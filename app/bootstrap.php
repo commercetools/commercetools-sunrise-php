@@ -47,13 +47,13 @@ $app->get('/catalog', function() {
 });
 
 $app->get('/{slug}', function(Application $app, $slug) {
-    $client = $app['client'];
-    $request = ProductProjectionBySlugGetRequest::ofSlugAndContext($slug, $client->getConfig()->getContext());
-    $response = $app['client']->execute($request);
-
-    if ($response->isError() || is_null($response->toObject())) {
-        $app->abort(404, "product $slug does not exist.");
-    }
+//    $client = $app['client'];
+//    $request = ProductProjectionBySlugGetRequest::ofSlugAndContext($slug, $client->getConfig()->getContext());
+//    $response = $app['client']->execute($request);
+//
+//    if ($response->isError() || is_null($response->toObject())) {
+//        $app->abort(404, "product $slug does not exist.");
+//    }
 
     $viewData = json_decode(file_get_contents(__DIR__ . '/../vendor/commercetools/sunrise-design/output/templates/pdp.json'), true);
     $viewData['meta']['assetsPath'] = '/assets/';
