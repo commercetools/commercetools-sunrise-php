@@ -48,7 +48,7 @@ class CompileTemplates extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $projectDir = $this->getApplication()->getService('console.project_directory');
-        $vendorTemplateDir = $projectDir . '/vendor/commercetools/sunrise-design/output/templates';
+        $vendorTemplateDir = $projectDir . '/vendor/commercetools/sunrise-design/input/templates';
         $templateDir =  $projectDir . '/templates';
         $outputDir = $projectDir . '/output';
 
@@ -69,7 +69,9 @@ class CompileTemplates extends Command
                         \LightnCandy::FLAG_RUNTIMEPARTIAL,
                     'basedir' => [
                         $templateDir,
+                        $templateDir . '/partials',
                         $vendorTemplateDir,
+                        $vendorTemplateDir . '/partials',
                     ],
                     'fileext' => [
                         '.hbs',
