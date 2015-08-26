@@ -1,0 +1,21 @@
+# behat.yml
+default:
+  translation:
+    locale: en
+  suites:
+    default:
+      paths:
+        - %paths.base%/features
+        - %paths.base%/vendor/commercetools/sunrise-scenarios/src/main/resources/features
+      contexts:
+        - Commercetools\Sunrise\BehatContext
+  extensions:
+    Behat\MinkExtension:
+      sessions:
+        my_goutte:
+          goutte: ~
+        my_selenium:
+          selenium2: ~
+      base_url: http://localhost:8001
+      default_session: my_selenium
+      javascript_session: my_selenium

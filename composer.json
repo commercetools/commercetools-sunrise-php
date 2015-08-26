@@ -1,0 +1,68 @@
+{
+  "require": {
+    "commercetools/php-sdk": "dev-develop",
+    "commercetools/sunrise-design": "dev-master",
+    "commercetools/commons": "dev-master",
+    "silex/silex": "~2.0@dev",
+    "cilex/console-service-provider": "^1.1",
+    "zordius/lightncandy": "^0.22"
+  },
+  "require-dev": {
+    "commercetools/sunrise-scenarios": "dev-master",
+    "behat/mink": "^1.6",
+    "behat/behat": "^3.0",
+    "behat/mink-extension": "^2.0",
+    "behat/mink-selenium2-driver": "^1.2",
+    "behat/mink-goutte-driver": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {"Commercetools\\Sunrise\\": "src/"}
+  },
+  "autoload-dev": {
+    "psr-4": {"Commercetools\\Sunrise\\": ["tests/unit/", "tests/integration/", "tests/behat/"]}
+  },
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "commercetools/sunrise-design",
+        "version": "master",
+        "source": {
+          "url": "https://github.com/sphereio/sphere-sunrise-design",
+          "type": "git",
+          "reference": "master"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "commercetools/sunrise-scenarios",
+        "version": "master",
+        "source": {
+          "url": "https://github.com/sphereio/sphere-sunrise-scenarios",
+          "type": "git",
+          "reference": "master"
+        }
+      }
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/sphereio/commercetools-php-commons"
+    }
+  ],
+  "scripts": {
+    "post-update-cmd": [
+      "cd vendor/commercetools/sunrise-design && npm install && cd ../../..",
+      "cd vendor/commercetools/sunrise-design && grunt build && cd ../../..",
+      "cp -rf vendor/commercetools/sunrise-design/output/assets web/assets",
+      "app/console.php compile"
+    ],
+    "post-install-cmd": [
+      "cd vendor/commercetools/sunrise-design && npm install && cd ../../..",
+      "cd vendor/commercetools/sunrise-design && grunt build && cd ../../..",
+      "cp -rf vendor/commercetools/sunrise-design/output/assets web/assets",
+      "app/console.php compile"
+    ]
+  }
+}

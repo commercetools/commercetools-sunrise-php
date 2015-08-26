@@ -1,0 +1,27 @@
+language: php
+php:
+  - "5.6"
+
+before_install:
+  - npm install -g grunt-cli
+
+before_script:
+  - "php -S localhost:8001 -t web/ > /dev/null &"
+  - "sh -e /etc/init.d/xvfb start"
+  - "export DISPLAY=:99.0"
+  - "wget http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.1.jar"
+  - "java -jar selenium-server-standalone-*.jar > /dev/null &"
+  - sleep 5
+  - composer install -o
+
+script:
+  - vendor/bin/behat
+
+env:
+  global:
+    # SPHERE_CLIENT_ID
+    - secure: MEht7kleJ/K9/daNOjEpPNJnXxKyQZ36oEM8fImi612BoJmZp/uwjuKpqKscIyyLwXSpsr7c9w+V2CfSk3QI+NGLnhSNgjJWE2QXxzxD6OgM0gKFTDtBq//+k77Sx4UnQDi0pQPRZ1BrfBUqrxw4H07i53hXd/kmjZnknRcbODc=
+    # SPHERE_CLIENT_SECRET
+    - secure: Q4zRyFxLw/7YlHG/iWzyR7V7Srm8LsQ3UgMshckUyqefhzhF19GefoPJdPdALyLVEYQMG3O/U1aebbyt8Puy5jWWKKiwFaQA+mMXzpBFcvhutgxByqBXdIysIhGU65No+WbiCKlpL2WPNtYvE1cMSjFfn7IX8ThGkBxhJQcha38=
+    # SPHERE_PROJECT
+    - secure: CPj46vCtmLaxGKXycJW+PmNXloXu5ruOV/Qg1mA6tU83oPjlxHVrqMOlb87ykf6U8X6XXAjMrgR0q3gBepPJg3HZmJyeOsVhwSU/jhfN7L1lR7BrQrPdLutvhuC6Fgj+b2Ubzh7PIt7pR6AYZyMCv5ofajW9aBcC5D556WJsSjE=
