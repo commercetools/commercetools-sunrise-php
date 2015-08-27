@@ -7,17 +7,20 @@ before_install:
 
 before_script:
   - "gem install compass"
-  - "php -S localhost:8001 -t web/ > /dev/null &"
+  - "php -S localhost:8001 -t web/ > access.log 2>&1 &"
   - "sh -e /etc/init.d/xvfb start"
   - "export DISPLAY=:99.0"
   - "wget http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.1.jar"
-  - "java -jar selenium-server-standalone-*.jar > /dev/null &"
+  - "java -jar selenium-server-standalone-*.jar > selenium.log 2>&1 &"
   - sleep 5
   - composer install -o
 
 script:
   - vendor/bin/behat
 
+after_script:
+  - cat access.log
+  - cat selenium.log
 env:
   global:
     # SPHERE_CLIENT_ID
