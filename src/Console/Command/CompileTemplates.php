@@ -54,6 +54,9 @@ class CompileTemplates extends Command
 
         $iterator = new \DirectoryIterator($vendorTemplateDir);
 
+        if (!file_exists($outputDir)) {
+            mkdir($outputDir);
+        }
         foreach ($iterator as $file) {
             if ($file->isFile() && in_array($file->getExtension(), ['hbs'])) {
                 if (file_exists($templateDir . '/' . $file->getFilename())) {
