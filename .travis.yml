@@ -21,7 +21,7 @@ before_script:
 
 script:
   - vendor/bin/behat
-  - sunrise-scenarios.sh
+  - ./sunrise-scenarios.sh
 
 after_script:
   - cat access.log
