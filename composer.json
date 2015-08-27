@@ -23,28 +23,12 @@
   },
   "repositories": [
     {
-      "type": "package",
-      "package": {
-        "name": "commercetools/sunrise-design",
-        "version": "master",
-        "source": {
-          "url": "https://github.com/sphereio/sphere-sunrise-design",
-          "type": "git",
-          "reference": "master"
-        }
-      }
+      "type": "vcs",
+      "url": "https://github.com/sphereio/sphere-sunrise-design"
     },
     {
-      "type": "package",
-      "package": {
-        "name": "commercetools/sunrise-scenarios",
-        "version": "master",
-        "source": {
-          "url": "https://github.com/sphereio/sphere-sunrise-scenarios",
-          "type": "git",
-          "reference": "master"
-        }
-      }
+      "type": "vcs",
+      "url": "https://github.com/sphereio/sphere-sunrise-scenarios"
     },
     {
       "type": "vcs",
