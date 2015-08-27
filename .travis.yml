@@ -8,7 +8,7 @@ before_install:
 - npm install -g grunt-cli
 before_script:
 - gem install compass
-- php -S localhost:8001 -t web/ > access.log 2>&1 &
+- php -S localhost:8001 -t web/ web/index.php > access.log 2>&1 &
 - sh -e /etc/init.d/xvfb start
 - export DISPLAY=:99.0
 - wget http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.1.jar

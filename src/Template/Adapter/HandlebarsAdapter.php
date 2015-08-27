@@ -56,4 +56,13 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         $renderer = include($this->templateDir . '/pop.php');
         return $renderer($viewData);
     }
+
+    protected function renderHome($viewData)
+    {
+        /**
+         * @var callable $renderer
+         */
+        $renderer = include($this->templateDir . '/home.php');
+        return $renderer($viewData);
+    }
 }

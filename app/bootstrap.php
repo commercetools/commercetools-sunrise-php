@@ -8,14 +8,18 @@ namespace Commercetools\Sunrise;
 use Commercetools\Core\Client;
 use Commercetools\Core\Config;
 use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
+use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
 use Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter;
 use Commercetools\Sunrise\Template\TemplateService;
 use Silex\Application;
 use Commercetools\Core\Model\Common\Context;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 require __DIR__.'/../vendor/autoload.php';
 
 define('PROJECT_DIR', dirname(__DIR__));
+const DEFAULT_LANGUAGE = 'de';
 
 $app = new Application();
 
@@ -36,35 +40,26 @@ $app['client'] = function () {
     return Client::ofConfig($config);
 };
 
+$app['languages'] = function () {
+    return ['de' => ['de', 'en'], 'en' => ['en']];
+};
 $app['view'] = function () {
     return new TemplateService(new HandlebarsAdapter(PROJECT_DIR .'/output'));
 };
 
-$app->get('/', function() {
-   return 'Sunrise Home';
+$app->get('/', 'Commercetools\Sunrise\Controller\CatalogController::home')->value('lang', DEFAULT_LANGUAGE);
+$app->get('/search', function(Application $app) {
+    return $app->redirect('/'.DEFAULT_LANGUAGE.'/search');
+});
+$app->get('/{slug}.html', function(Application $app, $slug) {
+    return $app->redirect('/'.DEFAULT_LANGUAGE.'/' . $slug . '.html');
 });
 
-$app->get('/catalog', function(Application $app) {
-    $viewData = json_decode(file_get_contents(__DIR__ . '/../vendor/commercetools/sunrise-design/output/templates/pop.json'), true);
-    $viewData['meta']['assetsPath'] = '/assets/';
-    /**
-     * @var callable $renderer
-     */
-    return $app['view']->render('product-overview', $viewData);
+$app->get('/{lang}/search', 'Commercetools\Sunrise\Controller\CatalogController::search');
+$app->get('/{lang}/{slug}.html', 'Commercetools\Sunrise\Controller\CatalogController::detail');
+$app->error(function (NotFoundHttpException $e) {
+    $message = 'The requested page could not be found.';
+
+    return new Response($message);
 });
-
-$app->get('/{slug}', function(Application $app, $slug) {
-    $client = $app['client'];
-    $request = ProductProjectionBySlugGetRequest::ofSlugAndContext($slug, $client->getConfig()->getContext());
-    $response = $app['client']->execute($request);
-
-    if ($response->isError() || is_null($response->toObject())) {
-        $app->abort(404, "product $slug does not exist.");
-    }
-
-    $viewData = json_decode(file_get_contents(__DIR__ . '/../vendor/commercetools/sunrise-design/output/templates/pdp.json'), true);
-
-    return $app['view']->render('product-detail', $viewData);
-});
-
 return $app;
