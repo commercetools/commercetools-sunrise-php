@@ -8,10 +8,14 @@ namespace Commercetools\Sunrise;
 use Commercetools\Core\Client;
 use Commercetools\Core\Config;
 use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
+use Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter;
+use Commercetools\Sunrise\Template\TemplateService;
 use Silex\Application;
 use Commercetools\Core\Model\Common\Context;
 
 require __DIR__.'/../vendor/autoload.php';
+
+define('PROJECT_DIR', dirname(__DIR__));
 
 $app = new Application();
 
@@ -32,18 +36,21 @@ $app['client'] = function () {
     return Client::ofConfig($config);
 };
 
+$app['view'] = function () {
+    return new TemplateService(new HandlebarsAdapter(PROJECT_DIR .'/output'));
+};
+
 $app->get('/', function() {
    return 'Sunrise Home';
 });
 
-$app->get('/catalog', function() {
+$app->get('/catalog', function(Application $app) {
     $viewData = json_decode(file_get_contents(__DIR__ . '/../vendor/commercetools/sunrise-design/output/templates/pop.json'), true);
     $viewData['meta']['assetsPath'] = '/assets/';
     /**
      * @var callable $renderer
      */
-    $renderer = include(__DIR__.'/../output/pop.php');
-    return $renderer($viewData);
+    return $app['view']->render('product-overview', $viewData);
 });
 
 $app->get('/{slug}', function(Application $app, $slug) {
@@ -56,12 +63,8 @@ $app->get('/{slug}', function(Application $app, $slug) {
     }
 
     $viewData = json_decode(file_get_contents(__DIR__ . '/../vendor/commercetools/sunrise-design/output/templates/pdp.json'), true);
-    $viewData['meta']['assetsPath'] = '/assets/';
-    /**
-     * @var callable $renderer
-     */
-    $renderer = include(__DIR__.'/../output/pdp.php');
-    return $renderer($viewData);
+
+    return $app['view']->render('product-detail', $viewData);
 });
 
 return $app;
