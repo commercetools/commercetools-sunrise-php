@@ -4,3 +4,4 @@ output
 vendor
 web/assets
 target
+composer.phar
