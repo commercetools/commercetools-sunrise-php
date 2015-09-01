@@ -12,7 +12,7 @@ It aims to focus on being slim, easy to understand and fast, delegating reusabil
 
  * PHP (see the SDK for detailed requirements)
  * composer
- * (for now) node.js & nom installed (for building the templates)
+ * (for now) node.js & npm installed (for building the templates)
 
 # Run
 
@@ -31,7 +31,7 @@ client_secret = baz
 For local development purposes you can run the application in the php built-in web server. The `web` folder contains static assets and index.php as the _only_ PHP file.
 
 ```php
-php -S localhost:8000 -t web
+php -S localhost:8000 -t web/ web/index.php
 ```
 Open [http://localhost:8000/](http://localhost:8000/)
 
