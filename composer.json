@@ -1,11 +1,13 @@
 {
   "require": {
-    "commercetools/php-sdk": "dev-develop",
+    "commercetools/php-sdk": "dev-release/v1.0.0-RC3",
     "commercetools/sunrise-design": "dev-master",
     "commercetools/commons": "dev-master",
     "silex/silex": "~2.0@dev",
     "cilex/console-service-provider": "^1.1",
-    "zordius/lightncandy": "^0.22"
+    "zordius/lightncandy": "^0.22",
+    "symfony/config": "^2.7",
+    "symfony/yaml": "^2.7"
   },
   "require-dev": {
     "commercetools/sunrise-scenarios": "dev-master",

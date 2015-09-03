@@ -50,10 +50,13 @@ class CompileTemplates extends Command
         $projectDir = $this->getApplication()->getService('console.project_directory');
         $vendorTemplateDir = $projectDir . '/vendor/commercetools/sunrise-design/input/templates';
         $templateDir =  $projectDir . '/templates';
-        $outputDir = $projectDir . '/output';
+        $outputDir = $projectDir . '/cache/templates';
 
         $iterator = new \DirectoryIterator($vendorTemplateDir);
 
+        if (!file_exists(dirname($outputDir))) {
+            mkdir(dirname($outputDir));
+        }
         if (!file_exists($outputDir)) {
             mkdir($outputDir);
         }

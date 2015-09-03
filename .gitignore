@@ -5,3 +5,4 @@ vendor
 web/assets
 target
 composer.phar
+cache

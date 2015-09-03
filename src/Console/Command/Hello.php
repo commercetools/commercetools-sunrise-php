@@ -44,7 +44,8 @@ class Hello extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $hello = 'Hello ' . $input->getArgument('name') . '!';
+        $translator = $this->getApplication()->getService('translator');
+        $hello = $translator->trans('hello', ['%name%' => $input->getArgument('name')]);
         $output->writeln($hello);
     }
 }
