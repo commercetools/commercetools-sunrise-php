@@ -34,7 +34,7 @@ class CatalogController
     public function home(Request $request, Application $app)
     {
         $viewData = json_decode(
-            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/output/templates/home.json'),
+            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/home.json'),
             true
         );
         $viewData['meta']['assetsPath'] = '/' . $viewData['meta']['assetsPath'];
@@ -49,7 +49,7 @@ class CatalogController
         $products = $this->getProducts($request, $app);
 
         $viewData = json_decode(
-            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/output/templates/pop.json'),
+            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pop.json'),
             true
         );
         $viewData['meta']['assetsPath'] = '/' . $viewData['meta']['assetsPath'];
@@ -95,7 +95,7 @@ class CatalogController
         $product = $this->getProductBySlug($slug, $app);
 
         $viewData = json_decode(
-            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/output/templates/pdp.json'),
+            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pdp.json'),
             true
         );
         $viewData['meta']['assetsPath'] = '/' . $viewData['meta']['assetsPath'];
