@@ -3,7 +3,7 @@
     "ext-apcu": "*",
     "ext-mbstring": "*",
     "commercetools/php-sdk": "dev-release/v1.0.0-RC3",
-    "commercetools/sunrise-design": "dev-master",
+    "commercetools/sunrise-design": "*",
     "commercetools/commons": "dev-master",
     "silex/silex": "~2.0@dev",
     "cilex/console-service-provider": "^1.1",
@@ -30,8 +30,16 @@
   },
   "repositories": [
     {
-      "type": "vcs",
-      "url": "https://github.com/sphereio/sphere-sunrise-design"
+      "type": "package",
+      "package": {
+        "name": "commercetools/sunrise-design",
+        "version": "0.9",
+        "source": {
+          "url": "https://github.com/sphereio/sphere-sunrise-design",
+          "type": "git",
+          "reference": "gh-pages"
+        }
+      }
     },
     {
       "type": "vcs",
@@ -44,15 +52,11 @@
   ],
   "scripts": {
     "post-update-cmd": [
-      "cd vendor/commercetools/sunrise-design && npm install && cd ../../..",
-      "grunt --gruntfile vendor/commercetools/sunrise-design/Gruntfile.js build",
-      "cp -rf vendor/commercetools/sunrise-design/output/assets web/assets",
+      "cp -rf vendor/commercetools/sunrise-design/assets web/assets",
       "app/console.php compile"
     ],
     "post-install-cmd": [
-      "cd vendor/commercetools/sunrise-design && npm install && cd ../../..",
-      "grunt --gruntfile vendor/commercetools/sunrise-design/Gruntfile.js build",
-      "cp -rf vendor/commercetools/sunrise-design/output/assets web/assets",
+      "cp -rf vendor/commercetools/sunrise-design/assets web/assets",
       "app/console.php compile"
     ]
   }

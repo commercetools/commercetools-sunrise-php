@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8dec0c5aa799147d65918f208c1dd927",
+    "hash": "11187d629b27aa0fa2b08bb2d424a8de",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -163,36 +163,13 @@
         },
         {
             "name": "commercetools/sunrise-design",
-            "version": "dev-master",
+            "version": "0.9",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sphereio/sphere-sunrise-design.git",
-                "reference": "11f9eb2db12d43198689fde91b5f17e3f9b49f52"
+                "url": "https://github.com/sphereio/sphere-sunrise-design",
+                "reference": "gh-pages"
             },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-design/zipball/11f9eb2db12d43198689fde91b5f17e3f9b49f52",
-                "reference": "11f9eb2db12d43198689fde91b5f17e3f9b49f52",
-                "shasum": ""
-            },
-            "type": "library",
-            "license": [
-                "MIT"
-            ],
-            "description": "Compiles Handlebars templates with JSON data, outputting static HTML files.",
-            "homepage": "https://github.com/sphereio/sphere-sunrise-design",
-            "keywords": [
-                "SPHERE.IO",
-                "Sunrise",
-                "template"
-            ],
-            "support": {
-                "email": "support@sphere.io",
-                "forum": "http://support.sphere.io",
-                "issues": "https://github.com/sphereio/sphere-sunrise-design/issues",
-                "source": "https://github.com/sphereio/sphere-sunrise-design/tree/master"
-            },
-            "time": "2015-09-04 10:05:37"
+            "type": "library"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2217,7 +2194,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "commercetools/php-sdk": 20,
-        "commercetools/sunrise-design": 20,
         "commercetools/commons": 20,
         "silex/silex": 20,
         "commercetools/sunrise-scenarios": 20,
