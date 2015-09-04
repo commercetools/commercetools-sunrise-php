@@ -9,6 +9,7 @@
     "zordius/lightncandy": "^0.22",
     "symfony/config": "^2.7",
     "symfony/yaml": "^2.7",
+    "symfony/translation": "*",
     "monolog/monolog": "^1.7"
   },
   "require-dev": {
