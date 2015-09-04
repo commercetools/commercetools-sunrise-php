@@ -1,0 +1,13 @@
+{
+  "name": "commercetools-sunrise-php",
+  "version": "0.1.0",
+  "description": "SUNRISE PHP is a template shopfront implementation that implements a complete online shop on the commercetools eCommerce platform using the following components:",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sphereio/commercetools-sunrise-php/issues"
+  },
+  "engines": {
+    "node": "0.12.x"
+  },
+  "homepage": "https://github.com/sphereio/commercetools-sunrise-php#readme"
+}
