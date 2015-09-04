@@ -42,13 +42,13 @@
   "scripts": {
     "post-update-cmd": [
       "cd vendor/commercetools/sunrise-design && npm install && cd ../../..",
-      "cd vendor/commercetools/sunrise-design && grunt build && cd ../../..",
+      "grunt --gruntfile vendor/commercetools/sunrise-design/Gruntfile.js build",
       "cp -rf vendor/commercetools/sunrise-design/output/assets web/assets",
       "app/console.php compile"
     ],
     "post-install-cmd": [
       "cd vendor/commercetools/sunrise-design && npm install && cd ../../..",
-      "cd vendor/commercetools/sunrise-design && grunt build && cd ../../..",
+      "grunt --gruntfile vendor/commercetools/sunrise-design/Gruntfile.js build",
       "cp -rf vendor/commercetools/sunrise-design/output/assets web/assets",
       "app/console.php compile"
     ]

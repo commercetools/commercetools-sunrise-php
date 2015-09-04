@@ -6,3 +6,4 @@ web/assets
 target
 composer.phar
 cache
+node_modules

@@ -9,5 +9,9 @@
   "engines": {
     "node": "0.12.x"
   },
-  "homepage": "https://github.com/sphereio/commercetools-sunrise-php#readme"
+  "homepage": "https://github.com/sphereio/commercetools-sunrise-php#readme",
+  "dependencies": {
+    "grunt": "0.4.5",
+    "grunt-cli": "0.1.13"
+  }
 }
