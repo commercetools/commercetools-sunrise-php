@@ -44,11 +44,11 @@ $app['client'] = function () use ($app) {
         $appConfig = parse_ini_file(__DIR__ .'/myapp.ini', true);
         $config = $appConfig['commercetools'];
     } else {
-        $config = Config::fromArray([
+        $config = [
             'client_id' => $_SERVER['SPHERE_CLIENT_ID'],
             'client_secret' => $_SERVER['SPHERE_CLIENT_SECRET'],
             'project' => $_SERVER['SPHERE_PROJECT']
-        ]);
+        ];
     }
     $config = Config::fromArray($config)->setContext($context);
 
