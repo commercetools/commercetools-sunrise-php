@@ -9,13 +9,15 @@ before_install:
 before_script:
 - composer config -g github-oauth.github.com $GITHUB_OAUTH_TOKEN
 - gem install compass
+- sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ $TRAVIS_PHP_VERSION != 'nightly' ] && [ `php-config --vernum` -ge 50500 ] ; then pecl config-set preferred_state beta; printf "yes\n" | pecl install -f apcu ; else echo 'extension="apc.so"' >> ./tests/apc.ini ; fi"
+- sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ $TRAVIS_PHP_VERSION != 'nightly' ] ; then phpenv config-add ./tests/apc.ini; fi"
 - php -S localhost:8001 -t web/ web/index.php > access.log 2>&1 &
 - sh -e /etc/init.d/xvfb start
 - export DISPLAY=:99.0
 - wget http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.1.jar
 - java -jar selenium-server-standalone-*.jar > selenium.log 2>&1 &
 - sleep 5
-- composer install -o
+- composer install -o --ignore-platform-reqs
 script:
 - vendor/bin/behat
 after_script:
