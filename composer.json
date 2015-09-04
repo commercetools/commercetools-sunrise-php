@@ -1,5 +1,6 @@
 {
   "require": {
+    "ext-apcu": "*",
     "commercetools/php-sdk": "dev-release/v1.0.0-RC3",
     "commercetools/sunrise-design": "dev-master",
     "commercetools/commons": "dev-master",
