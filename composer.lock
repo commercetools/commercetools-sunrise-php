@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "59e2197ed44abd6e6d7e3d52e0cbf21e",
+    "hash": "8dec0c5aa799147d65918f208c1dd927",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -167,12 +167,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/sphere-sunrise-design.git",
-                "reference": "6002a73ec4218d4b3474a3a9fbfbfb6914c432f9"
+                "reference": "11f9eb2db12d43198689fde91b5f17e3f9b49f52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-design/zipball/6002a73ec4218d4b3474a3a9fbfbfb6914c432f9",
-                "reference": "6002a73ec4218d4b3474a3a9fbfbfb6914c432f9",
+                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-design/zipball/11f9eb2db12d43198689fde91b5f17e3f9b49f52",
+                "reference": "11f9eb2db12d43198689fde91b5f17e3f9b49f52",
                 "shasum": ""
             },
             "type": "library",
@@ -192,7 +192,7 @@
                 "issues": "https://github.com/sphereio/sphere-sunrise-design/issues",
                 "source": "https://github.com/sphereio/sphere-sunrise-design/tree/master"
             },
-            "time": "2015-09-01 07:46:54"
+            "time": "2015-09-04 10:05:37"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2226,7 +2226,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-apcu": "*"
+        "ext-apcu": "*",
+        "ext-mbstring": "*"
     },
     "platform-dev": []
 }
