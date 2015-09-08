@@ -213,4 +213,10 @@ $app->error(function (NotFoundHttpException $e) use ($app) {
 
     return new Response($message);
 });
+
+if (!$app['config']['debug']) {
+    $app->error(function (\Exception $e) {
+        return new Response('Bad things happen');
+    });
+}
 return $app;

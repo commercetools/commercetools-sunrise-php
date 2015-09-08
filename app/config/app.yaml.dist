@@ -1,4 +1,4 @@
-debug: true
+debug: false
 default:
   locale: en
   country: us
