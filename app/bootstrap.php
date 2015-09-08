@@ -56,12 +56,14 @@ $app['config'] = function () use ($app) {
 
         $config = [];
         foreach ($yamlConfigFiles as $yamlConfigFile) {
-            $fileName = $app['locator']->locate($yamlConfigFile);
-            // see the previous article "Loading resources" to
-            // see where $delegatingLoader comes from
-            // $delegatingLoader->load($yamlUserFile);
-            $config = array_merge($config, Yaml::parse(file_get_contents($fileName)));
-            $resources[] = new FileResource($yamlConfigFile);
+            try {
+                $fileName = $app['locator']->locate($yamlConfigFile);
+                // see the previous article "Loading resources" to
+                // see where $delegatingLoader comes from
+                // $delegatingLoader->load($yamlUserFile);
+                $config = array_merge($config, Yaml::parse(file_get_contents($fileName)));
+                $resources[] = new FileResource($yamlConfigFile);
+            } catch (\InvalidArgumentException $e) {}
         }
 
         $config = new Config($config);
