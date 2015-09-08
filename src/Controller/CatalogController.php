@@ -15,37 +15,55 @@ use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Request\Categories\CategoryQueryRequest;
 use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
 use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
+use Commercetools\Sunrise\Template\TemplateService;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class CatalogController
+class CatalogController extends SunriseController
 {
-    /**
-     * @param Application $app
-     * @return UrlGenerator
-     */
-    protected function getUrlGenerator(Application $app)
+    const SLUG_SKU_SEPARATOR = '--';
+
+    protected $client;
+    protected $locale;
+
+    public function __construct(
+        Client $client,
+        $locale,
+        TemplateService $view,
+        UrlGenerator $generator,
+        TranslatorInterface $translator,
+        $config
+    )
     {
-        return $app['url_generator'];
+        parent::__construct($view, $generator, $translator, $config);
+        $this->view = $view;
+        $this->client = $client;
+        $this->generator = $generator;
+        $this->locale = $locale;
     }
 
-    public function home(Request $request, Application $app)
+    public function home(Request $request)
     {
+        //var_dump($this->getHeaderViewData('home'));
         $viewData = json_decode(
             file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/home.json'),
             true
         );
         $viewData['meta']['assetsPath'] = '/' . $viewData['meta']['assetsPath'];
+        $viewData = array_merge(
+            $viewData,
+            $this->getHeaderViewData('Sunrise - Homeblabla')
+        );
         // @ToDo remove when cucumber tests are working correctly
-        array_unshift($viewData['header']['navMenu']['categories'], ['text' => 'Sunrise Home']);
-        return $app['view']->render('home', $viewData);
+        //array_unshift($viewData['header']['navMenu']['categories'], ['text' => 'Sunrise Home']);
+        return $this->view->render('home', $viewData);
     }
 
     public function search(Request $request, Application $app)
     {
-        $generator = $this->getUrlGenerator($app);
         $products = $this->getProducts($request, $app);
 
         $viewData = json_decode(
@@ -56,12 +74,10 @@ class CatalogController
         $viewData['content']['products']['list'] = [];
         foreach ($products as $key => $product) {
             $price = $product->getMasterVariant()->getPrices()->getAt(0)->getValue();
-            $productUrl = $generator->generate(
+            $productUrl = $this->generator->generate(
                 'pdp',
                 [
-                    '_locale' => $app['locale'],
-                    'slug' => (string)$product->getSlug(),
-                    'sku' => (string)$product->getMasterVariant()->getSku()
+                    'slug' => $this->prepareSlug((string)$product->getSlug(), $product->getMasterVariant()->getSku())
                 ]
             );
             $productData = [
@@ -84,14 +100,13 @@ class CatalogController
         /**
          * @var callable $renderer
          */
-        $html = $app['view']->render('product-overview', $viewData);
+        $html = $this->view->render('product-overview', $viewData);
         return $html;
     }
 
     public function detail(Request $request, Application $app)
     {
-        $slug = $request->get('slug');
-        $generator = $this->getUrlGenerator($app);
+        list($slug, $sku) = $this->splitSlug($request->get('slug'));
         $product = $this->getProductBySlug($slug, $app);
 
         $viewData = json_decode(
@@ -100,7 +115,10 @@ class CatalogController
         );
         $viewData['meta']['assetsPath'] = '/' . $viewData['meta']['assetsPath'];
 
-        $productUrl = $generator->generate('pdp', ['slug' => (string)$product->getSlug()]);
+        $productUrl = $this->generator->generate(
+            'pdp',
+            ['slug' => $this->prepareSlug((string)$product->getSlug(), $product->getMasterVariant()->getSku())]
+        );
         $productData = [
             'id' => $product->getId(),
             'text' => (string)$product->getName(),
@@ -118,27 +136,24 @@ class CatalogController
             $viewData['content']['product'],
             $productData
         );
-        return $app['view']->render('product-detail', $viewData);
+        return $this->view->render('product-detail', $viewData);
     }
 
     protected function getProducts(Request $request, Application $app)
     {
-        /**
-         * @var Client $client
-         */
-        $client = $app['client'];
         $searchRequest = ProductProjectionSearchRequest::of();
         $categories = $this->getCategories($app);
 
-        if ($category1 = $request->get('category1')) {
-            $category = $categories->getBySlug($category1, $app['locale']);
+        if ($category = $request->get('category')) {
+            $category = $categories->getBySlug($category, $app['locale']);
             if ($category instanceof Category) {
                 $searchRequest->addFilter(
                     Filter::of()->setName('categories.id')->setValue($category->getId())
                 );
             }
         }
-        $response = $searchRequest->executeWithClient($client);
+
+        $response = $searchRequest->executeWithClient($this->client);
         $products = $searchRequest->mapResponse($response);
 
         return $products;
@@ -181,6 +196,16 @@ class CatalogController
         }
 
         return $categories;
+    }
+
+    protected function splitSlug($slug)
+    {
+        return explode(static::SLUG_SKU_SEPARATOR, $slug);
+    }
+
+    protected function prepareSlug($slug, $sku)
+    {
+        return $slug . static::SLUG_SKU_SEPARATOR . $sku;
     }
 
     protected function getCategoryTree()

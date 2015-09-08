@@ -7,108 +7,203 @@ namespace Commercetools\Sunrise;
 
 use Commercetools\Core\Cache\CacheAdapterFactory;
 use Commercetools\Core\Client;
-use Commercetools\Core\Config;
+use Commercetools\Sunrise\Controller\CatalogController;
+use Commercetools\Sunrise\Model\Config;
+use Commercetools\Sunrise\Service\ClientFactory;
+use Commercetools\Sunrise\Service\LocaleConverter;
 use Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter;
 use Commercetools\Sunrise\Template\TemplateService;
 use Silex\Application;
-use Commercetools\Core\Model\Common\Context;
 use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\MonologServiceProvider;
+use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Yaml\Yaml;
 
 require __DIR__.'/../vendor/autoload.php';
 
 define('PROJECT_DIR', dirname(__DIR__));
-const DEFAULT_LOCALE = 'de-de';
-const LOCALE_PATTERN = '[a-z]{2}-[a-z]{2}';
+define('CONFIG_DEBUG', true);
+
+const LOCALE_PATTERN = '[a-z]{2}([_-][a-z]{2})?';
 
 $app = new Application();
-$app->register(new LocaleServiceProvider());
 
+$app['locator'] = function () use ($app) {
+    return new FileLocator([
+        PROJECT_DIR.'/app/config'
+    ]);
+};
+$app['config'] = function () use ($app) {
+    $cachePath = PROJECT_DIR . '/cache/config.php';
+
+    $configCache = new ConfigCache($cachePath, CONFIG_DEBUG);
+    if (!$configCache->isFresh()) {
+        // fill this with an array of 'users.yml' file paths
+        $yamlConfigFiles = [
+            'app.yaml.dist',
+            'app.yaml',
+        ];
+
+        $resources = array();
+
+        $config = [];
+        foreach ($yamlConfigFiles as $yamlConfigFile) {
+            $fileName = $app['locator']->locate($yamlConfigFile);
+            // see the previous article "Loading resources" to
+            // see where $delegatingLoader comes from
+            // $delegatingLoader->load($yamlUserFile);
+            $config = array_merge($config, Yaml::parse(file_get_contents($fileName)));
+            $resources[] = new FileResource($yamlConfigFile);
+        }
+
+        $config = new Config($config);
+        // the code for the UserMatcher is generated elsewhere
+        $code = sprintf(<<<EOF
+<?php
+
+use \Commercetools\Sunrise\Model\Config;
+
+return new Config(%s);
+
+EOF
+            ,
+            var_export($config->toArray(), true)
+        );
+
+        $configCache->write($code, $resources);
+
+    } else {
+        // you may want to require the cached code:
+        $config = require $cachePath;
+    }
+
+    return $config;
+};
+
+$app['locale'] = $app['config']['default.locale'];
+$app['country'] = $app['config']['default.country'];
+$app['languages'] = function () use ($app) {
+    $languages = $app['config']['default.languages'];
+    $fallbackLanguages = $app['config']['default.fallback_languages'];
+    $fallbacks = [];
+    foreach ($languages as $language) {
+        $fallbacks[$language] = [$language];
+        if (isset($fallbackLanguages[$language])) {
+            $fallbacks[$language] = array_merge($fallbacks[$language], $fallbackLanguages[$language]);
+        }
+    }
+    return $fallbacks;
+};
+
+/**
+ * Provider
+ */
+$app->register(new LocaleServiceProvider());
+$app->register(new ServiceControllerServiceProvider());
 // Register the monolog logging service
 $app->register(new MonologServiceProvider(), array(
     'monolog.logfile' => 'php://stderr',
 ));
 
-$app['locale'] = DEFAULT_LOCALE;
-
-$app['client'] = function () use ($app) {
-    $language = \Locale::getPrimaryLanguage($app['locale']);
-    $languages = $app['languages'][$language];
-    $context = Context::of()->setLanguages($languages)->setGraceful(true)->setLocale('de')->setLocale($app['locale']);
-    if (file_exists(__DIR__ .'/myapp.ini')) {
-        $appConfig = parse_ini_file(__DIR__ .'/myapp.ini', true);
-        $config = $appConfig['commercetools'];
-    } else {
-        $config = [
-            'client_id' => $_SERVER['SPHERE_CLIENT_ID'],
-            'client_secret' => $_SERVER['SPHERE_CLIENT_SECRET'],
-            'project' => $_SERVER['SPHERE_PROJECT']
-        ];
-    }
-    $config = Config::fromArray($config)->setContext($context);
-
-    return Client::ofConfig($config);
-};
-$app['cache'] = function () use ($app) {
-    $factory = new CacheAdapterFactory();
-
-    return $factory->get();
-};
-
-$app->register(new TranslationServiceProvider(), ['translator.cache_dir' => PROJECT_DIR . '/cache/translation']);
+$app->register(
+    new TranslationServiceProvider(),
+    [
+        'translator.cache_dir' => $app['config']['default.i18n.cache_dir'],
+        'debug' => $app['config']['debug']
+    ]
+);
 $app['translator'] = $app->extend('translator', function(Translator $translator, Application $app) {
         $translator->addLoader('yaml', new YamlFileLoader());
         $translator->addResource('yaml', PROJECT_DIR.'/app/locales/en.yaml', 'en');
         $translator->addResource('yaml', PROJECT_DIR.'/app/locales/de.yaml', 'de');
         return $translator;
 });
-$app['languages'] = function () {
-    return ['de' => ['de', 'en'], 'en' => ['en']];
-};
 
+/**
+ * Helper
+ */
+$app['cache'] = function () use ($app) {
+    $factory = new CacheAdapterFactory();
+
+    return $factory->get();
+};
 $app['view'] = function () {
     return new TemplateService(new HandlebarsAdapter(PROJECT_DIR .'/cache/templates'));
 };
+$app['locale.converter'] = function () use ($app) {
+    return new LocaleConverter($app);
+};
+$app['client'] = function () use ($app) {
+    $locale = $app['locale.converter']->convert($app['locale']);
+    return ClientFactory::build(
+        $locale,
+        $app['config']['commercetools'],
+        $app['languages'],
+        $app['cache'],
+        ($app['config']['debug'] ? $app['logger'] : null)
+    );
+};
 
-$app->get('/', 'Commercetools\Sunrise\Controller\CatalogController::home')->value('lang', DEFAULT_LOCALE);
+/**
+ * Controller
+ */
+$app['catalog.controller'] = function () use ($app) {
+    $locale = $app['locale.converter']->convert($app['locale']);
+    return new CatalogController(
+        $app['client'],
+        $locale,
+        $app['view'],
+        $app['url_generator'],
+        $app['translator'],
+        $app['config']['sunrise']
+    );
+};
 
-$app->get('/{_locale}', 'Commercetools\Sunrise\Controller\CatalogController::home')
+/**
+ * Routes
+ */
+$app->get('/', 'catalog.controller:home');
+
+$app->get('/{_locale}', 'catalog.controller:home')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('home');
-$app->get('/{_locale}/search', 'Commercetools\Sunrise\Controller\CatalogController::search')
+$app->get('/{_locale}/search', 'catalog.controller:search')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('pop');
-$app->get('/{_locale}/{slug}.html', 'Commercetools\Sunrise\Controller\CatalogController::detail')
+$app->get('/{_locale}/{slug}.html', 'catalog.controller:detail')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('pdp');
-$app->get('/{_locale}/{category1}', 'Commercetools\Sunrise\Controller\CatalogController::search')
+$app->get('/{_locale}/{category1}', 'catalog.controller:search')
     ->assert('_locale', LOCALE_PATTERN);
 
 // location redirects for trailing slashes
 $app->get('/{_locale}/', function(Application $app) {
     return $app->redirect('/'.$app['locale']);
 })->assert('_locale', LOCALE_PATTERN);
-$app->get('/{_locale}/search/', function($category1, $category2, Application $app) {
+$app->get('/{_locale}/search/', function(Application $app) {
     return $app->redirect('/'. $app['locale'] . '/search');
 })->assert('_locale', LOCALE_PATTERN);
-$app->get('/{_locale}/{category1}/', function($category1, Application $app) {
-    return $app->redirect('/'. $app['locale'] . '/' . $category1);
+$app->get('/{_locale}/{category}/', function($category, Application $app) {
+    return $app->redirect('/'. $app['locale'] . '/' . $category);
 })->assert('_locale', LOCALE_PATTERN);
 
 // location redirects for uri without locale information
 $app->get('/search', function(Application $app) {
-    return $app->redirect('/'.DEFAULT_LOCALE.'/search');
+    return $app->redirect('/'.$app['locale'].'/search');
 });
 $app->get('/{slug}.html', function(Application $app, $slug) {
-    return $app->redirect('/'.DEFAULT_LOCALE.'/' . $slug . '.html');
+    return $app->redirect('/'.$app['locale'].'/' . $slug . '.html');
 });
-$app->get('/{category1}', function(Application $app, $category1) {
-    return $app->redirect('/' . DEFAULT_LOCALE . '/' . $category1);
+$app->get('/{category}', function(Application $app, $category) {
+    return $app->redirect('/' . $app['locale'] . '/' . $category);
 });
 
 $app->error(function (NotFoundHttpException $e) use ($app) {

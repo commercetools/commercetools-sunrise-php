@@ -33,7 +33,7 @@
       "type": "package",
       "package": {
         "name": "commercetools/sunrise-design",
-        "version": "0.9",
+        "version": "0.9.1",
         "source": {
           "url": "https://github.com/sphereio/sphere-sunrise-design",
           "type": "git",

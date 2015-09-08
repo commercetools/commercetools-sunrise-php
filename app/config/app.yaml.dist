@@ -1,0 +1,22 @@
+debug: true
+default:
+  locale: en
+  country: us
+  languages:
+    - de
+    - en
+  countries:
+    - DE
+    - UK
+  fallback_languages:
+    de:
+      - en
+  i18n:
+    cache_dir: cache/i18n
+sunrise:
+  header:
+    callUs: +44 123 456 000
+commercetools:
+  client_id: <client-id>
+  client_secret: <client-secret>
+  project: <project>

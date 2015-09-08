@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "11187d629b27aa0fa2b08bb2d424a8de",
+    "hash": "45127699892b42d34329984f77ad0ff0",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -116,16 +116,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "f9de33c4a5b69913b54faa23f7d43868d6b34b1d"
+                "reference": "a4be01badfae76c9ded1dbc874d83ff8baca3a62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/f9de33c4a5b69913b54faa23f7d43868d6b34b1d",
-                "reference": "f9de33c4a5b69913b54faa23f7d43868d6b34b1d",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/a4be01badfae76c9ded1dbc874d83ff8baca3a62",
+                "reference": "a4be01badfae76c9ded1dbc874d83ff8baca3a62",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
+                "ext-mbstring": "*",
                 "guzzlehttp/guzzle": "^5.0 || ^6.0",
                 "guzzlehttp/psr7": "^1.1",
                 "php": ">=5.4",
@@ -159,11 +160,11 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-09-03 16:38:30"
+            "time": "2015-09-07 12:37:41"
         },
         {
             "name": "commercetools/sunrise-design",
-            "version": "0.9",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/sphere-sunrise-design",
@@ -557,12 +558,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "df291b12c632ca89ae37301dba2e0bcb4a4f28d8"
+                "reference": "ff1fb3af45887e849d3d40f4df475536406d33af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/df291b12c632ca89ae37301dba2e0bcb4a4f28d8",
-                "reference": "df291b12c632ca89ae37301dba2e0bcb4a4f28d8",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/ff1fb3af45887e849d3d40f4df475536406d33af",
+                "reference": "ff1fb3af45887e849d3d40f4df475536406d33af",
                 "shasum": ""
             },
             "require": {
@@ -638,7 +639,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2015-09-02 14:20:41"
+            "time": "2015-09-06 18:43:29"
         },
         {
             "name": "symfony/config",

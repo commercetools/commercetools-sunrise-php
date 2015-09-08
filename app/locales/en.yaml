@@ -1,3 +1,10 @@
 hello: Hello %name%
+header:
+  help: Help
+  callUs: CALL US ON %phone%
+  stores: STORES
+  nav:
+    new: New
+    sale: Sale
 error:
   not_found: The requested page could not be found.

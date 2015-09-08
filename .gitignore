@@ -7,3 +7,4 @@ target
 composer.phar
 cache
 node_modules
+app.yaml
