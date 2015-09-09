@@ -33,7 +33,7 @@
       "type": "package",
       "package": {
         "name": "commercetools/sunrise-design",
-        "version": "0.9.1",
+        "version": "0.9.2",
         "source": {
           "url": "https://github.com/sphereio/sphere-sunrise-design",
           "type": "git",
@@ -52,11 +52,11 @@
   ],
   "scripts": {
     "post-update-cmd": [
-      "cp -rf vendor/commercetools/sunrise-design/assets web/assets",
+      "cp -rf vendor/commercetools/sunrise-design/assets web/",
       "app/console.php compile"
     ],
     "post-install-cmd": [
-      "cp -rf vendor/commercetools/sunrise-design/assets web/assets",
+      "cp -rf vendor/commercetools/sunrise-design/assets web/",
       "app/console.php compile"
     ]
   }

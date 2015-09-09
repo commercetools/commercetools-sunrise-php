@@ -14,6 +14,9 @@ class Collection implements ArraySerializable
 
     public function toArray()
     {
+        if (count($this->data) == 0) {
+            return [];
+        }
         return array_map(
             function ($value) { if ($value instanceof ArraySerializable) { return $value->toArray(); } return $value; },
             $this->data

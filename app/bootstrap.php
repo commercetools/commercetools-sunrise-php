@@ -164,6 +164,7 @@ $app['catalog.controller'] = function () use ($app) {
         $locale,
         $app['view'],
         $app['url_generator'],
+        $app['cache'],
         $app['translator'],
         $app['config']['sunrise']
     );
@@ -183,8 +184,9 @@ $app->get('/{_locale}/search', 'catalog.controller:search')
 $app->get('/{_locale}/{slug}.html', 'catalog.controller:detail')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('pdp');
-$app->get('/{_locale}/{category1}', 'catalog.controller:search')
-    ->assert('_locale', LOCALE_PATTERN);
+$app->get('/{_locale}/{category}', 'catalog.controller:search')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('category');
 
 // location redirects for trailing slashes
 $app->get('/{_locale}/', function(Application $app) {

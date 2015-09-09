@@ -6,6 +6,12 @@
 namespace Commercetools\Sunrise\Controller;
 
 
+use Commercetools\Commons\Helper\QueryHelper;
+use Commercetools\Core\Cache\CacheAdapterInterface;
+use Commercetools\Core\Client;
+use Commercetools\Core\Model\Category\Category;
+use Commercetools\Core\Model\Category\CategoryCollection;
+use Commercetools\Core\Request\Categories\CategoryQueryRequest;
 use Commercetools\Sunrise\Model\Collection;
 use Commercetools\Sunrise\Model\View\Header;
 use Commercetools\Sunrise\Model\View\Tree;
@@ -17,6 +23,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class SunriseController
 {
+    const CACHE_TTL = 3600;
     /**
      * @var TemplateService
      */
@@ -35,17 +42,47 @@ class SunriseController
      */
     protected $config;
 
+    /**
+     * @var CacheAdapterInterface
+     */
+    protected $cache;
+
+    /**
+     * @var Client
+     */
+    protected $client;
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
     public function __construct(
+        Client $client,
+        $locale,
         TemplateService $view,
         UrlGenerator $generator,
+        CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         $config
     )
     {
+        $this->locale = $locale;
         $this->view = $view;
         $this->generator = $generator;
         $this->translator = $translator;
         $this->config = $config;
+        $this->cache = $cache;
+        $this->client = $client;
+    }
+
+    protected function getViewData($title)
+    {
+        $viewData = new ViewData();
+        $viewData->header = $this->getHeaderViewData($title);
+        $viewData->meta = $this->getMeta();
+
+        return $viewData;
     }
 
     protected function getHeaderViewData($title)
@@ -77,105 +114,99 @@ class SunriseController
         $header->user->isLoggedIn = false;
         $header->user->signIn = new Url('Login', '');
         $header->miniCart = new Url('MiniCart', '');
-        $header->navMenu = new ViewData();
-        $header->navMenu->new = new Url($this->trans('header.nav.new'), '');
-        $header->navMenu->sale = new Url($this->trans('header.nav.sale'), '');
+        $header->navMenu = $this->getNavMenu();
 
-        $womenCategory = new Tree('Women', '');
-        $categoriesSubTree1 = new Tree('Women', '');
-        $categoriesSubTree1->addNode(new Url('Basic example', ''));
-        $categoriesSubTree1->addNode(new Url('Button toolbar', ''));
-        $categoriesSubTree1->addNode(new Url('Sizing', ''));
-        $categoriesSubTree1->addNode(new Url('Nesting', ''));
-        $categoriesSubTree1->addNode(new Url('Vertical variation', ''));
+        return $header;
+    }
 
-        $categoriesSubTree2 = new Tree('Glasses', '');
-        $categoriesSubTree2->addNode(new Url('Lorem', ''));
-        $categoriesSubTree2->addNode(new Url('Ipsum', ''));
+    protected function getNavMenu()
+    {
+        $navMenu = new ViewData();
 
-        $categoriesSubTree3 = new Tree('Women', '');
-        $categoriesSubTree3->addNode(new Url('Basic example', ''));
-        $categoriesSubTree3->addNode(new Url('Button toolbar', ''));
-        $categoriesSubTree3->addNode(new Url('Sizing', ''));
-        $categoriesSubTree3->addNode(new Url('Nesting', ''));
-        $categoriesSubTree3->addNode(new Url('Vertical variation', ''));
+        $cacheKey = 'category-menu';
+        if ($this->cache->has($cacheKey)) {
+            $categoryMenu = unserialize($this->cache->fetch($cacheKey));
+        } else {
+            $categories = $this->getCategories();
+            $categoryMenu = new Collection();
+            foreach ($categories->getRoots() as $root) {
+                /**
+                 * @var Category $root
+                 */
+                $menuEntry = new Tree(
+                    (string)$root->getName(), $this->getLinkFor('category', ['category' => $root->getSlug()])
+                );
 
-        $categoriesSubTree4 = new Tree('Glasses', '');
-        $categoriesSubTree4->addNode(new Url('Lorem', ''));
-        $categoriesSubTree4->addNode(new Url('Ipsum', ''));
+                foreach ($categories->getByParent($root->getId()) as $children) {
+                    /**
+                     * @var Category $children
+                     */
+                    $childrenEntry = new Tree(
+                        (string)$children->getName(),
+                        $this->getLinkFor('category', ['category' => $children->getSlug()])
+                    );
 
+                    foreach ($categories->getByParent($children->getId()) as $subChild) {
+                        /**
+                         * @var Category $subChild
+                         */
+                        $childrenSubEntry = new Url(
+                            (string)$subChild->getName(),
+                            $this->getLinkFor('category', ['category' => $subChild->getSlug()])
+                        );
+                        $childrenEntry->addNode($childrenSubEntry);
+                    }
+                    $menuEntry->addNode($childrenEntry);
+                }
+                $categoryMenu->add($menuEntry);
+            }
+            $categoryMenu = $categoryMenu->toArray();
+            $this->cache->store($cacheKey, serialize($categoryMenu), static::CACHE_TTL);
+        }
+        $navMenu->categories = $categoryMenu;
 
-        $womenCategory->addNode($categoriesSubTree1);
-        $womenCategory->addNode($categoriesSubTree2);
-        $womenCategory->addNode($categoriesSubTree3);
-        $womenCategory->addNode($categoriesSubTree4);
+        return $navMenu;
+    }
 
-        $menCategory = new Tree('Men', '');
-        $categoriesSubTree1 = new Tree('Men', '');
-        $categoriesSubTree1->addNode(new Url('Basic example', ''));
-        $categoriesSubTree1->addNode(new Url('Button toolbar', ''));
-        $categoriesSubTree1->addNode(new Url('Sizing', ''));
-        $categoriesSubTree1->addNode(new Url('Nesting', ''));
-        $categoriesSubTree1->addNode(new Url('Vertical variation', ''));
+    protected function getMeta()
+    {
+        $meta = new ViewData();
+        $meta->assetsPath = $this->config['assetsPath'];
 
-        $categoriesSubTree2 = new Tree('Glasses', '');
-        $categoriesSubTree2->addNode(new Url('Lorem', ''));
-        $categoriesSubTree2->addNode(new Url('Very long navigation item', ''));
-        $categoriesSubTree2->addNode(new Url('Very long navigation items will be truncated', ''));
-        $categoriesSubTree2->addNode(new Url('Button toolbar', ''));
-        $categoriesSubTree2->addNode(new Url('Sizing', ''));
-        $categoriesSubTree2->addNode(new Url('Nesting', ''));
-        $categoriesSubTree2->addNode(new Url('Very long navigation items will be truncated', ''));
-        $categoriesSubTree2->addNode(new Url('Very long navigation item', ''));
-
-        $categoriesSubTree3 = new Tree('Men', '');
-        $categoriesSubTree3->addNode(new Url('Basic example', ''));
-        $categoriesSubTree3->addNode(new Url('Button toolbar', ''));
-        $categoriesSubTree3->addNode(new Url('Sizing', ''));
-        $categoriesSubTree3->addNode(new Url('Nesting', ''));
-        $categoriesSubTree3->addNode(new Url('Very long navigation items will be truncated', ''));
-
-        $categoriesSubTree4 = new Tree('Glasses', '');
-        $categoriesSubTree4->addNode(new Url('Lorem', ''));
-        $categoriesSubTree4->addNode(new Url('Very long navigation item', ''));
-        $categoriesSubTree4->addNode(new Url('Very long navigation items will be truncated', ''));
-        $categoriesSubTree4->addNode(new Url('Button toolbar', ''));
-        $categoriesSubTree4->addNode(new Url('Sizing', ''));
-        $categoriesSubTree4->addNode(new Url('Nesting', ''));
-        $categoriesSubTree4->addNode(new Url('Very long navigation items will be truncated', ''));
-        $categoriesSubTree4->addNode(new Url('Very long navigation item', ''));
-
-
-        $menCategory->addNode($categoriesSubTree1);
-        $menCategory->addNode($categoriesSubTree2);
-        $menCategory->addNode($categoriesSubTree3);
-        $menCategory->addNode($categoriesSubTree4);
-
-        $header->navMenu->categories = new Collection();
-        $header->navMenu->categories->add($womenCategory);
-        $header->navMenu->categories->add($menCategory);
-
-        $brands = new Tree('Brands', '');
-        $brandsSubTree1 = new Tree('Brands', '');
-        $brandsSubTree1->addNode(new Url('Basic example', ''));
-        $brandsSubTree1->addNode(new Url('Button toolbar', ''));
-        $brandsSubTree1->addNode(new Url('Sizing', ''));
-        $brandsSubTree1->addNode(new Url('Nesting', ''));
-        $brandsSubTree1->addNode(new Url('Vertical variation', ''));
-
-        $brandsSubTree2 = new Tree('Glasses', '');
-        $brandsSubTree2->addNode(new Url('Lorem', ''));
-        $brandsSubTree2->addNode(new Url('Ipsum', ''));
-        $brands->addNode($brandsSubTree1);
-        $brands->addNode($brandsSubTree2);
-
-        $header->navMenu->brands = $brands;
-
-        return ['header' => $header->toArray()];
+        return $meta;
     }
 
     protected function trans($id, $parameters = [], $domain = null, $locale = null)
     {
         return $this->translator->trans($id, $parameters, $domain, $locale);
+    }
+
+    /**
+     * @return CategoryCollection
+     */
+    protected function getCategories()
+    {
+        $cacheKey = 'categories';
+
+        $this->cache->remove($cacheKey);
+        $categoryData = [];
+        if ($this->cache->has($cacheKey)) {
+            $cachedCategories = $this->cache->fetch($cacheKey);
+            if (!empty($cachedCategories)) {
+                $categoryData = $cachedCategories;
+            }
+            $categories = CategoryCollection::fromArray($categoryData, $this->client->getConfig()->getContext());
+        } else {
+            $helper = new QueryHelper();
+            $categories = $helper->getAll($this->client, CategoryQueryRequest::of());
+            $this->cache->store($cacheKey, $categories->toArray(), static::CACHE_TTL);
+        }
+
+        return $categories;
+    }
+
+    protected function getLinkFor($site, $params)
+    {
+        return $this->generator->generate($site, $params);
     }
 }

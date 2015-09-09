@@ -5,45 +5,21 @@
 
 namespace Commercetools\Sunrise\Controller;
 
-use Commercetools\Commons\Helper\QueryHelper;
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
-use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Model\Product\Filter;
 use Commercetools\Core\Model\Product\ProductProjection;
-use Commercetools\Core\Request\Categories\CategoryQueryRequest;
 use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
 use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
-use Commercetools\Sunrise\Template\TemplateService;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class CatalogController extends SunriseController
 {
     const SLUG_SKU_SEPARATOR = '--';
 
-    protected $client;
-    protected $locale;
-
-    public function __construct(
-        Client $client,
-        $locale,
-        TemplateService $view,
-        UrlGenerator $generator,
-        TranslatorInterface $translator,
-        $config
-    )
-    {
-        parent::__construct($view, $generator, $translator, $config);
-        $this->view = $view;
-        $this->client = $client;
-        $this->generator = $generator;
-        $this->locale = $locale;
-    }
 
     public function home(Request $request)
     {
@@ -52,10 +28,12 @@ class CatalogController extends SunriseController
             file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/home.json'),
             true
         );
-        $viewData['meta']['assetsPath'] = '/' . $viewData['meta']['assetsPath'];
+        foreach ($viewData['content']['wishlistWidged']['list'] as &$wish) {
+            $wish['image'] = '/' . $wish['image'];
+        }
         $viewData = array_merge(
             $viewData,
-            $this->getHeaderViewData('Sunrise - Homeblabla')
+            $this->getViewData('Sunrise - Home')->toArray()
         );
         // @ToDo remove when cucumber tests are working correctly
         //array_unshift($viewData['header']['navMenu']['categories'], ['text' => 'Sunrise Home']);
@@ -70,7 +48,16 @@ class CatalogController extends SunriseController
             file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pop.json'),
             true
         );
-        $viewData['meta']['assetsPath'] = '/' . $viewData['meta']['assetsPath'];
+        $viewData['content']['banner']['imageMobile'] = '/' . $viewData['content']['banner']['imageMobile'];
+        $viewData['content']['banner']['imageDesktop'] = '/' . $viewData['content']['banner']['imageDesktop'];
+        foreach ($viewData['content']['wishlistWidged']['list'] as &$wish) {
+            $wish['image'] = '/' . $wish['image'];
+        }
+
+        $viewData = array_merge(
+            $viewData,
+            $this->getViewData('Sunrise - Product Overview Page')->toArray()
+        );
         $viewData['content']['products']['list'] = [];
         foreach ($products as $key => $product) {
             $price = $product->getMasterVariant()->getPrices()->getAt(0)->getValue();
@@ -91,7 +78,7 @@ class CatalogController extends SunriseController
             ];
             foreach ($product->getMasterVariant()->getImages() as $image) {
                 $productData['images'][] = [
-                    'thumbImage' => $image->getThumb() ? :'http://placehold.it/200x200',
+                    'thumbImage' => $image->getUrl() ? :'http://placehold.it/200x200',
                     'bigImage' => $image->getUrl() ? :'http://placehold.it/200x200'
                 ];
             }
@@ -113,9 +100,15 @@ class CatalogController extends SunriseController
             file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pdp.json'),
             true
         );
-        $viewData['meta']['assetsPath'] = '/' . $viewData['meta']['assetsPath'];
+        foreach ($viewData['content']['wishlistWidged']['list'] as &$wish) {
+            $wish['image'] = '/' . $wish['image'];
+        }
+        $viewData = array_merge(
+            $viewData,
+            $this->getViewData('Sunrise - Product Detail Page')->toArray()
+        );
 
-        $productUrl = $this->generator->generate(
+        $productUrl = $this->getLinkFor(
             'pdp',
             ['slug' => $this->prepareSlug((string)$product->getSlug(), $product->getMasterVariant()->getSku())]
         );
@@ -164,40 +157,6 @@ class CatalogController extends SunriseController
 
     }
 
-    /**
-     * @param $app
-     * @return CategoryCollection
-     */
-    protected function getCategories($app)
-    {
-        /**
-         * @var Client $client
-         */
-        $client = $app['client'];
-        /**
-         * @var CacheAdapterInterface $cache
-         */
-        $cache = $app['cache'];
-
-        $cacheKey = 'categories';
-
-//        $cache->remove($cacheKey);
-        $categoryData = [];
-        if ($cache->has($cacheKey)) {
-            $cachedCategories = $cache->fetch($cacheKey);
-            if (!empty($cachedCategories)) {
-                $categoryData = $cachedCategories;
-            }
-            $categories = CategoryCollection::fromArray($categoryData, $client->getConfig()->getContext());
-        } else {
-            $helper = new QueryHelper();
-            $categories = $helper->getAll($client, CategoryQueryRequest::of());
-            $cache->store($cacheKey, $categories->toArray(), 3600);
-        }
-
-        return $categories;
-    }
-
     protected function splitSlug($slug)
     {
         return explode(static::SLUG_SKU_SEPARATOR, $slug);
@@ -215,32 +174,24 @@ class CatalogController extends SunriseController
 
     protected function getProductBySlug($slug, $app)
     {
-        /**
-         * @var Client $client
-         */
-        $client = $app['client'];
-        /**
-         * @var CacheAdapterInterface $cache
-         */
-        $cache = $app['cache'];
         $cacheKey = 'product-'. $slug;
 
-        if ($cache->has($cacheKey)) {
-            $cachedProduct = $cache->fetch($cacheKey);
+        if ($this->cache->has($cacheKey)) {
+            $cachedProduct = $this->cache->fetch($cacheKey);
             if (empty($cachedProduct)) {
                 throw new NotFoundHttpException("product $slug does not exist.");
             }
-            $product = ProductProjection::fromArray(current($cachedProduct['results']), $client->getConfig()->getContext());
+            $product = ProductProjection::fromArray(current($cachedProduct['results']), $this->client->getConfig()->getContext());
         } else {
-            $productRequest = ProductProjectionBySlugGetRequest::ofSlugAndContext($slug, $client->getConfig()->getContext());
-            $response = $productRequest->executeWithClient($client);
+            $productRequest = ProductProjectionBySlugGetRequest::ofSlugAndContext($slug, $this->client->getConfig()->getContext());
+            $response = $productRequest->executeWithClient($this->client);
 
             if ($response->isError() || is_null($response->toObject())) {
-                $cache->store($cacheKey, '', 3600);
+                $this->cache->store($cacheKey, '', 3600);
                 throw new NotFoundHttpException("product $slug does not exist.");
             }
             $product = $productRequest->mapResponse($response);
-            $cache->store($cacheKey, $response->toArray(), 3600);
+            $this->cache->store($cacheKey, $response->toArray(), static::CACHE_TTL);
         }
         return $product;
     }
