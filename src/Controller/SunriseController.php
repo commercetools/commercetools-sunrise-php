@@ -80,8 +80,9 @@ class SunriseController
     {
         $viewData = new ViewData();
         $viewData->header = $this->getHeaderViewData($title);
-        $viewData->meta = $this->getMeta();
-
+        $viewData->meta = $this->getMetaData();
+        $viewData->footer = $this->getFooterData();
+        $viewData->seo = $this->getSeoData();
         return $viewData;
     }
 
@@ -168,12 +169,69 @@ class SunriseController
         return $navMenu;
     }
 
-    protected function getMeta()
+    protected function getMetaData()
     {
         $meta = new ViewData();
         $meta->assetsPath = $this->config['assetsPath'];
 
         return $meta;
+    }
+
+    protected function getFooterData()
+    {
+        $footer = new ViewData();
+        $footer->paySecure = $this->trans('footer.paySecure');
+        $footer->followUs = $this->trans('footer.followUs');
+        $footer->newsletter = new Url($this->trans('footer.newsletter.text'), '');
+        $footer->newsletter->textAlt = $this->trans('footer.newsletter.textAlt');
+        $footer->newsletter->placeHolder = $this->trans('footer.newsletter.placeHolder');
+        $footer->newsletter->inputId = 'pop-newsletter-input';
+        $footer->newsletter->buttonId = 'pop-newsletter-button';
+
+        $footer->customerCare = new ViewData();
+        $footer->customerCare->text = $this->trans('footer.customerCare.text');
+        $ccList = new Collection();
+        $ccList->add(new Url($this->trans('footer.customerCare.contactUs'),''));
+        $ccList->add(new Url($this->trans('footer.customerCare.help'),''));
+        $ccList->add(new Url($this->trans('footer.customerCare.shipping'),''));
+        $ccList->add(new Url($this->trans('footer.customerCare.returns'),''));
+        $ccList->add(new Url($this->trans('footer.customerCare.sizeGuide'),''));
+        $footer->customerCare->list = $ccList;
+
+        $footer->aboutUs = new ViewData();
+        $footer->aboutUs->text = $this->trans('footer.aboutUs.text');
+        $aboutUsList = new Collection();
+        $aboutUsList->add(new Url($this->trans('footer.aboutUs.ourStory'),''));
+        $aboutUsList->add(new Url($this->trans('footer.aboutUs.careers'),''));
+        $footer->aboutUs->list = $aboutUsList;
+
+        $footer->shortcuts = new ViewData();
+        $footer->shortcuts->text = $this->trans('footer.shortcuts.text');
+        $shortcutsList = new Collection();
+        $shortcutsList->add(new Url($this->trans('footer.shortcuts.myAccount'),''));
+        $shortcutsList->add(new Url($this->trans('footer.shortcuts.stores'),''));
+        $shortcutsList->add(new Url($this->trans('footer.shortcuts.giftCards'),''));
+        $shortcutsList->add(new Url($this->trans('footer.shortcuts.payment'),''));
+        $footer->shortcuts->list = $shortcutsList;
+
+        $footer->legalInfo = new ViewData();
+        $footer->legalInfo->text = $this->trans('footer.legalInfo.text');
+        $legalInfoList = new Collection();
+        $legalInfoList->add(new Url($this->trans('footer.legalInfo.imprint'),''));
+        $legalInfoList->add(new Url($this->trans('footer.legalInfo.privacy'),''));
+        $legalInfoList->add(new Url($this->trans('footer.legalInfo.terms'),''));
+        $footer->legalInfo->list = $legalInfoList;
+
+        return $footer;
+    }
+
+    protected function getSeoData()
+    {
+        $seo = new ViewData();
+        $seo->text = $this->trans('seo.text');
+        $seo->description = $this->trans('seo.description');
+
+        return $seo;
     }
 
     protected function trans($id, $parameters = [], $domain = null, $locale = null)

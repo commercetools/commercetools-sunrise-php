@@ -108,18 +108,19 @@ class CatalogController extends SunriseController
             $this->getViewData('Sunrise - Product Detail Page')->toArray()
         );
 
+        $productVariant = $product->getVariantBySku($sku);
         $productUrl = $this->getLinkFor(
             'pdp',
-            ['slug' => $this->prepareSlug((string)$product->getSlug(), $product->getMasterVariant()->getSku())]
+            ['slug' => $this->prepareSlug((string)$product->getSlug(), $productVariant->getSku())]
         );
         $productData = [
             'id' => $product->getId(),
             'text' => (string)$product->getName(),
             'description' => (string)$product->getDescription(),
             'url' => $productUrl,
-            'imageUrl' => (string)$product->getMasterVariant()->getImages()->getAt(0)->getUrl(),
+            'imageUrl' => (string)$productVariant->getImages()->getAt(0)->getUrl(),
         ];
-        foreach ($product->getMasterVariant()->getImages() as $image) {
+        foreach ($productVariant->getImages() as $image) {
             $productData['images'][] = [
                 'thumbImage' => $image->getUrl(),
                 'bigImage' => $image->getUrl()

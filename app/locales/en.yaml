@@ -6,5 +6,37 @@ header:
   nav:
     new: New
     sale: Sale
+footer:
+  paySecure: Pay securely with these payment methods
+  followUs: Follow us
+  newsletter:
+    text: Join our newsletter
+    textAlt: Subscribe
+    placeholder: Your email ...
+  customerCare:
+    text: Customer Care
+    contactUs: Contact us
+    help: Help
+    shipping: Shipping
+    returns: Returns
+    sizeGuide: Size Guide
+  aboutUs:
+    text: Customer Care
+    ourStory: Our Story
+    careers: Careers
+  shortcuts:
+    text: Shortcuts
+    myAccount: My Account
+    stores: stores
+    giftCards: Gift Cards
+    payment: Payment
+  legalInfo:
+    text: © 2015 Sunrise
+    imprint: Imprint
+    privacy: Privacy Policy
+    terms: Terms of Use
+seo:
+  text: SEO TEXT AREA
+  description: SEO Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
 error:
   not_found: The requested page could not be found.
