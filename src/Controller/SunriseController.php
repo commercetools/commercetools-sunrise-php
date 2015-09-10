@@ -13,6 +13,7 @@ use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Request\Categories\CategoryQueryRequest;
 use Commercetools\Core\Response\PagedQueryResponse;
+use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use Commercetools\Sunrise\Model\View\Header;
 use Commercetools\Sunrise\Model\View\Tree;
@@ -40,7 +41,7 @@ class SunriseController
     protected $translator;
 
     /**
-     * @var array
+     * @var Config
      */
     protected $config;
 
@@ -66,7 +67,7 @@ class SunriseController
         UrlGenerator $generator,
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
-        $config
+        Config $config
     )
     {
         $this->locale = $locale;
@@ -94,25 +95,28 @@ class SunriseController
         $header->stores = new Url($this->trans('header.stores'), '');
         $header->help = new Url($this->trans('header.help'), '');
         $header->callUs = new Url(
-            $this->trans('header.callUs', ['%phone%' => $this->config['header']['callUs']]),
+            $this->trans('header.callUs', ['%phone%' => $this->config['sunrise.header.callUs']]),
             ''
         );
-        $header->location = [
-            'language' => [
-                [
-                    'text' => 'German',
-                    'value' => '',
-                    'selected' => true
-                ]
-            ],
-            'country' => [
-                [
-                    'text' => 'Germany',
-                    'value' => '',
-                    'selected' => true
-                ]
-            ]
-        ];
+        $header->location = new ViewData();
+        $languages = new ViewDataCollection();
+        foreach ($this->config['default.languages'] as $language) {
+            $languageEntry = new ViewData();
+            $languageEntry->text = $this->trans('header.languages.' . $language);
+            $languageEntry->value = $language;
+            $languages->add($languageEntry);
+        }
+        $header->location->language = $languages;
+
+        $countries = new ViewDataCollection();
+        foreach ($this->config['default.countries'] as $country) {
+            $countryEntry = new ViewData();
+            $countryEntry->text = $this->trans('header.countries.' . $country);
+            $countryEntry->value = $country;
+            $countries->add($countryEntry);
+        }
+
+        $header->location->country = $countries;
         $header->user = new ViewData();
         $header->user->isLoggedIn = false;
         $header->user->signIn = new Url('Login', '');
@@ -174,7 +178,7 @@ class SunriseController
     protected function getMetaData()
     {
         $meta = new ViewData();
-        $meta->assetsPath = $this->config['assetsPath'];
+        $meta->assetsPath = $this->config['sunrise.assetsPath'];
 
         return $meta;
     }

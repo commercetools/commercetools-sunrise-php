@@ -166,7 +166,7 @@ $app['catalog.controller'] = function () use ($app) {
         $app['url_generator'],
         $app['cache'],
         $app['translator'],
-        $app['config']['sunrise']
+        $app['config']
     );
 };
 

@@ -6,6 +6,12 @@ header:
   nav:
     new: New
     sale: Sale
+  languages:
+    de: German
+    en: English
+  countries:
+    DE: Germany
+    UK: United Kingdom
 footer:
   paySecure: Pay securely with these payment methods
   followUs: Follow us

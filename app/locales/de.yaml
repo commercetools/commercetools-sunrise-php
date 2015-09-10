@@ -1,3 +1,16 @@
 hello: Hallo %name%
+header:
+  help: Help
+  callUs: CALL US ON %phone%
+  stores: STORES
+  nav:
+    new: New
+    sale: Sale
+  languages:
+    de: Deutsch
+    en: Englisch
+  countries:
+    DE: Deutschland
+    UK: Großbritannien
 error:
   not_found: Die angeforderte Seite konnte nicht gefunden werden.
