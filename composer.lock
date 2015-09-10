@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "672fae362c9a1b6cb36439df9ea04e71",
+    "hash": "55fa5efe9d887e42b6b2a0aad0197fa6",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -112,16 +112,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "dev-release/v1.0.0-RC3",
+            "version": "v1.0.0-RC3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "b5f4e32ff6f96642a5ba8617b994e6f9d8d03e9b"
+                "reference": "791ccfbb5e66916387f3904fc10b73022abfcc88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/b5f4e32ff6f96642a5ba8617b994e6f9d8d03e9b",
-                "reference": "b5f4e32ff6f96642a5ba8617b994e6f9d8d03e9b",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/791ccfbb5e66916387f3904fc10b73022abfcc88",
+                "reference": "791ccfbb5e66916387f3904fc10b73022abfcc88",
                 "shasum": ""
             },
             "require": {
@@ -160,7 +160,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-09-09 08:33:40"
+            "time": "2015-09-10 09:47:37"
         },
         {
             "name": "commercetools/sunrise-design",
@@ -2183,7 +2183,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/php-sdk": 20,
+        "commercetools/php-sdk": 10,
         "commercetools/commons": 20,
         "silex/silex": 20,
         "commercetools/sunrise-scenarios": 20,

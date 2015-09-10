@@ -23,7 +23,6 @@ class CatalogController extends SunriseController
 
     public function home(Request $request)
     {
-        //var_dump($this->getHeaderViewData('home'));
         $viewData = json_decode(
             file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/home.json'),
             true
@@ -57,6 +56,7 @@ class CatalogController extends SunriseController
             $this->getViewData('Sunrise - Product Overview Page')->toArray()
         );
         $viewData = $this->getViewData('Sunrise - Product Overview Page');
+
         $viewData->content = new ViewData();
         $viewData->content->text = "Women";
         $viewData->content->banner = new ViewData();

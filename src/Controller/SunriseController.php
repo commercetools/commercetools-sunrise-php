@@ -278,6 +278,6 @@ class SunriseController
     {
         $page = floor($response->getOffset() / max(1,$response->getCount())) + 1;
         $maxPage = floor($response->getTotal() / max(1, $response->getCount()));
-        var_dump($page, $maxPage);
+        //var_dump($page, $maxPage);
     }
 }
