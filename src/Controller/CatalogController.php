@@ -41,20 +41,6 @@ class CatalogController extends SunriseController
     {
         $products = $this->getProducts($request);
 
-        $viewData = json_decode(
-            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pop.json'),
-            true
-        );
-        $viewData['content']['banner']['imageMobile'] = '/' . $viewData['content']['banner']['imageMobile'];
-        $viewData['content']['banner']['imageDesktop'] = '/' . $viewData['content']['banner']['imageDesktop'];
-        foreach ($viewData['content']['wishlistWidged']['list'] as &$wish) {
-            $wish['image'] = '/' . $wish['image'];
-        }
-
-        $viewData = array_merge(
-            $viewData,
-            $this->getViewData('Sunrise - Product Overview Page')->toArray()
-        );
         $viewData = $this->getViewData('Sunrise - Product Overview Page');
 
         $viewData->content = new ViewData();
