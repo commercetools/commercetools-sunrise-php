@@ -5,14 +5,14 @@
 
 namespace Commercetools\Sunrise\Controller;
 
-use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Product\Filter;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
 use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
-use Silex\Application;
+use Commercetools\Sunrise\Model\ViewData;
+use Commercetools\Sunrise\Model\ViewDataCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -35,14 +35,12 @@ class CatalogController extends SunriseController
             $viewData,
             $this->getViewData('Sunrise - Home')->toArray()
         );
-        // @ToDo remove when cucumber tests are working correctly
-        //array_unshift($viewData['header']['navMenu']['categories'], ['text' => 'Sunrise Home']);
         return $this->view->render('home', $viewData);
     }
 
-    public function search(Request $request, Application $app)
+    public function search(Request $request)
     {
-        $products = $this->getProducts($request, $app);
+        $products = $this->getProducts($request);
 
         $viewData = json_decode(
             file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pop.json'),
@@ -58,7 +56,17 @@ class CatalogController extends SunriseController
             $viewData,
             $this->getViewData('Sunrise - Product Overview Page')->toArray()
         );
-        $viewData['content']['products']['list'] = [];
+        $viewData = $this->getViewData('Sunrise - Product Overview Page');
+        $viewData->content = new ViewData();
+        $viewData->content->text = "Women";
+        $viewData->content->banner = new ViewData();
+        $viewData->content->banner->text = "Women";
+        $viewData->content->banner->description = "Lorem dolor deserunt debitis voluptatibus odio id animi voluptates alias eum adipisci laudantium iusto totam quibusdam modi quo! Consectetur.";
+        $viewData->content->banner->imageMobile = "/assets/img/banner_mobile.jpg";
+        $viewData->content->banner->imageDesktop = "/assets/img/banner_desktop.jpg";
+        $viewData->jumboTron = new ViewData();
+        $viewData->content->products = new ViewData();
+        $viewData->content->products->list = new ViewDataCollection();
         foreach ($products as $key => $product) {
             $price = $product->getMasterVariant()->getPrices()->getAt(0)->getValue();
             $productUrl = $this->generator->generate(
@@ -82,19 +90,19 @@ class CatalogController extends SunriseController
                     'bigImage' => $image->getUrl() ? :'http://placehold.it/200x200'
                 ];
             }
-            $viewData['content']['products']['list'][] = $productData;
+            $viewData->content->products->list->add($productData);
         }
         /**
          * @var callable $renderer
          */
-        $html = $this->view->render('product-overview', $viewData);
+        $html = $this->view->render('product-overview', $viewData->toArray());
         return $html;
     }
 
-    public function detail(Request $request, Application $app)
+    public function detail(Request $request)
     {
         list($slug, $sku) = $this->splitSlug($request->get('slug'));
-        $product = $this->getProductBySlug($slug, $app);
+        $product = $this->getProductBySlug($slug);
 
         $viewData = json_decode(
             file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pdp.json'),
@@ -133,13 +141,13 @@ class CatalogController extends SunriseController
         return $this->view->render('product-detail', $viewData);
     }
 
-    protected function getProducts(Request $request, Application $app)
+    protected function getProducts(Request $request)
     {
-        $searchRequest = ProductProjectionSearchRequest::of();
-        $categories = $this->getCategories($app);
+        $searchRequest = ProductProjectionSearchRequest::of()->limit(static::ITEMS_PER_PAGE);
+        $categories = $this->getCategories();
 
         if ($category = $request->get('category')) {
-            $category = $categories->getBySlug($category, $app['locale']);
+            $category = $categories->getBySlug($category, $this->locale);
             if ($category instanceof Category) {
                 $searchRequest->addFilter(
                     Filter::of()->setName('categories.id')->setValue($category->getId())
@@ -149,13 +157,8 @@ class CatalogController extends SunriseController
 
         $response = $searchRequest->executeWithClient($this->client);
         $products = $searchRequest->mapResponse($response);
-
+        $this->getPagination($response);
         return $products;
-    }
-
-    protected function getSlug(Request $slug)
-    {
-
     }
 
     protected function splitSlug($slug)
@@ -173,7 +176,7 @@ class CatalogController extends SunriseController
 
     }
 
-    protected function getProductBySlug($slug, $app)
+    protected function getProductBySlug($slug)
     {
         $cacheKey = 'product-'. $slug;
 

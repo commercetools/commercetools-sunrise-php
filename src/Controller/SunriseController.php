@@ -12,7 +12,8 @@ use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Request\Categories\CategoryQueryRequest;
-use Commercetools\Sunrise\Model\Collection;
+use Commercetools\Core\Response\PagedQueryResponse;
+use Commercetools\Sunrise\Model\ViewDataCollection;
 use Commercetools\Sunrise\Model\View\Header;
 use Commercetools\Sunrise\Model\View\Tree;
 use Commercetools\Sunrise\Model\View\Url;
@@ -23,6 +24,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class SunriseController
 {
+    const ITEMS_PER_PAGE = 12;
     const CACHE_TTL = 3600;
     /**
      * @var TemplateService
@@ -129,7 +131,7 @@ class SunriseController
             $categoryMenu = unserialize($this->cache->fetch($cacheKey));
         } else {
             $categories = $this->getCategories();
-            $categoryMenu = new Collection();
+            $categoryMenu = new ViewDataCollection();
             foreach ($categories->getRoots() as $root) {
                 /**
                  * @var Category $root
@@ -190,7 +192,7 @@ class SunriseController
 
         $footer->customerCare = new ViewData();
         $footer->customerCare->text = $this->trans('footer.customerCare.text');
-        $ccList = new Collection();
+        $ccList = new ViewDataCollection();
         $ccList->add(new Url($this->trans('footer.customerCare.contactUs'),''));
         $ccList->add(new Url($this->trans('footer.customerCare.help'),''));
         $ccList->add(new Url($this->trans('footer.customerCare.shipping'),''));
@@ -200,14 +202,14 @@ class SunriseController
 
         $footer->aboutUs = new ViewData();
         $footer->aboutUs->text = $this->trans('footer.aboutUs.text');
-        $aboutUsList = new Collection();
+        $aboutUsList = new ViewDataCollection();
         $aboutUsList->add(new Url($this->trans('footer.aboutUs.ourStory'),''));
         $aboutUsList->add(new Url($this->trans('footer.aboutUs.careers'),''));
         $footer->aboutUs->list = $aboutUsList;
 
         $footer->shortcuts = new ViewData();
         $footer->shortcuts->text = $this->trans('footer.shortcuts.text');
-        $shortcutsList = new Collection();
+        $shortcutsList = new ViewDataCollection();
         $shortcutsList->add(new Url($this->trans('footer.shortcuts.myAccount'),''));
         $shortcutsList->add(new Url($this->trans('footer.shortcuts.stores'),''));
         $shortcutsList->add(new Url($this->trans('footer.shortcuts.giftCards'),''));
@@ -216,7 +218,7 @@ class SunriseController
 
         $footer->legalInfo = new ViewData();
         $footer->legalInfo->text = $this->trans('footer.legalInfo.text');
-        $legalInfoList = new Collection();
+        $legalInfoList = new ViewDataCollection();
         $legalInfoList->add(new Url($this->trans('footer.legalInfo.imprint'),''));
         $legalInfoList->add(new Url($this->trans('footer.legalInfo.privacy'),''));
         $legalInfoList->add(new Url($this->trans('footer.legalInfo.terms'),''));
@@ -266,5 +268,12 @@ class SunriseController
     protected function getLinkFor($site, $params)
     {
         return $this->generator->generate($site, $params);
+    }
+
+    protected function getPagination(PagedQueryResponse $response)
+    {
+        $page = floor($response->getOffset() / max(1,$response->getCount())) + 1;
+        $maxPage = floor($response->getTotal() / max(1, $response->getCount()));
+        var_dump($page, $maxPage);
     }
 }

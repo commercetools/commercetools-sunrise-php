@@ -8,7 +8,7 @@ namespace Commercetools\Sunrise\Model;
 
 use Commercetools\Sunrise\Model\View\ArraySerializable;
 
-class Collection implements ArraySerializable
+class ViewDataCollection implements ArraySerializable
 {
     protected $data;
 

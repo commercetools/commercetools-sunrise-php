@@ -558,12 +558,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "a95bd16873c127f62db5cc658b9897256242a18b"
+                "reference": "7b095c09e41b093745e2a841ce4b3524d4dabe52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/a95bd16873c127f62db5cc658b9897256242a18b",
-                "reference": "a95bd16873c127f62db5cc658b9897256242a18b",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/7b095c09e41b093745e2a841ce4b3524d4dabe52",
+                "reference": "7b095c09e41b093745e2a841ce4b3524d4dabe52",
                 "shasum": ""
             },
             "require": {
@@ -633,7 +633,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2015-09-08 08:10:26"
+            "time": "2015-09-09 12:54:20"
         },
         {
             "name": "symfony/config",
@@ -1731,12 +1731,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/sphere-sunrise-scenarios.git",
-                "reference": "9dd844aad06bd6fbaee329f90fe3fd5cae7cb1cd"
+                "reference": "c23224e7f7357eb50dfbf7f6790331c502a938de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-scenarios/zipball/9dd844aad06bd6fbaee329f90fe3fd5cae7cb1cd",
-                "reference": "9dd844aad06bd6fbaee329f90fe3fd5cae7cb1cd",
+                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-scenarios/zipball/c23224e7f7357eb50dfbf7f6790331c502a938de",
+                "reference": "c23224e7f7357eb50dfbf7f6790331c502a938de",
                 "shasum": ""
             },
             "type": "library",
@@ -1755,7 +1755,7 @@
                 "issues": "https://github.com/sphereio/sphere-sunrise-scenarios/issues",
                 "source": "https://github.com/sphereio/sphere-sunrise-scenarios/tree/master"
             },
-            "time": "2015-08-27 13:55:13"
+            "time": "2015-09-10 08:14:20"
         },
         {
             "name": "fabpot/goutte",

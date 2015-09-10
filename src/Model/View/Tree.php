@@ -6,19 +6,19 @@
 namespace Commercetools\Sunrise\Model\View;
 
 
-use Commercetools\Sunrise\Model\Collection;
+use Commercetools\Sunrise\Model\ViewDataCollection;
 
 class Tree extends Url
 {
     /**
-     * @var Collection
+     * @var ViewDataCollection
      */
     protected $children;
 
     public function __construct($text, $url)
     {
         parent::__construct($text, $url);
-        $this->children = new Collection();
+        $this->children = new ViewDataCollection();
     }
 
     public function addNode(Url $url)
