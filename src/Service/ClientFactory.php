@@ -32,11 +32,11 @@ class ClientFactory
         $language = \Locale::getPrimaryLanguage($locale);
         $languages = $fallbackLanguages[$language];
         $context = Context::of()->setLanguages($languages)->setGraceful(true)->setLocale($locale);
-        if (isset($_SERVER['SPHERE_CLIENT_ID'])) {
+        if (getenv('SPHERE_CLIENT_ID')) {
             $config = [
-                'client_id' => $_SERVER['SPHERE_CLIENT_ID'],
-                'client_secret' => $_SERVER['SPHERE_CLIENT_SECRET'],
-                'project' => $_SERVER['SPHERE_PROJECT']
+                'client_id' => getenv('SPHERE_CLIENT_ID'),
+                'client_secret' => getenv('SPHERE_CLIENT_SECRET'),
+                'project' => getenv('SPHERE_PROJECT')
             ];
         } else {
             $config = $clientCredentials;
