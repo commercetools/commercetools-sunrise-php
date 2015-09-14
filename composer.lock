@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "070e145eb9670cc65a4a75f458d54ed8",
+    "hash": "1cab2d860ae8da27c5d9527afca03ade",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -178,12 +178,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/sphere-sunrise-dmexco.git",
-                "reference": "783a1873fe570c645bc8e426ae08995bab670767"
+                "reference": "17e3043f417a7a2c4724b0579ca9a04a4622a286"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-dmexco/zipball/783a1873fe570c645bc8e426ae08995bab670767",
-                "reference": "783a1873fe570c645bc8e426ae08995bab670767",
+                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-dmexco/zipball/17e3043f417a7a2c4724b0579ca9a04a4622a286",
+                "reference": "17e3043f417a7a2c4724b0579ca9a04a4622a286",
                 "shasum": ""
             },
             "type": "library",
@@ -199,7 +199,7 @@
                 "issues": "https://github.com/sphereio/sphere-sunrise-dmexco/issues",
                 "source": "https://github.com/sphereio/sphere-sunrise-dmexco/tree/master"
             },
-            "time": "2015-09-11 12:56:55"
+            "time": "2015-09-14 16:03:33"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -450,16 +450,16 @@
         },
         {
             "name": "pimple/pimple",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "3313af5935dbc560fab845b76a1ca351b47855af"
+                "reference": "a30f7d6e57565a2e1a316e1baf2a483f788b258a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/3313af5935dbc560fab845b76a1ca351b47855af",
-                "reference": "3313af5935dbc560fab845b76a1ca351b47855af",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/a30f7d6e57565a2e1a316e1baf2a483f788b258a",
+                "reference": "a30f7d6e57565a2e1a316e1baf2a483f788b258a",
                 "shasum": ""
             },
             "require": {
@@ -486,13 +486,13 @@
                     "email": "fabien@symfony.com"
                 }
             ],
-            "description": "Pimple is a simple Dependency Injection Container for PHP 5.3",
+            "description": "Pimple, a simple Dependency Injection Container",
             "homepage": "http://pimple.sensiolabs.org",
             "keywords": [
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-07-30 09:57:46"
+            "time": "2015-09-11 15:10:35"
         },
         {
             "name": "psr/http-message",

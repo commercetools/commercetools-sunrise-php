@@ -41,11 +41,14 @@ footer:
     imprint: Imprint
     privacy: Privacy Policy
     terms: Terms of Use
+filter:
+  productCountSeparator: of
+  itemsPerPage: Items per Page
 search:
   sort:
-    new: New
-    price-asc: Price asc
-    price-desc: Price desc
+    new: What's new
+    price-asc: Price low to high
+    price-desc: Price high to low
 seo:
   text: SEO TEXT AREA
   description: SEO Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.

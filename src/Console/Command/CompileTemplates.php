@@ -5,6 +5,7 @@
 
 namespace Commercetools\Sunrise\Console\Command;
 
+use Commercetools\Sunrise\Model\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,9 +49,20 @@ class CompileTemplates extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $projectDir = $this->getApplication()->getService('console.project_directory');
-        $vendorTemplateDir = $projectDir . '/vendor/commercetools/sunrise-design/templates';
-        $templateDir =  $projectDir . '/templates';
-        $outputDir = $projectDir . '/cache/templates';
+        /**
+         * @var Config $config
+         */
+        $config = $this->getApplication()->getService('config');
+
+        $vendorTemplateDir = $projectDir . '/' . $config->get('default.templates.base');
+        $templateDirs = array_map(
+            function ($value) use ($projectDir){
+                return $projectDir . '/' . $value;
+            },
+            $config->get('default.templates.templateDirs')
+        );
+        $outputDir = $projectDir . '/' . $config->get('default.templates.cache_dir');
+        $baseDirs = array_merge($templateDirs, [$vendorTemplateDir]);
 
         $iterator = new \DirectoryIterator($vendorTemplateDir);
 
@@ -62,8 +74,11 @@ class CompileTemplates extends Command
         }
         foreach ($iterator as $file) {
             if ($file->isFile() && in_array($file->getExtension(), ['hbs'])) {
-                if (file_exists($templateDir . '/' . $file->getFilename())) {
-                    $file = new \SplFileInfo($templateDir . '/' . $file->getFilename());
+                foreach ($templateDirs as $dir) {
+                    if (file_exists($dir . '/' . $file->getFilename())) {
+                        $file = new \SplFileInfo($dir . '/' . $file->getFilename());
+                        break;
+                    }
                 }
                 $templateFile = $file->openFile();
                 $contents = $templateFile->fread($file->getSize());
@@ -73,10 +88,7 @@ class CompileTemplates extends Command
                         \LightnCandy::FLAG_ERROR_EXCEPTION |
                         \LightnCandy::FLAG_HANDLEBARS |
                         \LightnCandy::FLAG_RUNTIMEPARTIAL,
-                    'basedir' => [
-                        $templateDir,
-                        $vendorTemplateDir,
-                    ],
+                    'basedir' => $baseDirs,
                     'fileext' => [
                         '.hbs',
                     ]

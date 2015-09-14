@@ -13,6 +13,12 @@ default:
       - en
   i18n:
     cache_dir: cache/i18n
+  templates:
+    base: vendor/commercetools/sunrise-design/templates
+    cache_dir: cache/templates
+    templateDirs:
+      - templates
+      - vendor/commercetools/sunrise-dmexco/conf/templates
 sunrise:
   header:
     callUs: +44 123 456 000

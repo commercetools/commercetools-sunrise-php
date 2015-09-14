@@ -12,5 +12,13 @@ header:
   countries:
     DE: Deutschland
     UK: Großbritannien
+filter:
+  productCountSeparator: von
+  itemsPerPage: Items pro Seite
+search:
+  sort:
+    new: Neu eingetroffen
+    price-asc: Preis aufsteigend
+    price-desc: Preis absteigend
 error:
   not_found: Die angeforderte Seite konnte nicht gefunden werden.

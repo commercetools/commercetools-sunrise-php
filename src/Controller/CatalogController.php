@@ -120,7 +120,7 @@ class CatalogController extends SunriseController
     protected function getStaticContent()
     {
         $static = new ViewData();
-        $static->productCountSeparatorText = $this->trans('of');
+        $static->productCountSeparatorText = $this->trans('filter.productCountSeparator');
 
         return $static;
     }
@@ -128,7 +128,7 @@ class CatalogController extends SunriseController
     protected function getDisplayContent($currentCount)
     {
         $display = new ViewData();
-        $display->title = $this->trans('Items per page');
+        $display->title = $this->trans('filter.itemsPerPage');
         $display->list = new ViewDataCollection();
 
         foreach ($this->config->get('sunrise.itemsPerPage') as $count) {
