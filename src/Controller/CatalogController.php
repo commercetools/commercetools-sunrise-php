@@ -13,13 +13,14 @@ use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
 use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
 use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Model\ViewDataCollection;
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CatalogController extends SunriseController
 {
     const SLUG_SKU_SEPARATOR = '--';
-
 
     public function home(Request $request)
     {
@@ -39,6 +40,7 @@ class CatalogController extends SunriseController
 
     public function search(Request $request)
     {
+        $uri = new Uri($request->getRequestUri());
         $products = $this->getProducts($request);
 
         $viewData = $this->getViewData('Sunrise - Product Overview Page');
@@ -53,6 +55,10 @@ class CatalogController extends SunriseController
         $viewData->jumboTron = new ViewData();
         $viewData->content->products = new ViewData();
         $viewData->content->products->list = new ViewDataCollection();
+        $viewData->content->static = $this->getStaticContent();
+        $viewData->content->display = $this->getDisplayContent($this->getItemsPerPage($request));
+        $viewData->content->filters = $this->getFiltersData($uri);
+        $viewData->content->sort = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
         foreach ($products as $key => $product) {
             $price = $product->getMasterVariant()->getPrices()->getAt(0)->getValue();
             $productUrl = $this->generator->generate(
@@ -84,6 +90,58 @@ class CatalogController extends SunriseController
          */
         $html = $this->view->render('product-overview', $viewData->toArray());
         return $html;
+    }
+
+    protected function getFiltersData(UriInterface $uri)
+    {
+        $filter = new ViewData();
+        $filter->url = $uri->getPath();
+
+        return $filter;
+    }
+
+    protected function getSortData($currentSort)
+    {
+        $sortData = new ViewDataCollection();
+
+        foreach ($this->config['sunrise.products.sort'] as $sort) {
+            $entry = new ViewData();
+            $entry->value = $sort['formValue'];
+            $entry->label = $this->trans('search.sort.' . $sort['formValue']);
+            if ($currentSort == $sort) {
+                $entry->selected = true;
+            }
+            $sortData->add($entry);
+        }
+
+        return $sortData;
+    }
+
+    protected function getStaticContent()
+    {
+        $static = new ViewData();
+        $static->productCountSeparatorText = $this->trans('of');
+
+        return $static;
+    }
+
+    protected function getDisplayContent($currentCount)
+    {
+        $display = new ViewData();
+        $display->title = $this->trans('Items per page');
+        $display->list = new ViewDataCollection();
+
+        foreach ($this->config->get('sunrise.itemsPerPage') as $count) {
+            $entry = new ViewData();
+            $entry->value = $count;
+            $entry->name = $count;
+            if ($currentCount == $count) {
+                $entry->selected = true;
+            }
+            $display->list->add($entry);
+        }
+
+        return $display;
     }
 
     public function detail(Request $request)
@@ -130,9 +188,15 @@ class CatalogController extends SunriseController
 
     protected function getProducts(Request $request)
     {
-        $searchRequest = ProductProjectionSearchRequest::of()->limit(static::ITEMS_PER_PAGE);
-        $categories = $this->getCategories();
+        $itemsPerPage = $this->getItemsPerPage($request);
+        $currentPage = $this->getCurrentPage($request);
+        $sort = $this->getSort($request, 'sunrise.products.sort')['searchParam'];
+        $searchRequest = ProductProjectionSearchRequest::of()
+            ->sort($sort)
+            ->limit($itemsPerPage)
+            ->offset(min($itemsPerPage * ($currentPage - 1),100000));
 
+        $categories = $this->getCategories();
         if ($category = $request->get('category')) {
             $category = $categories->getBySlug($category, $this->locale);
             if ($category instanceof Category) {
@@ -141,12 +205,13 @@ class CatalogController extends SunriseController
                 );
             }
         }
-        $searchRequest->offset(static::ITEMS_PER_PAGE * ($request->get('page', 1) - 1));
-        $searchRequest->limit(static::ITEMS_PER_PAGE);
 
         $response = $searchRequest->executeWithClient($this->client);
         $products = $searchRequest->mapResponse($response);
-        $this->applyPagination($request, $response);
+
+        $this->applyPagination(new Uri($request->getRequestUri()), $response, $itemsPerPage);
+        $this->pagination->productsCount = $response->getCount();
+        $this->pagination->totalProducts = $response->getTotal();
 
         return $products;
     }

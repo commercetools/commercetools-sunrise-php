@@ -20,7 +20,7 @@ use Commercetools\Sunrise\Model\View\Tree;
 use Commercetools\Sunrise\Model\View\Url;
 use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Template\TemplateService;
-use GuzzleHttp\Psr7\Request as PsrRequest;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -31,6 +31,9 @@ class SunriseController
     const ITEMS_PER_PAGE = 12;
     const PAGE_SELECTOR_RANGE = 2;
     const FIRST_PAGE = 1;
+    const ITEM_COUNT_ELEMENT = 'items';
+    const SORT_ELEMENT = 'sort';
+    const SORT_DEFAULT = 'new';
 
     const CACHE_TTL = 3600;
     /**
@@ -288,14 +291,12 @@ class SunriseController
         return $this->generator->generate($site, $params);
     }
 
-    protected function applyPagination(Request $request, PagedQueryResponse $response)
+    protected function applyPagination(UriInterface $uri, PagedQueryResponse $response, $itemsPerPage)
     {
-        $psrRequest = new PsrRequest($request->getMethod(), $request->getRequestUri());
-        $uri = $psrRequest->getUri();
         $firstPage = static::FIRST_PAGE;
         $pageRange = static::PAGE_SELECTOR_RANGE;
-        $currentPage = floor($response->getOffset() / max(1, static::ITEMS_PER_PAGE)) + 1;
-        $totalPages = ceil($response->getTotal() / max(1, static::ITEMS_PER_PAGE));
+        $currentPage = floor($response->getOffset() / max(1, $itemsPerPage)) + 1;
+        $totalPages = ceil($response->getTotal() / max(1, $itemsPerPage));
 
         $displayedPages = $pageRange * 2 + 3;
         $pageThresholdLeft = $displayedPages - $pageRange;
@@ -308,10 +309,10 @@ class SunriseController
             $pagination->pages = $this->getPages($uri, $firstPage, $totalPages, $currentPage);
         } elseif ($currentPage < $pageThresholdLeft) {
             $pagination->pages = $this->getPages($uri, $firstPage, $thresholdPageLeft, $currentPage);
-            $pagination->lastPage = $this->getPageUrl($uri, $totalPages, $currentPage);
+            $pagination->lastPage = $this->getPageUrl($uri, $totalPages);
         } elseif ($currentPage > $pageThresholdRight) {
             $pagination->pages = $this->getPages($uri, $thresholdPageRight, $totalPages, $currentPage);
-            $pagination->firstPage = $this->getPageUrl($uri, $firstPage, $currentPage);
+            $pagination->firstPage = $this->getPageUrl($uri, $firstPage);
         } else {
             $pagination->pages = $this->getPages(
                 $uri,
@@ -319,28 +320,53 @@ class SunriseController
                 $currentPage + $pageRange,
                 $currentPage
             );
-            $pagination->firstPage = $this->getPageUrl($uri, $firstPage, $currentPage);
-            $pagination->lastPage = $this->getPageUrl($uri, $totalPages, $currentPage);
+            $pagination->firstPage = $this->getPageUrl($uri, $firstPage);
+            $pagination->lastPage = $this->getPageUrl($uri, $totalPages);
         }
 
         if ($currentPage > 1) {
             $prevPage = $currentPage - 1;
-            $pagination->prevPage = $this->getPageUrl($uri, $prevPage, $currentPage);
+            $pagination->prevPage = $this->getPageUrl($uri, $prevPage);
         }
         if ($currentPage < $totalPages) {
             $nextPage = $currentPage + 1;
-            $pagination->nextPage = $this->getPageUrl($uri, $nextPage, $currentPage);
+            $pagination->nextPage = $this->getPageUrl($uri, $nextPage);
         }
 
         $this->pagination = $pagination;
     }
 
-    public function getPageUrl(UriInterface $uri, $page, $currentPage)
+    protected function getItemsPerPage(Request $request)
     {
-        $url = new Url($page, (string)$uri->withQuery('page=' . ($page)));
-        if ($currentPage == $page) {
-            $url->selected = true;
+        $itemsPerPage = $request->get(static::ITEM_COUNT_ELEMENT, static::ITEMS_PER_PAGE);
+        if (!in_array($itemsPerPage, $this->config->get('sunrise.itemsPerPage'))) {
+            return static::ITEMS_PER_PAGE;
         }
+        return $itemsPerPage;
+    }
+
+    protected function getSort(Request $request, $configEntry)
+    {
+        $sort = $request->get(static::SORT_ELEMENT, static::SORT_DEFAULT);
+        if (!array_key_exists($sort, $this->config->get($configEntry))) {
+            return static::SORT_DEFAULT;
+        }
+        return $this->config->get($configEntry)[$sort];
+    }
+
+    protected function getCurrentPage(Request $request)
+    {
+        $currentPage = $request->get('page', 1);
+        if ($currentPage < 1) {
+            $currentPage = 1;
+        }
+
+        return $currentPage;
+    }
+
+    protected function getPageUrl(UriInterface $uri, $number, $query = 'page')
+    {
+        $url = new Url($number, Uri::withQueryValue($uri, $query,$number));
         return $url;
     }
 
@@ -348,7 +374,11 @@ class SunriseController
     {
         $pages = new ViewDataCollection();
         for ($i = $start; $i <= $stop; $i++) {
-            $pages->add($this->getPageUrl($uri, $i, $currentPage));
+            $url = $this->getPageUrl($uri, $i);
+            if ($currentPage == $i) {
+                $url->selected = true;
+            }
+            $pages->add($url);
         }
         return $pages;
     }

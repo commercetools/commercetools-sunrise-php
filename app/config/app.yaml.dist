@@ -19,6 +19,22 @@ sunrise:
   assetsPath: /assets/
   sale:
     slug: sale
+  itemsPerPage:
+    - 12
+    - 24
+    - 48
+  products:
+    sort:
+      new:
+        formValue: new
+        searchParam: createdAt desc
+      price-asc:
+        formValue: price-asc
+        searchParam: price asc
+      price-desc:
+        formValue: price-desc
+        searchParam: price desc
+
 commercetools:
   client_id: <client-id>
   client_secret: <client-secret>
