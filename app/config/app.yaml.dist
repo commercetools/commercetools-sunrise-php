@@ -17,6 +17,8 @@ sunrise:
   header:
     callUs: +44 123 456 000
   assetsPath: /assets/
+  sale:
+    slug: sale
 commercetools:
   client_id: <client-id>
   client_secret: <client-secret>

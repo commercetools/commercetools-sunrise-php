@@ -78,6 +78,7 @@ class CatalogController extends SunriseController
             }
             $viewData->content->products->list->add($productData);
         }
+        $viewData->content->pagination = $this->pagination;
         /**
          * @var callable $renderer
          */
@@ -140,10 +141,13 @@ class CatalogController extends SunriseController
                 );
             }
         }
+        $searchRequest->offset(static::ITEMS_PER_PAGE * ($request->get('page', 1) - 1));
+        $searchRequest->limit(static::ITEMS_PER_PAGE);
 
         $response = $searchRequest->executeWithClient($this->client);
         $products = $searchRequest->mapResponse($response);
-        $this->getPagination($response);
+        $this->applyPagination($request, $response);
+
         return $products;
     }
 

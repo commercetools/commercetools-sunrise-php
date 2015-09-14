@@ -5,6 +5,7 @@
     "commercetools/php-sdk": "^1.0@beta",
     "commercetools/sunrise-design": "*",
     "commercetools/commons": "dev-master",
+    "commercetools/sunrise-dmexco": "dev-master",
     "silex/silex": "~2.0@dev",
     "cilex/console-service-provider": "^1.1",
     "zordius/lightncandy": "^0.22",
@@ -48,15 +49,21 @@
     {
       "type": "vcs",
       "url": "https://github.com/sphereio/commercetools-php-commons"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/sphereio/sphere-sunrise-dmexco"
     }
   ],
   "scripts": {
     "post-update-cmd": [
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
+      "cp -rf vendor/commercetools/sunrise-dmexco/conf/templates .",
       "app/console.php compile"
     ],
     "post-install-cmd": [
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
+      "cp -rf vendor/commercetools/sunrise-dmexco/conf/templates .",
       "app/console.php compile"
     ]
   }

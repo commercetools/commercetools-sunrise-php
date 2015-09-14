@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "55fa5efe9d887e42b6b2a0aad0197fa6",
+    "hash": "070e145eb9670cc65a4a75f458d54ed8",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -171,6 +171,35 @@
                 "reference": "gh-pages"
             },
             "type": "library"
+        },
+        {
+            "name": "commercetools/sunrise-dmexco",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sphereio/sphere-sunrise-dmexco.git",
+                "reference": "783a1873fe570c645bc8e426ae08995bab670767"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-dmexco/zipball/783a1873fe570c645bc8e426ae08995bab670767",
+                "reference": "783a1873fe570c645bc8e426ae08995bab670767",
+                "shasum": ""
+            },
+            "type": "library",
+            "description": "Sunrise dmexco",
+            "homepage": "https://github.com/sphereio/sphere-sunrise-dmexco",
+            "keywords": [
+                "SPHERE.IO",
+                "Sunrise"
+            ],
+            "support": {
+                "email": "support@sphere.io",
+                "forum": "http://support.sphere.io",
+                "issues": "https://github.com/sphereio/sphere-sunrise-dmexco/issues",
+                "source": "https://github.com/sphereio/sphere-sunrise-dmexco/tree/master"
+            },
+            "time": "2015-09-11 12:56:55"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2185,6 +2214,7 @@
     "stability-flags": {
         "commercetools/php-sdk": 10,
         "commercetools/commons": 20,
+        "commercetools/sunrise-dmexco": 20,
         "silex/silex": 20,
         "commercetools/sunrise-scenarios": 20,
         "behat/mink-goutte-driver": 20

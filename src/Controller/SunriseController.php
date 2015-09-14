@@ -20,12 +20,18 @@ use Commercetools\Sunrise\Model\View\Tree;
 use Commercetools\Sunrise\Model\View\Url;
 use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Template\TemplateService;
+use GuzzleHttp\Psr7\Request as PsrRequest;
+use Psr\Http\Message\UriInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class SunriseController
 {
     const ITEMS_PER_PAGE = 12;
+    const PAGE_SELECTOR_RANGE = 2;
+    const FIRST_PAGE = 1;
+
     const CACHE_TTL = 3600;
     /**
      * @var TemplateService
@@ -59,6 +65,8 @@ class SunriseController
      * @var string
      */
     protected $locale;
+
+    protected $pagination;
 
     public function __construct(
         Client $client,
@@ -136,15 +144,21 @@ class SunriseController
         } else {
             $categories = $this->getCategories();
             $categoryMenu = new ViewDataCollection();
-            foreach ($categories->getRoots() as $root) {
+            $roots = $this->sortCategoriesByOrderHint($categories->getRoots());
+
+            foreach ($roots as $root) {
                 /**
                  * @var Category $root
                  */
                 $menuEntry = new Tree(
                     (string)$root->getName(), $this->getLinkFor('category', ['category' => $root->getSlug()])
                 );
+                if ($root->getSlug() == $this->config['sunrise.sale.slug']) {
+                    $menuEntry->sale = true;
+                }
 
-                foreach ($categories->getByParent($root->getId()) as $children) {
+                $subCategories = $this->sortCategoriesByOrderHint($categories->getByParent($root->getId()));
+                foreach ($subCategories as $children) {
                     /**
                      * @var Category $children
                      */
@@ -153,7 +167,8 @@ class SunriseController
                         $this->getLinkFor('category', ['category' => $children->getSlug()])
                     );
 
-                    foreach ($categories->getByParent($children->getId()) as $subChild) {
+                    $subChildCategories = $this->sortCategoriesByOrderHint($categories->getByParent($children->getId()));
+                    foreach ($subChildCategories as $subChild) {
                         /**
                          * @var Category $subChild
                          */
@@ -252,7 +267,6 @@ class SunriseController
     {
         $cacheKey = 'categories';
 
-        $this->cache->remove($cacheKey);
         $categoryData = [];
         if ($this->cache->has($cacheKey)) {
             $cachedCategories = $this->cache->fetch($cacheKey);
@@ -274,10 +288,77 @@ class SunriseController
         return $this->generator->generate($site, $params);
     }
 
-    protected function getPagination(PagedQueryResponse $response)
+    protected function applyPagination(Request $request, PagedQueryResponse $response)
     {
-        $page = floor($response->getOffset() / max(1,$response->getCount())) + 1;
-        $maxPage = floor($response->getTotal() / max(1, $response->getCount()));
-        //var_dump($page, $maxPage);
+        $psrRequest = new PsrRequest($request->getMethod(), $request->getRequestUri());
+        $uri = $psrRequest->getUri();
+        $firstPage = static::FIRST_PAGE;
+        $pageRange = static::PAGE_SELECTOR_RANGE;
+        $currentPage = floor($response->getOffset() / max(1, static::ITEMS_PER_PAGE)) + 1;
+        $totalPages = ceil($response->getTotal() / max(1, static::ITEMS_PER_PAGE));
+
+        $displayedPages = $pageRange * 2 + 3;
+        $pageThresholdLeft = $displayedPages - $pageRange;
+        $thresholdPageLeft = $displayedPages - 1;
+        $pageThresholdRight = $totalPages - $pageRange - 2;
+        $thresholdPageRight = $totalPages - $displayedPages + 2;
+        $pagination = new ViewData();
+
+        if ($totalPages <= $displayedPages) {
+            $pagination->pages = $this->getPages($uri, $firstPage, $totalPages, $currentPage);
+        } elseif ($currentPage < $pageThresholdLeft) {
+            $pagination->pages = $this->getPages($uri, $firstPage, $thresholdPageLeft, $currentPage);
+            $pagination->lastPage = $this->getPageUrl($uri, $totalPages, $currentPage);
+        } elseif ($currentPage > $pageThresholdRight) {
+            $pagination->pages = $this->getPages($uri, $thresholdPageRight, $totalPages, $currentPage);
+            $pagination->firstPage = $this->getPageUrl($uri, $firstPage, $currentPage);
+        } else {
+            $pagination->pages = $this->getPages(
+                $uri,
+                $currentPage - $pageRange,
+                $currentPage + $pageRange,
+                $currentPage
+            );
+            $pagination->firstPage = $this->getPageUrl($uri, $firstPage, $currentPage);
+            $pagination->lastPage = $this->getPageUrl($uri, $totalPages, $currentPage);
+        }
+
+        if ($currentPage > 1) {
+            $prevPage = $currentPage - 1;
+            $pagination->prevPage = $this->getPageUrl($uri, $prevPage, $currentPage);
+        }
+        if ($currentPage < $totalPages) {
+            $nextPage = $currentPage + 1;
+            $pagination->nextPage = $this->getPageUrl($uri, $nextPage, $currentPage);
+        }
+
+        $this->pagination = $pagination;
+    }
+
+    public function getPageUrl(UriInterface $uri, $page, $currentPage)
+    {
+        $url = new Url($page, (string)$uri->withQuery('page=' . ($page)));
+        if ($currentPage == $page) {
+            $url->selected = true;
+        }
+        return $url;
+    }
+
+    protected function getPages(UriInterface $uri, $start, $stop, $currentPage)
+    {
+        $pages = new ViewDataCollection();
+        for ($i = $start; $i <= $stop; $i++) {
+            $pages->add($this->getPageUrl($uri, $i, $currentPage));
+        }
+        return $pages;
+    }
+
+    protected function sortCategoriesByOrderHint($categories)
+    {
+        usort($categories, function (Category $a, Category $b) {
+            return $a->getOrderHint() > $b->getOrderHint();
+        });
+
+        return $categories;
     }
 }
