@@ -25,4 +25,4 @@ Feature: Cart
 
   Scenario: continue shopping
     When I press "cart-continueshopping-btn-xs"
-    Then I should be on homepage
+    Then I should be on "/en/home"

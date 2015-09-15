@@ -16,6 +16,7 @@ before_script:
 - sleep 5
 - composer install -o --ignore-platform-reqs
 script:
+- vendor/bin/behat -p sunrise
 - vendor/bin/behat
 after_script:
 - cat access.log

@@ -23,3 +23,7 @@ jvm:
   extensions:
     Behat\MinkExtension:
       base_url: http://localhost:9000
+sunrise:
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://sunrise.commercetools.de
