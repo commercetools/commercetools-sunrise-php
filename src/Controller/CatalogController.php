@@ -40,6 +40,8 @@ class CatalogController extends SunriseController
 
     public function search(Request $request)
     {
+        var_dump($request->getQueryString());
+        var_dump($request->get('size'));
         $uri = new Uri($request->getRequestUri());
         $products = $this->getProducts($request);
 
@@ -121,24 +123,23 @@ class CatalogController extends SunriseController
     {
         $static = new ViewData();
         $static->productCountSeparatorText = $this->trans('filter.productCountSeparator');
+        $static->displaySelectorText = $this->trans('filter.itemsPerPage');
 
         return $static;
     }
 
     protected function getDisplayContent($currentCount)
     {
-        $display = new ViewData();
-        $display->title = $this->trans('filter.itemsPerPage');
-        $display->list = new ViewDataCollection();
+        $display = new ViewDataCollection();
 
         foreach ($this->config->get('sunrise.itemsPerPage') as $count) {
             $entry = new ViewData();
             $entry->value = $count;
-            $entry->name = $count;
+            $entry->text = $count;
             if ($currentCount == $count) {
                 $entry->selected = true;
             }
-            $display->list->add($entry);
+            $display->add($entry);
         }
 
         return $display;
