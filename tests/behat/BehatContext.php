@@ -2,7 +2,6 @@
 
 namespace Commercetools\Sunrise;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,5 +97,14 @@ class BehatContext extends MinkContext implements SnippetAcceptingContext
     public function restartSession()
     {
         $this->getSession()->reset();
+    }
+
+    /**
+     * @Given I wait for :seconds
+     */
+    public function waitFor($seconds)
+    {
+        $toWait = $seconds * 1000;
+        $this->getSession()->wait($toWait);
     }
 }

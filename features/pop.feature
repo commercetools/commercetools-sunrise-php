@@ -2,9 +2,9 @@ Feature: Product Overview Page
 
   Scenario: open category
     Given I go to "/en/home"
-    When I follow "Women"
-    Then I should be on "/en/women"
-    And the ".breadcrumb" element should contain "Women"
+    When I follow "plus content"
+    Then I should be on "/en/new"
+    And the ".breadcrumb" element should contain "New"
 
   Scenario: open a product
     Given I go to "/en/search"

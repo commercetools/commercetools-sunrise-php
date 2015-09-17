@@ -16,9 +16,13 @@ default:
           goutte: ~
         my_selenium:
           selenium2: ~
-      base_url: http://localhost:8001
-      default_session: my_selenium
-      javascript_session: my_selenium
+        sauce:
+          selenium2:
+            browser: firefox
+            capabilities: { "browser": "firefox", "platform": "Windows 7" }
+      base_url: http://127.0.0.1:8001
+      default_session: sauce
+      javascript_session: sauce
 jvm:
   extensions:
     Behat\MinkExtension:
