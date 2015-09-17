@@ -17,10 +17,8 @@ before_script:
 - java -jar selenium-server-standalone-*.jar > selenium.log 2>&1 &
 - sleep 5
 - composer install -o --ignore-platform-reqs
-- ./setup-tests.sh
 script:
-- vendor/bin/behat -p sunrise
-- vendor/bin/behat
+- ./run-behat-tests.sh
 after_script:
 - cat access.log
 - cat selenium.log
