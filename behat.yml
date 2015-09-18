@@ -11,6 +11,7 @@ default:
         - Commercetools\Sunrise\BehatContext
   extensions:
     Behat\MinkExtension:
+      base_url: http://127.0.0.1:8001
       sessions:
         my_goutte:
           goutte: ~
@@ -20,14 +21,34 @@ default:
           selenium2:
             browser: firefox
             capabilities: { "browser": "firefox", "platform": "Windows 7" }
-      base_url: http://127.0.0.1:8001
+      default_session: my_selenium
+      javascript_session: my_selenium
+php:
+  extensions:
+    Behat\MinkExtension:
       default_session: sauce
       javascript_session: sauce
+      sessions:
+        sauce:
+          selenium2:
+            capabilities: { "name": "Sunrise PHP"}
 jvm:
   extensions:
     Behat\MinkExtension:
-      base_url: http://localhost:9000
+      base_url: http://127.0.0.1:9000
+      default_session: sauce
+      javascript_session: sauce
+      sessions:
+        sauce:
+          selenium2:
+            capabilities: { "name": "Sunrise JVM"}
 sunrise:
   extensions:
     Behat\MinkExtension:
       base_url: http://sunrise.commercetools.de
+      default_session: sauce
+      javascript_session: sauce
+      sessions:
+        sauce:
+          selenium2:
+            capabilities: { "name": "Sunrise Live"}

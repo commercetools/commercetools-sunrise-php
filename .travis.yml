@@ -18,6 +18,9 @@ after_script:
 - cat access.log
 - cat selenium.log
 env:
+  matrix:
+    - BEHAT_PROFILES="php"
+    - BEHAT_PROFILES="sunrise"
   global:
   # SPHERE_CLIENT_ID
   - secure: Vir8kGIpYfiUvDYb0Dgk6cgqyoHNZZFR8+hpOju9WnhPgnpWZxFMf/kF4pR5uZfGh5qwM6VD3iDZTii0cxi21X/prOJnQoLzHVpZFreQkeFGfq6MarElOfbLrN5wCsI06+DQVsIzIhzuJ+QBvuiTOgcd9euLuSWdYmdOu422fGj/YNWfGVQlTYQ0dXT10siMOdhZs5kT/pHNMKKG+JbqiFM6+NS3Y8ksZCrjx663oxzPNVceg2rugqoRedqA3l3dkNAoD2IVZKc+WDjY2lA3WhZAmdg1rjI8Bv5cDcGTprV167rp5YTTlAeJHe0GRHUnqT0zOdKhRx/tdFpDPreRXg7itA5ItCsmFXO6KbXcuzIJEkgOceH6i1oZ2tDB3FYNedddYryTcLIA7QCWwJVL/tbEyNrgZHxjdadlSJX+Re+705f9jLmCSn4NudbKagxOJp2Mjp3TOZ+gOxeyd90JNanv/2MfbEUFFt+soV/xkEPFnjL8UoMMLO5LvDc0cpK38xpYKFV/5KFQKmmSqiNKvuI8S86fSONVzrhrOjZber1KsNGOplQEkZWvtJZlpd49JRn+fyZ3t0gzyrzh79zUXszCmf+MgYttwGWPDfGPSw1tZUKdFdozc4l95sAYikjrlcQadnmdFf29pJY6t9N9yk3oI4x7CPtc5Ekhh9u1iSE=
