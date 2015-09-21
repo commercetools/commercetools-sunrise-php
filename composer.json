@@ -15,7 +15,7 @@
     "monolog/monolog": "^1.7"
   },
   "require-dev": {
-    "commercetools/sunrise-scenarios": "dev-master",
+    "commercetools/sunrise-scenarios": "dev-behat",
     "behat/mink": "^1.6",
     "behat/behat": "^3.0",
     "behat/mink-extension": "^2.0",
@@ -35,7 +35,7 @@
       "type": "package",
       "package": {
         "name": "commercetools/sunrise-design",
-        "version": "0.9.3",
+        "version": "0.9.4",
         "source": {
           "url": "https://github.com/sphereio/sphere-sunrise-design",
           "type": "git",

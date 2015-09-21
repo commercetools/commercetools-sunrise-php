@@ -5,34 +5,77 @@ default:
   suites:
     default:
       paths:
-        - %paths.base%/features
         - %paths.base%/vendor/commercetools/sunrise-scenarios/src/main/resources/features
       contexts:
-        - Commercetools\Sunrise\BehatContext
+        - Commercetools\Sunrise\SunriseContext:
+            homepage: /
   extensions:
     Behat\MinkExtension:
       base_url: http://127.0.0.1:8001
+      default_session: default
+      javascript_session: default
       sessions:
-        my_goutte:
-          goutte: ~
-        my_selenium:
+        default:
           selenium2: ~
         sauce:
-          selenium2:
-            browser: firefox
-            capabilities: { "browser": "firefox", "platform": "Windows 7" }
-      default_session: my_selenium
-      javascript_session: my_selenium
+          sauce_labs:
+            connect: true
+            capabilities:
+              selenium-version: 2.44.0
+              version: 34
+              browser: Firefox
+              platform: "Linux"
+              max-duration: 3600
+              record-screenshots: true
+              custom-data:
+                foo: bar
 php:
   extensions:
     Behat\MinkExtension:
+      base_url: http://127.0.0.1:8001
+
+jvm:
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://127.0.0.1:9000
+  suites:
+    default:
+      contexts:
+        - Commercetools\Sunrise\SunriseContext:
+            homepage: /en/home
+
+staging:
+  extensions:
+    Behat\MinkExtension:
+      base_url: https://sphere-sunrise-dmexco.herokuapp.com/
+  suites:
+    default:
+      contexts:
+        - Commercetools\Sunrise\SunriseContext:
+            homepage: /en/home
+
+live:
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://sunrise.commercetools.de
+  suites:
+    default:
+      contexts:
+        - Commercetools\Sunrise\SunriseContext:
+            homepage: /en/home
+
+php-sauce:
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://127.0.0.1:8001
       default_session: sauce
       javascript_session: sauce
       sessions:
         sauce:
-          selenium2:
+          sauce_labs:
             capabilities: { "name": "Sunrise PHP"}
-jvm:
+
+jvm-sauce:
   extensions:
     Behat\MinkExtension:
       base_url: http://127.0.0.1:9000
@@ -40,15 +83,44 @@ jvm:
       javascript_session: sauce
       sessions:
         sauce:
-          selenium2:
+          sauce_labs:
             capabilities: { "name": "Sunrise JVM"}
-sunrise:
+  suites:
+    default:
+      contexts:
+        - Commercetools\Sunrise\SunriseContext:
+            homepage: /en/home
+
+staging-sauce:
   extensions:
     Behat\MinkExtension:
-      base_url: http://sunrise.commercetools.de
+      base_url: https://sphere-sunrise-dmexco.herokuapp.com/
       default_session: sauce
       javascript_session: sauce
       sessions:
         sauce:
-          selenium2:
+          sauce_labs:
+            connect: false
+            capabilities: { "name": "Sunrise Staging"}
+  suites:
+    default:
+      contexts:
+        - Commercetools\Sunrise\SunriseContext:
+            homepage: /en/home
+
+live-sauce:
+  extensions:
+    Behat\MinkExtension:
+      base_url: https://sunrise.commercetools.de/
+      default_session: sauce
+      javascript_session: sauce
+      sessions:
+        sauce:
+          sauce_labs:
+            connect: false
             capabilities: { "name": "Sunrise Live"}
+  suites:
+    default:
+      contexts:
+        - Commercetools\Sunrise\SunriseContext:
+            homepage: /en/home
