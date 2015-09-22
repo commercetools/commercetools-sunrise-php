@@ -246,8 +246,8 @@ class CatalogController extends SunriseController
         );
 
         $this->applyPagination(new Uri($request->getRequestUri()), $offset, $total, $itemsPerPage);
-        $this->pagination->productsCount = $response->getCount();
-        $this->pagination->totalProducts = $response->getTotal();
+        $this->pagination->productsCount = $products->count();
+        $this->pagination->totalProducts = $total;
 
         return $products;
     }
