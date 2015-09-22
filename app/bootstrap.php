@@ -9,6 +9,7 @@ use Commercetools\Core\Cache\CacheAdapterFactory;
 use Commercetools\Core\Client;
 use Commercetools\Sunrise\Controller\CatalogController;
 use Commercetools\Sunrise\Model\Config;
+use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Service\ClientFactory;
 use Commercetools\Sunrise\Service\LocaleConverter;
 use Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter;
@@ -137,9 +138,16 @@ $app['cache'] = function () use ($app) {
 
     return $factory->get();
 };
-$app['view'] = function () {
+$app['template'] = function () {
     return new TemplateService(new HandlebarsAdapter(PROJECT_DIR .'/cache/templates'));
 };
+
+$app->view(function ($result) use ($app) {
+    list($page, $viewData) = $result;
+
+    return $app['template']->render($page, $viewData);
+});
+
 $app['locale.converter'] = function () use ($app) {
     return new LocaleConverter($app);
 };
@@ -154,6 +162,14 @@ $app['client'] = function () use ($app) {
     );
 };
 
+$app['repository.product'] = function () use ($app) {
+    return new ProductRepository(
+        $app['config'],
+        $app['cache'],
+        $app['client']
+    );
+};
+
 /**
  * Controller
  */
@@ -162,11 +178,11 @@ $app['catalog.controller'] = function () use ($app) {
     return new CatalogController(
         $app['client'],
         $locale,
-        $app['view'],
         $app['url_generator'],
         $app['cache'],
         $app['translator'],
-        $app['config']
+        $app['config'],
+        $app['repository.product']
     );
 };
 
@@ -175,38 +191,32 @@ $app['catalog.controller'] = function () use ($app) {
  */
 $app->get('/', 'catalog.controller:home');
 
-$app->get('/{_locale}', 'catalog.controller:home')
+$app->get('/{_locale}/', 'catalog.controller:home')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('home');
-$app->get('/{_locale}/search', 'catalog.controller:search')
+$app->get('/{_locale}/search/', 'catalog.controller:search')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('pop');
-$app->get('/{_locale}/{slug}.html', 'catalog.controller:detail')
-    ->assert('_locale', LOCALE_PATTERN)
-    ->bind('pdp');
-$app->get('/{_locale}/{category}', 'catalog.controller:search')
+$app->get('/{_locale}/{category}/', 'catalog.controller:search')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('category');
-
-// location redirects for trailing slashes
-$app->get('/{_locale}/', function(Application $app) {
-    return $app->redirect('/'.$app['locale']);
-})->assert('_locale', LOCALE_PATTERN);
-$app->get('/{_locale}/search/', function(Application $app) {
-    return $app->redirect('/'. $app['locale'] . '/search');
-})->assert('_locale', LOCALE_PATTERN);
-$app->get('/{_locale}/{category}/', function($category, Application $app) {
-    return $app->redirect('/'. $app['locale'] . '/' . $category);
-})->assert('_locale', LOCALE_PATTERN);
+$app->get('/{_locale}/{slug}.html', 'catalog.controller:detail')
+    ->assert('_locale', LOCALE_PATTERN);
+$app->get('/{_locale}/{slug}/{sku}.html', 'catalog.controller:detail')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('pdp');
 
 // location redirects for uri without locale information
-$app->get('/search', function(Application $app) {
-    return $app->redirect('/'.$app['locale'].'/search');
+$app->get('/search/', function(Application $app) {
+    return $app->redirect('/'.$app['locale'].'/search/');
+});
+$app->get('/{slug}/{sku}.html', function(Application $app, $slug, $sku) {
+    return $app->redirect('/'.$app['locale'].'/' . $slug . '/' . $sku . '.html');
 });
 $app->get('/{slug}.html', function(Application $app, $slug) {
     return $app->redirect('/'.$app['locale'].'/' . $slug . '.html');
 });
-$app->get('/{category}', function(Application $app, $category) {
+$app->get('/{category}/', function(Application $app, $category) {
     return $app->redirect('/' . $app['locale'] . '/' . $category);
 });
 

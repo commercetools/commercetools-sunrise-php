@@ -14,6 +14,7 @@ use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Request\Categories\CategoryQueryRequest;
 use Commercetools\Core\Response\PagedQueryResponse;
 use Commercetools\Sunrise\Model\Config;
+use Commercetools\Sunrise\Model\Repository;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use Commercetools\Sunrise\Model\View\Header;
 use Commercetools\Sunrise\Model\View\Tree;
@@ -74,7 +75,6 @@ class SunriseController
     public function __construct(
         Client $client,
         $locale,
-        TemplateService $view,
         UrlGenerator $generator,
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
@@ -82,7 +82,6 @@ class SunriseController
     )
     {
         $this->locale = $locale;
-        $this->view = $view;
         $this->generator = $generator;
         $this->translator = $translator;
         $this->config = $config;
@@ -291,12 +290,12 @@ class SunriseController
         return $this->generator->generate($site, $params);
     }
 
-    protected function applyPagination(UriInterface $uri, PagedQueryResponse $response, $itemsPerPage)
+    protected function applyPagination(UriInterface $uri, $offset, $total, $itemsPerPage)
     {
         $firstPage = static::FIRST_PAGE;
         $pageRange = static::PAGE_SELECTOR_RANGE;
-        $currentPage = floor($response->getOffset() / max(1, $itemsPerPage)) + 1;
-        $totalPages = ceil($response->getTotal() / max(1, $itemsPerPage));
+        $currentPage = floor($offset / max(1, $itemsPerPage)) + 1;
+        $totalPages = ceil($total / max(1, $itemsPerPage));
 
         $displayedPages = $pageRange * 2 + 3;
         $pageThresholdLeft = $displayedPages - $pageRange;

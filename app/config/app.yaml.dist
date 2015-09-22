@@ -19,6 +19,8 @@ default:
     templateDirs:
       - templates
       - vendor/commercetools/sunrise-dmexco/conf/templates
+  cache:
+    products: true
 sunrise:
   header:
     callUs: +44 123 456 000

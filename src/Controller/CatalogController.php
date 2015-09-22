@@ -5,22 +5,49 @@
 
 namespace Commercetools\Sunrise\Controller;
 
+use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Product\Filter;
-use Commercetools\Core\Model\Product\ProductProjection;
-use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
+use Commercetools\Core\Model\Product\ProductCollection;
 use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
+use Commercetools\Core\Response\PagedSearchResponse;
+use Commercetools\Sunrise\Model\Config;
+use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Model\ViewDataCollection;
+use Commercetools\Sunrise\Template\TemplateService;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CatalogController extends SunriseController
 {
     const SLUG_SKU_SEPARATOR = '--';
+
+    /**
+     * @var ProductRepository
+     */
+    protected $productRepository;
+
+    public function __construct(
+        Client $client,
+        $locale,
+        UrlGenerator $generator,
+        CacheAdapterInterface $cache,
+        TranslatorInterface $translator,
+        Config $config,
+        ProductRepository $productRepository
+    )
+    {
+        parent::__construct($client, $locale, $generator, $cache, $translator, $config);
+        $this->productRepository = $productRepository;
+    }
+
 
     public function home(Request $request)
     {
@@ -35,17 +62,16 @@ class CatalogController extends SunriseController
             $viewData,
             $this->getViewData('Sunrise - Home')->toArray()
         );
-        return $this->view->render('home', $viewData);
+
+        return ['home', $viewData];
     }
 
     public function search(Request $request)
     {
-        var_dump($request->getQueryString());
-        var_dump($request->get('size'));
         $uri = new Uri($request->getRequestUri());
         $products = $this->getProducts($request);
 
-        $viewData = $this->getViewData('Sunrise - Product Overview Page');
+        $viewData = $this->getViewData('Sunrise - ProductRepository Overview Page');
 
         $viewData->content = new ViewData();
         $viewData->content->text = "Women";
@@ -66,7 +92,8 @@ class CatalogController extends SunriseController
             $productUrl = $this->generator->generate(
                 'pdp',
                 [
-                    'slug' => $this->prepareSlug((string)$product->getSlug(), $product->getMasterVariant()->getSku())
+                    'slug' => (string)$product->getSlug(),
+                    'sku' => $product->getMasterVariant()->getSku()
                 ]
             );
             $productData = [
@@ -90,8 +117,7 @@ class CatalogController extends SunriseController
         /**
          * @var callable $renderer
          */
-        $html = $this->view->render('product-overview', $viewData->toArray());
-        return $html;
+        return ['product-overview', $viewData->toArray()];
     }
 
     protected function getFiltersData(UriInterface $uri)
@@ -147,8 +173,20 @@ class CatalogController extends SunriseController
 
     public function detail(Request $request)
     {
-        list($slug, $sku) = $this->splitSlug($request->get('slug'));
-        $product = $this->getProductBySlug($slug);
+        $slug = $request->get('slug');
+        $sku = $request->get('sku');
+        $product = $this->productRepository->getProductBySlug($slug);
+
+        if (empty($sku)) {
+            $productUrl = $this->getLinkFor(
+                'pdp',
+                [
+                    'slug' => (string)$product->getSlug(),
+                    'sku' => $product->getMasterVariant()->getSku()
+                ]
+            );
+            return new RedirectResponse($productUrl);
+        }
 
         $viewData = json_decode(
             file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pdp.json'),
@@ -159,13 +197,13 @@ class CatalogController extends SunriseController
         }
         $viewData = array_merge(
             $viewData,
-            $this->getViewData('Sunrise - Product Detail Page')->toArray()
+            $this->getViewData('Sunrise - ProductRepository Detail Page')->toArray()
         );
 
         $productVariant = $product->getVariantBySku($sku);
         $productUrl = $this->getLinkFor(
             'pdp',
-            ['slug' => $this->prepareSlug((string)$product->getSlug(), $productVariant->getSku())]
+            ['slug' => (string)$product->getSlug(), 'sku' => $productVariant->getSku()]
         );
         $productData = [
             'id' => $product->getId(),
@@ -184,7 +222,7 @@ class CatalogController extends SunriseController
             $viewData['content']['product'],
             $productData
         );
-        return $this->view->render('product-detail', $viewData);
+        return ['product-detail', $viewData];
     }
 
     protected function getProducts(Request $request)
@@ -192,67 +230,25 @@ class CatalogController extends SunriseController
         $itemsPerPage = $this->getItemsPerPage($request);
         $currentPage = $this->getCurrentPage($request);
         $sort = $this->getSort($request, 'sunrise.products.sort')['searchParam'];
-        $searchRequest = ProductProjectionSearchRequest::of()
-            ->sort($sort)
-            ->limit($itemsPerPage)
-            ->offset(min($itemsPerPage * ($currentPage - 1),100000));
+        $category = $request->get('category');
 
-        $categories = $this->getCategories();
-        if ($category = $request->get('category')) {
-            $category = $categories->getBySlug($category, $this->locale);
-            if ($category instanceof Category) {
-                $searchRequest->addFilter(
-                    Filter::of()->setName('categories.id')->setValue($category->getId())
-                );
-            }
-        }
+        /**
+         * @var ProductCollection $products
+         * @var PagedSearchResponse $response
+         */
+        list($products, $offset, $total) = $this->productRepository->getProducts(
+            $this->getCategories(),
+            $this->locale,
+            $itemsPerPage,
+            $currentPage,
+            $sort,
+            $category
+        );
 
-        $response = $searchRequest->executeWithClient($this->client);
-        $products = $searchRequest->mapResponse($response);
-
-        $this->applyPagination(new Uri($request->getRequestUri()), $response, $itemsPerPage);
+        $this->applyPagination(new Uri($request->getRequestUri()), $offset, $total, $itemsPerPage);
         $this->pagination->productsCount = $response->getCount();
         $this->pagination->totalProducts = $response->getTotal();
 
         return $products;
-    }
-
-    protected function splitSlug($slug)
-    {
-        return explode(static::SLUG_SKU_SEPARATOR, $slug);
-    }
-
-    protected function prepareSlug($slug, $sku)
-    {
-        return $slug . static::SLUG_SKU_SEPARATOR . $sku;
-    }
-
-    protected function getCategoryTree()
-    {
-
-    }
-
-    protected function getProductBySlug($slug)
-    {
-        $cacheKey = 'product-'. $slug;
-
-        if ($this->cache->has($cacheKey)) {
-            $cachedProduct = $this->cache->fetch($cacheKey);
-            if (empty($cachedProduct)) {
-                throw new NotFoundHttpException("product $slug does not exist.");
-            }
-            $product = ProductProjection::fromArray(current($cachedProduct['results']), $this->client->getConfig()->getContext());
-        } else {
-            $productRequest = ProductProjectionBySlugGetRequest::ofSlugAndContext($slug, $this->client->getConfig()->getContext());
-            $response = $productRequest->executeWithClient($this->client);
-
-            if ($response->isError() || is_null($response->toObject())) {
-                $this->cache->store($cacheKey, '', 3600);
-                throw new NotFoundHttpException("product $slug does not exist.");
-            }
-            $product = $productRequest->mapResponse($response);
-            $this->cache->store($cacheKey, $response->toArray(), static::CACHE_TTL);
-        }
-        return $product;
     }
 }
