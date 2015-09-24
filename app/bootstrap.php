@@ -9,6 +9,7 @@ use Commercetools\Core\Cache\CacheAdapterFactory;
 use Commercetools\Core\Client;
 use Commercetools\Sunrise\Controller\CatalogController;
 use Commercetools\Sunrise\Model\Config;
+use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Service\ClientFactory;
 use Commercetools\Sunrise\Service\LocaleConverter;
@@ -169,6 +170,13 @@ $app['repository.product'] = function () use ($app) {
         $app['client']
     );
 };
+$app['repository.category'] = function () use ($app) {
+    return new CategoryRepository(
+        $app['config'],
+        $app['cache'],
+        $app['client']
+    );
+};
 
 /**
  * Controller
@@ -182,6 +190,7 @@ $app['catalog.controller'] = function () use ($app) {
         $app['cache'],
         $app['translator'],
         $app['config'],
+        $app['repository.category'],
         $app['repository.product']
     );
 };

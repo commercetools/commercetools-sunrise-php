@@ -6,9 +6,11 @@
 namespace Commercetools\Sunrise\Model;
 
 
+use Commercetools\Commons\Helper\QueryHelper;
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Request\AbstractApiRequest;
+use Commercetools\Core\Request\QueryAllRequestInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Repository
@@ -18,12 +20,12 @@ class Repository
     /**
      * @var Config
      */
-    private $config;
+    protected $config;
 
     /**
      * @var CacheAdapterInterface
      */
-    private $cache;
+    protected $cache;
 
     /**
      * @var Client
@@ -35,6 +37,31 @@ class Repository
         $this->cache = $cache;
         $this->config = $config;
         $this->client = $client;
+    }
+
+    /**
+     * @param $repository
+     * @param $cacheKey
+     * @param QueryAllRequestInterface $request
+     * @param int $ttl
+     * @return mixed
+     */
+    protected function retrieveAll($repository, $cacheKey, QueryAllRequestInterface $request, $ttl = self::CACHE_TTL)
+    {
+        $data = [];
+        if ($this->config['default.cache.' . $repository] && $this->cache->has($cacheKey)) {
+            $cachedData = $this->cache->fetch($cacheKey);
+            if (!empty($cachedData)) {
+                $data = $cachedData;
+            }
+            $result = $request->mapResult($data, $this->client->getConfig()->getContext());
+        } else {
+            $helper = new QueryHelper();
+            $result = $helper->getAll($this->client, $request);
+            $this->store($repository, $cacheKey, $result->toArray(), $ttl);
+        }
+
+        return $result;
     }
 
     /**

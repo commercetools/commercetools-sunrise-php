@@ -12,9 +12,8 @@ use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Request\Categories\CategoryQueryRequest;
-use Commercetools\Core\Response\PagedQueryResponse;
 use Commercetools\Sunrise\Model\Config;
-use Commercetools\Sunrise\Model\Repository;
+use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use Commercetools\Sunrise\Model\View\Header;
 use Commercetools\Sunrise\Model\View\Tree;
@@ -72,13 +71,19 @@ class SunriseController
 
     protected $pagination;
 
+    /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository;
+
     public function __construct(
         Client $client,
         $locale,
         UrlGenerator $generator,
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
-        Config $config
+        Config $config,
+        CategoryRepository $categoryRepository
     )
     {
         $this->locale = $locale;
@@ -87,6 +92,7 @@ class SunriseController
         $this->config = $config;
         $this->cache = $cache;
         $this->client = $client;
+        $this->categoryRepository = $categoryRepository;
     }
 
     protected function getViewData($title)
@@ -144,7 +150,7 @@ class SunriseController
         if ($this->cache->has($cacheKey)) {
             $categoryMenu = unserialize($this->cache->fetch($cacheKey));
         } else {
-            $categories = $this->getCategories();
+            $categories = $this->categoryRepository->getCategories();
             $categoryMenu = new ViewDataCollection();
             $roots = $this->sortCategoriesByOrderHint($categories->getRoots());
 

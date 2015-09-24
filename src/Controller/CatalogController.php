@@ -7,21 +7,17 @@ namespace Commercetools\Sunrise\Controller;
 
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
-use Commercetools\Core\Model\Category\Category;
-use Commercetools\Core\Model\Product\Filter;
 use Commercetools\Core\Model\Product\ProductCollection;
-use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
 use Commercetools\Core\Response\PagedSearchResponse;
 use Commercetools\Sunrise\Model\Config;
+use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Model\ViewDataCollection;
-use Commercetools\Sunrise\Template\TemplateService;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -41,10 +37,11 @@ class CatalogController extends SunriseController
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         Config $config,
+        CategoryRepository $categoryRepository,
         ProductRepository $productRepository
     )
     {
-        parent::__construct($client, $locale, $generator, $cache, $translator, $config);
+        parent::__construct($client, $locale, $generator, $cache, $translator, $config, $categoryRepository);
         $this->productRepository = $productRepository;
     }
 
