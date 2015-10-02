@@ -2,7 +2,7 @@
 
 SUNRISE PHP is a template shopfront implementation that implements a complete online shop on the commercetools eCommerce platform using the following components:
 
- * the [commercetools PHP SDK](https://github.com/sphereio/commerctools-php-sdk) and its corresponding [commons library](https://github.com/sphereio/commerctools-php-commons)
+ * the [commercetools PHP SDK](https://github.com/sphereio/commercetools-php-sdk) and its corresponding [commons library](https://github.com/sphereio/commercetools-php-commons)
  * the [commercetools SUNRISE](https://github.com/sphereio/sphere-sunrise-design) responsive HTML templates (handlebars syntax)
  * the [silex microframework](http://silex.sensiolabs.org/) (part of the Symfony ecosystem and using lots of Symfony components)
 
