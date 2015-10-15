@@ -102,6 +102,7 @@ class SunriseController
         $viewData->meta = $this->getMetaData();
         $viewData->footer = $this->getFooterData();
         $viewData->seo = $this->getSeoData();
+        $viewData->content = new ViewData();
         return $viewData;
     }
 

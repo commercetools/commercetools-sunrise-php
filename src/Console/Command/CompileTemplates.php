@@ -53,7 +53,6 @@ class CompileTemplates extends Command
          * @var Config $config
          */
         $config = $this->getApplication()->getService('config');
-
         $vendorTemplateDir = $projectDir . '/' . $config->get('default.templates.base');
         $templateDirs = array_map(
             function ($value) use ($projectDir){
@@ -87,10 +86,14 @@ class CompileTemplates extends Command
                     'flags' => \LightnCandy::FLAG_BESTPERFORMANCE |
                         \LightnCandy::FLAG_ERROR_EXCEPTION |
                         \LightnCandy::FLAG_HANDLEBARS |
+                        \LightnCandy::FLAG_NAMEDARG |
                         \LightnCandy::FLAG_RUNTIMEPARTIAL,
                     'basedir' => $baseDirs,
                     'fileext' => [
                         '.hbs',
+                    ],
+                    'helpers' => [
+                        'i18n' => '\Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter::trans'
                     ]
                 ]);
                 $fileName = $file->getBasename($file->getExtension() ? '.' . $file->getExtension() : '');

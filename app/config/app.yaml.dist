@@ -18,7 +18,6 @@ default:
     cache_dir: cache/templates
     templateDirs:
       - templates
-      - vendor/commercetools/sunrise-dmexco/conf/templates
   cache:
     products: true
 sunrise:

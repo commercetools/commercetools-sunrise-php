@@ -49,6 +49,14 @@ search:
     new: What's new
     price-asc: Price low to high
     price-desc: Price high to low
+product:
+  detailsText: Product Details
+  deliveryReturnsText: Delivery & Returns
+  standardDeliveryText: Standard Delivery
+  expressDeliveryText: Express Delivery
+  freeReturnsText:  Free returns
+  moreDeliveryInfoText: More Info
+  sizeDefaultItem: Choose Size
 seo:
   text: SEO TEXT AREA
   description: SEO Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.

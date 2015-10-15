@@ -20,5 +20,13 @@ search:
     new: Neu eingetroffen
     price-asc: Preis aufsteigend
     price-desc: Preis absteigend
+product:
+  detailsText: Product Details
+  deliveryReturnsText: Delivery & Returns
+  standardDeliveryText: Standard Delivery
+  expressDeliveryText: Express Delivery
+  freeReturnsText:  Free returns
+  moreDeliveryInfoText: More Info
+  sizeDefaultItem: Choose Size
 error:
   not_found: Die angeforderte Seite konnte nicht gefunden werden.

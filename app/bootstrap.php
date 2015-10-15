@@ -124,10 +124,10 @@ $app->register(
         'debug' => $app['config']['debug']
     ]
 );
-$app['translator'] = $app->extend('translator', function(Translator $translator, Application $app) {
+$app['translator'] = $app->extend('translator', function(Translator $translator) {
         $translator->addLoader('yaml', new YamlFileLoader());
-        $translator->addResource('yaml', PROJECT_DIR.'/app/locales/en.yaml', 'en');
-        $translator->addResource('yaml', PROJECT_DIR.'/app/locales/de.yaml', 'de');
+        $translator->addResource('yaml', PROJECT_DIR.'/app/locales/en.yaml', 'en', 'messages');
+        $translator->addResource('yaml', PROJECT_DIR.'/app/locales/de.yaml', 'de', 'messages');
         return $translator;
 });
 
@@ -139,8 +139,8 @@ $app['cache'] = function () use ($app) {
 
     return $factory->get();
 };
-$app['template'] = function () {
-    return new TemplateService(new HandlebarsAdapter(PROJECT_DIR .'/cache/templates'));
+$app['template'] = function () use ($app) {
+    return new TemplateService(new HandlebarsAdapter(PROJECT_DIR .'/cache/templates', $app['translator']));
 };
 
 $app->view(function ($result) use ($app) {

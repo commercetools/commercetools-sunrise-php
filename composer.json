@@ -5,10 +5,9 @@
     "commercetools/php-sdk": "^1.0@beta",
     "commercetools/sunrise-design": "*",
     "commercetools/commons": "dev-master",
-    "commercetools/sunrise-dmexco": "dev-master",
     "silex/silex": "~2.0@dev",
     "cilex/console-service-provider": "^1.1",
-    "zordius/lightncandy": "^0.22",
+    "zordius/lightncandy": "dev-master",
     "symfony/config": "^2.7",
     "symfony/yaml": "^2.7",
     "symfony/translation": "*",
@@ -35,7 +34,7 @@
       "type": "package",
       "package": {
         "name": "commercetools/sunrise-design",
-        "version": "0.9.4",
+        "version": "0.9.5",
         "source": {
           "url": "https://github.com/sphereio/sphere-sunrise-design",
           "type": "git",
@@ -50,21 +49,15 @@
     {
       "type": "vcs",
       "url": "https://github.com/sphereio/commercetools-php-commons"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/sphereio/sphere-sunrise-dmexco"
     }
   ],
   "scripts": {
     "post-update-cmd": [
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "cp -rf vendor/commercetools/sunrise-dmexco/public web/assets/",
       "app/console.php compile"
     ],
     "post-install-cmd": [
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "cp -rf vendor/commercetools/sunrise-dmexco/public web/assets/",
       "app/console.php compile"
     ]
   }

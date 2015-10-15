@@ -7,13 +7,19 @@ namespace Commercetools\Sunrise\Template\Adapter;
 
 
 use Commercetools\Sunrise\Template\TemplateAdapterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class HandlebarsAdapter implements TemplateAdapterInterface
 {
     private $templateDir;
+    /**
+     * @var TranslatorInterface
+     */
+    private static $translator;
 
-    public function __construct($templateDir)
+    public function __construct($templateDir, TranslatorInterface $translator = null)
     {
+        static::$translator = $translator;
         $this->templateDir = $templateDir;
     }
 
@@ -64,5 +70,22 @@ class HandlebarsAdapter implements TemplateAdapterInterface
          */
         $renderer = include($this->templateDir . '/home.php');
         return $renderer($viewData);
+    }
+
+    public static function trans($args, $named = [])
+    {
+        $id = array_shift($args);
+        $locale = isset($named['locale']) ? $named['locale'] : null;
+        $bundle = isset($named['bundle']) ? $named['bundle'] : 'messages';
+        $count = isset($named['count']) ? $named['count'] : null;
+        foreach ($named as $key => $value) {
+            $args['{{' . $key . '}}'] = $value;
+        }
+
+        if (is_null($count)) {
+            return static::$translator->trans($id, $args, $bundle, $locale);
+        } else {
+            return static::$translator->transChoice($id, $count, $args, $bundle, $locale);
+        }
     }
 }
