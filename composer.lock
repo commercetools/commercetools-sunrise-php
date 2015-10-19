@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eefb6a4c129bfce58e9df6b80d61f642",
+    "hash": "fa96d4247c792c8405b6bc61a2dc8d4d",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -177,6 +177,35 @@
             "type": "library"
         },
         {
+            "name": "commercetools/sunrise-dmexco",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sphereio/sphere-sunrise-dmexco.git",
+                "reference": "05fb24988b4b345f6e93094ab1e308459e95003e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-dmexco/zipball/05fb24988b4b345f6e93094ab1e308459e95003e",
+                "reference": "05fb24988b4b345f6e93094ab1e308459e95003e",
+                "shasum": ""
+            },
+            "type": "library",
+            "description": "Sunrise dmexco",
+            "homepage": "https://github.com/sphereio/sphere-sunrise-dmexco",
+            "keywords": [
+                "SPHERE.IO",
+                "Sunrise"
+            ],
+            "support": {
+                "email": "support@sphere.io",
+                "forum": "http://support.sphere.io",
+                "issues": "https://github.com/sphereio/sphere-sunrise-dmexco/issues",
+                "source": "https://github.com/sphereio/sphere-sunrise-dmexco/tree/master"
+            },
+            "time": "2015-10-14 08:59:21"
+        },
+        {
             "name": "guzzlehttp/guzzle",
             "version": "6.1.0",
             "source": {
@@ -240,16 +269,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "97fe7210def29451ec74923b27e552238defd75a"
+                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/97fe7210def29451ec74923b27e552238defd75a",
-                "reference": "97fe7210def29451ec74923b27e552238defd75a",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/b1e1c0d55f8083c71eda2c28c12a228d708294ea",
+                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea",
                 "shasum": ""
             },
             "require": {
@@ -287,7 +316,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2015-08-15 19:37:21"
+            "time": "2015-10-15 22:28:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -1229,12 +1258,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "434eaf556571849f51b5d4f2b560079d2c7c7058"
+                "reference": "14bab046ae4ff9c04565ea5f632f833635fd802c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/434eaf556571849f51b5d4f2b560079d2c7c7058",
-                "reference": "434eaf556571849f51b5d4f2b560079d2c7c7058",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/14bab046ae4ff9c04565ea5f632f833635fd802c",
+                "reference": "14bab046ae4ff9c04565ea5f632f833635fd802c",
                 "shasum": ""
             },
             "require": {
@@ -1268,7 +1297,7 @@
                 "php",
                 "template"
             ],
-            "time": "2015-10-14 06:28:55"
+            "time": "2015-10-16 03:51:51"
         }
     ],
     "packages-dev": [
@@ -1893,16 +1922,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v78",
+            "version": "v80",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "6db8c2a37e131ad811f5518ddfbe0e6248f49337"
+                "reference": "1b916117abc0fa3c4305eaa864085704b6e8161d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/6db8c2a37e131ad811f5518ddfbe0e6248f49337",
-                "reference": "6db8c2a37e131ad811f5518ddfbe0e6248f49337",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/1b916117abc0fa3c4305eaa864085704b6e8161d",
+                "reference": "1b916117abc0fa3c4305eaa864085704b6e8161d",
                 "shasum": ""
             },
             "bin": [
@@ -1933,7 +1962,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2015-10-01 19:46:08"
+            "time": "2015-10-15 14:08:33"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -2344,16 +2373,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.13",
+            "version": "4.8.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "be067d6105286b74272facefc2697038f8807b77"
+                "reference": "b4900675926860bef091644849305399b986efa2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/be067d6105286b74272facefc2697038f8807b77",
-                "reference": "be067d6105286b74272facefc2697038f8807b77",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b4900675926860bef091644849305399b986efa2",
+                "reference": "b4900675926860bef091644849305399b986efa2",
                 "shasum": ""
             },
             "require": {
@@ -2412,7 +2441,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-14 13:49:40"
+            "time": "2015-10-17 15:03:30"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3117,6 +3146,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "commercetools/php-sdk": 10,
+        "commercetools/sunrise-dmexco": 20,
         "commercetools/commons": 20,
         "silex/silex": 20,
         "zordius/lightncandy": 20,

@@ -1,7 +1,7 @@
-hello: Hello %name%
+hello: Hello __name__
 header:
   help: Help
-  callUs: CALL US ON %phone%
+  callUs: CALL US ON __phone__
   stores: STORES
   nav:
     new: New
@@ -57,6 +57,7 @@ product:
   freeReturnsText:  Free returns
   moreDeliveryInfoText: More Info
   sizeDefaultItem: Choose Size
+  saleText: Sale
 seo:
   text: SEO TEXT AREA
   description: SEO Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.

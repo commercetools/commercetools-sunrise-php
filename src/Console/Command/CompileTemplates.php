@@ -85,14 +85,14 @@ class CompileTemplates extends Command
                 $phpStr = \LightnCandy::compile($contents, [
                     'flags' => \LightnCandy::FLAG_BESTPERFORMANCE |
                         \LightnCandy::FLAG_ERROR_EXCEPTION |
-                        \LightnCandy::FLAG_HANDLEBARS |
                         \LightnCandy::FLAG_NAMEDARG |
-                        \LightnCandy::FLAG_RUNTIMEPARTIAL,
+                        \LightnCandy::FLAG_RUNTIMEPARTIAL |
+                        \LightnCandy::FLAG_HANDLEBARSJS,
                     'basedir' => $baseDirs,
                     'fileext' => [
                         '.hbs',
                     ],
-                    'helpers' => [
+                    'hbhelpers' => [
                         'i18n' => '\Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter::trans'
                     ]
                 ]);

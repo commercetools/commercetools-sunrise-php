@@ -38,16 +38,14 @@ const LOCALE_PATTERN = '[a-z]{2}([_-][a-z]{2})?';
 
 $app = new Application();
 
-$app['locator'] = function () use ($app) {
-    return new FileLocator([
-        PROJECT_DIR.'/app/config'
-    ]);
-};
 $app['config'] = function () use ($app) {
     $cachePath = PROJECT_DIR . '/cache/config.php';
 
     $configCache = new ConfigCache($cachePath, CONFIG_DEBUG);
     if (!$configCache->isFresh()) {
+        $locator = new FileLocator([
+            PROJECT_DIR.'/app/config'
+        ]);
         // fill this with an array of 'users.yml' file paths
         $yamlConfigFiles = [
             'app.yaml.dist',
@@ -59,7 +57,7 @@ $app['config'] = function () use ($app) {
         $config = [];
         foreach ($yamlConfigFiles as $yamlConfigFile) {
             try {
-                $fileName = $app['locator']->locate($yamlConfigFile);
+                $fileName = $locator->locate($yamlConfigFile);
                 // see the previous article "Loading resources" to
                 // see where $delegatingLoader comes from
                 // $delegatingLoader->load($yamlUserFile);
@@ -121,14 +119,28 @@ $app->register(
     new TranslationServiceProvider(),
     [
         'translator.cache_dir' => $app['config']['default.i18n.cache_dir'],
-        'debug' => $app['config']['debug']
+        'debug' => $app['config']['debug'],
+        'domains' => $app['config']['default.i18n.namespaces']
     ]
 );
-$app['translator'] = $app->extend('translator', function(Translator $translator) {
-        $translator->addLoader('yaml', new YamlFileLoader());
-        $translator->addResource('yaml', PROJECT_DIR.'/app/locales/en.yaml', 'en', 'messages');
-        $translator->addResource('yaml', PROJECT_DIR.'/app/locales/de.yaml', 'de', 'messages');
-        return $translator;
+$app['translator'] = $app->extend('translator', function(Translator $translator) use ($app) {
+    $translator->addLoader('yaml', new YamlFileLoader());
+    $locator = new FileLocator($app['config']['default.i18n.resourceDirs']);
+
+    $languages = array_keys($app['languages']);
+    foreach ($app['config']['default.i18n.namespace.namespaces'] as $namespace) {
+        foreach ($languages as $language) {
+            $files = $locator->locate($language . '/' . $namespace . '.yaml', null, false);
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    $translator->addResource('yaml', $file, $language, $namespace);
+                }
+            } else {
+                $translator->addResource('yaml', $files, $language, $namespace);
+            }
+        }
+    }
+    return $translator;
 });
 
 /**
@@ -140,7 +152,15 @@ $app['cache'] = function () use ($app) {
     return $factory->get();
 };
 $app['template'] = function () use ($app) {
-    return new TemplateService(new HandlebarsAdapter(PROJECT_DIR .'/cache/templates', $app['translator']));
+    return new TemplateService(
+        new HandlebarsAdapter(
+            $app['config']['default.templates.cache_dir'],
+            $app['translator'],
+            $app['config']['default.i18n.namespace.defaultNs'],
+            $app['config']['default.i18n.interpolationPrefix'],
+            $app['config']['default.i18n.interpolationSuffix']
+        )
+    );
 };
 
 $app->view(function ($result) use ($app) {

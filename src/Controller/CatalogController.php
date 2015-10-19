@@ -8,6 +8,7 @@ namespace Commercetools\Sunrise\Controller;
 use Commercetools\Commons\Helper\PriceFinder;
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
+use Commercetools\Core\Model\Common\Attribute;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
 use Commercetools\Core\Model\Product\ProductVariant;
@@ -128,6 +129,27 @@ class CatalogController extends SunriseController
         $static = new ViewData();
         $static->productCountSeparatorText = $this->trans('filter.productCountSeparator');
         $static->displaySelectorText = $this->trans('filter.itemsPerPage');
+        $static->saleText = $this->trans('product.saleText');
+        $static->productDetailsText = $this->trans('product.detailsText');
+        $static->deliveryAndReturnsText = $this->trans('product.deliveryReturnsText');
+        $static->standardDeliveryText = $this->trans('product.standardDeliveryText');
+        $static->expressDeliveryText = $this->trans('product.expressDeliveryText');
+        $static->freeReturnsText = $this->trans('product.freeReturnsText');
+        $static->moreDeliveryInfoText = $this->trans('product.moreDeliveryInfoText');
+        $static->sizeDefaultItem = new ViewData();
+        $static->sizeDefaultItem->text = $this->trans('product.sizeDefaultItem');
+        $static->sizeDefaultItem->selected = empty($sku);
+        $static->sizeDefaultItem->id = "pdp-size-select-first-option";
+
+        $bagItems = new ViewDataCollection();
+        for ($i = 1; $i < 10; $i++) {
+            $bagItem = new ViewData();
+            $bagItem->text = $i;
+            $bagItem->value = $i;
+            $bagItem->id = 'pdp-bag-items-' . $i;
+            $bagItems->add($bagItem);
+        }
+        $static->bagItems = $bagItems;
 
         return $static;
     }
@@ -176,28 +198,8 @@ class CatalogController extends SunriseController
 //        }
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page');
 
-        $viewData->content->static = new ViewData();
-
-        $bagItems = new ViewDataCollection();
-        for ($i = 1; $i < 10; $i++) {
-            $bagItem = new ViewData();
-            $bagItem->text = $i;
-            $bagItem->value = $i;
-            $bagItem->id = 'pdp-bag-items-' . $i;
-            $bagItems->add($bagItem);
-        }
-        $viewData->content->static->bagItems = $bagItems;
+        $viewData->content->static = $this->getStaticContent();
         $viewData->content->product = $this->getProductDetailData($product, $sku);
-        $viewData->content->static->productDetailsText = $this->trans('product.detailsText');
-        $viewData->content->static->deliveryAndReturnsText = $this->trans('product.deliveryReturnsText');
-        $viewData->content->static->standardDeliveryText = $this->trans('product.standardDeliveryText');
-        $viewData->content->static->expressDeliveryText = $this->trans('product.expressDeliveryText');
-        $viewData->content->static->freeReturnsText = $this->trans('product.freeReturnsText');
-        $viewData->content->static->moreDeliveryInfoText = $this->trans('product.moreDeliveryInfoText');
-        $viewData->content->static->sizeDefaultItem = new ViewData();
-        $viewData->content->static->sizeDefaultItem->text = $this->trans('product.sizeDefaultItem');
-        $viewData->content->static->sizeDefaultItem->selected = empty($sku);
-        $viewData->content->static->sizeDefaultItem->id = "pdp-size-select-first-option";
 
         return ['product-detail', $viewData->toArray()];
     }
@@ -222,6 +224,7 @@ class CatalogController extends SunriseController
             ]
         );
         $productData->id = $product->getId();
+        $productData->sale = isset($productData->priceOld);
         $productData->text = (string)$product->getName();
         $productData->text = (string)$product->getName();
         $productData->text = (string)$product->getName();
@@ -280,19 +283,27 @@ class CatalogController extends SunriseController
             $productData->images->add($imageData);
         }
 
-        $sizes = new ViewDataCollection();
 
+        $selectorConfig = $this->config['sunrise.products.variantsSelector'];
+        $selectorName = $selectorConfig['name'];
+        $variantsSelector = new ViewDataCollection();
         foreach ($product->getAllVariants() as $variant) {
+            /**
+             * @var ProductVariant $variant
+             */
             $variant->getAttributes()->setAttributeDefinitions($product->getProductType()->getObj()->getAttributes());
-            $size = new ViewData();
-            $variantSize = $variant->getAttributes()->getByName('commonSize');
-            $size->id = 'pdp-size-select-' . $variantSize->getValue()->getKey();
-            $size->text = $variantSize->getValue()->getLabel();
-            $size->value = $variant->getSku() . '.html';
-            $size->selected = !$emptySku && ($variant->getSku() == $sku);
-            $sizes->add($size);
+            $selectorAttribute = $variant->getAttributes()->getByName($selectorConfig['attribute']);
+            $variantsSelector->add(
+                $this->getSelectorData(
+                    $selectorAttribute,
+                    $variant->getSku(),
+                    $product->getSlug(),
+                    (!$emptySku ? $sku: null),
+                    $selectorConfig['idPrefix']
+                )
+            );
         }
-        $productData->sizes = $sizes;
+        $productData->$selectorName = $variantsSelector;
 
         $productData->details = new ViewDataCollection();
         $productVariant->getAttributes()->setAttributeDefinitions(
@@ -335,5 +346,28 @@ class CatalogController extends SunriseController
         $this->pagination->totalProducts = $total;
 
         return $products;
+    }
+
+    /**
+     * @param Attribute $attribute
+     * @param $variantSku
+     * @param $productSlug
+     * @param $sku
+     * @param $idPrefix
+     * @return ViewData
+     */
+    protected function getSelectorData(Attribute $attribute, $variantSku, $productSlug, $sku, $idPrefix)
+    {
+        $size = new ViewData();
+        $size->id = $idPrefix . '-' . (string)$attribute->getValue();
+        $size->text = (string)$attribute->getValue();
+        $url = $this->getLinkFor(
+            'pdp',
+            ['slug' => $productSlug, 'sku' => $variantSku]
+        );
+        $size->value = $url;
+        $size->selected = ($variantSku == $sku);
+
+        return $size;
     }
 }

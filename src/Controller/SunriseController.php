@@ -76,6 +76,22 @@ class SunriseController
      */
     protected $categoryRepository;
 
+    /**
+     * @var string
+     */
+    private $interpolationPrefix;
+
+    /**
+     * @var string
+     */
+    private $interpolationSuffix;
+
+    /**
+     * @var string
+     */
+    private $defaultNamespace;
+
+
     public function __construct(
         Client $client,
         $locale,
@@ -93,6 +109,10 @@ class SunriseController
         $this->cache = $cache;
         $this->client = $client;
         $this->categoryRepository = $categoryRepository;
+
+        $this->defaultNamespace = $this->config['default.i18n.namespace.defaultNs'];
+        $this->interpolationPrefix = $this->config['default.i18n.interpolationPrefix'];
+        $this->interpolationSuffix = $this->config['default.i18n.interpolationSuffix'];
     }
 
     protected function getViewData($title)
@@ -112,7 +132,7 @@ class SunriseController
         $header->stores = new Url($this->trans('header.stores'), '');
         $header->help = new Url($this->trans('header.help'), '');
         $header->callUs = new Url(
-            $this->trans('header.callUs', ['%phone%' => $this->config['sunrise.header.callUs']]),
+            $this->trans('header.callUs', ['phone' => $this->config['sunrise.header.callUs']]),
             ''
         );
         $header->location = new ViewData();
@@ -266,7 +286,20 @@ class SunriseController
 
     protected function trans($id, $parameters = [], $domain = null, $locale = null)
     {
-        return $this->translator->trans($id, $parameters, $domain, $locale);
+        if (is_null($domain)) {
+            $domain = $this->defaultNamespace;
+        }
+        return $this->translator->trans($id, $this->mapInterpolation($parameters), $domain, $locale);
+    }
+
+    protected function mapInterpolation($parameters)
+    {
+        $args = [];
+        foreach ($parameters as $key => $value) {
+            $key = $this->interpolationPrefix . $key . $this->interpolationSuffix;
+            $args[$key] = $value;
+        }
+        return $args;
     }
 
     /**

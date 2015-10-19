@@ -1,7 +1,7 @@
-hello: Hallo %name%
+hello: Hallo __name__
 header:
   help: Help
-  callUs: CALL US ON %phone%
+  callUs: CALL US ON __phone__
   stores: STORES
   nav:
     new: New
@@ -28,5 +28,6 @@ product:
   freeReturnsText:  Free returns
   moreDeliveryInfoText: More Info
   sizeDefaultItem: Choose Size
+  saleText: Sale
 error:
   not_found: Die angeforderte Seite konnte nicht gefunden werden.

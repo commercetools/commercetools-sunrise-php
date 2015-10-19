@@ -12,12 +12,22 @@ default:
     de:
       - en
   i18n:
+    resourceDirs:
+      - vendor/commercetools/sunrise-design/locales
+      - app/locales
+    namespace:
+      defaultNs: translations
+      namespaces:
+        - translations
     cache_dir: cache/i18n
+    interpolationPrefix: __
+    interpolationSuffix: __
   templates:
     base: vendor/commercetools/sunrise-design/templates
     cache_dir: cache/templates
     templateDirs:
       - templates
+      - vendor/commercetools/sunrise-dmexco/conf/templates
   cache:
     products: true
 sunrise:
@@ -41,7 +51,10 @@ sunrise:
       price-desc:
         formValue: price-desc
         searchParam: price desc
-
+    variantsSelector:
+        attribute: size
+        name: sizes
+        idPrefix: pdp-size-select
 commercetools:
   client_id: <client-id>
   client_secret: <client-secret>

@@ -12,14 +12,38 @@ use Symfony\Component\Translation\TranslatorInterface;
 class HandlebarsAdapter implements TemplateAdapterInterface
 {
     private $templateDir;
+
     /**
      * @var TranslatorInterface
      */
     private static $translator;
 
-    public function __construct($templateDir, TranslatorInterface $translator = null)
-    {
+    /**
+     * @var string
+     */
+    private static $interpolationPrefix;
+
+    /**
+     * @var string
+     */
+    private static $interpolationSuffix;
+
+    /**
+     * @var string
+     */
+    private static $defaultNamespace;
+
+    public function __construct(
+        $templateDir,
+        TranslatorInterface $translator = null,
+        $defaultNamespace = null,
+        $interpolationPrefix = '__',
+        $interpolationSuffix = '__'
+    ) {
         static::$translator = $translator;
+        static::$defaultNamespace = $defaultNamespace;
+        static::$interpolationPrefix = $interpolationPrefix;
+        static::$interpolationSuffix = $interpolationSuffix;
         $this->templateDir = $templateDir;
     }
 
@@ -72,20 +96,23 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         return $renderer($viewData);
     }
 
-    public static function trans($args, $named = [])
+    public static function trans($context, $options)
     {
-        $id = array_shift($args);
-        $locale = isset($named['locale']) ? $named['locale'] : null;
-        $bundle = isset($named['bundle']) ? $named['bundle'] : 'messages';
-        $count = isset($named['count']) ? $named['count'] : null;
-        foreach ($named as $key => $value) {
-            $args['{{' . $key . '}}'] = $value;
+        $options = isset($options['hash']) ? $options['hash'] : [];
+        $bundle = isset($options['bundle']) ? $options['bundle'] : static::$defaultNamespace;
+        $locale = isset($options['locale']) ? $options['locale'] : null;
+        $count = isset($options['count']) ? $options['count'] : null;
+
+        $args = [];
+        foreach ($options as $key => $value) {
+            $key = static::$interpolationPrefix . $key . static::$interpolationSuffix;
+            $args[$key] = $value;
         }
 
         if (is_null($count)) {
-            return static::$translator->trans($id, $args, $bundle, $locale);
+            return static::$translator->trans($context, $args, $bundle, $locale);
         } else {
-            return static::$translator->transChoice($id, $count, $args, $bundle, $locale);
+            return static::$translator->transChoice($context, $count, $args, $bundle, $locale);
         }
     }
 }
