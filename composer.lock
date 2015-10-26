@@ -182,12 +182,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/sphere-sunrise-dmexco.git",
-                "reference": "05fb24988b4b345f6e93094ab1e308459e95003e"
+                "reference": "346bcbb3d38d9597bded4491302dc7c76ed23e0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-dmexco/zipball/05fb24988b4b345f6e93094ab1e308459e95003e",
-                "reference": "05fb24988b4b345f6e93094ab1e308459e95003e",
+                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-dmexco/zipball/346bcbb3d38d9597bded4491302dc7c76ed23e0f",
+                "reference": "346bcbb3d38d9597bded4491302dc7c76ed23e0f",
                 "shasum": ""
             },
             "type": "library",
@@ -203,7 +203,7 @@
                 "issues": "https://github.com/sphereio/sphere-sunrise-dmexco/issues",
                 "source": "https://github.com/sphereio/sphere-sunrise-dmexco/tree/master"
             },
-            "time": "2015-10-14 08:59:21"
+            "time": "2015-10-23 09:25:42"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1258,12 +1258,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "14bab046ae4ff9c04565ea5f632f833635fd802c"
+                "reference": "4c5c829c1efdc9a21e4ab451f55b8db867dff6b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/14bab046ae4ff9c04565ea5f632f833635fd802c",
-                "reference": "14bab046ae4ff9c04565ea5f632f833635fd802c",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/4c5c829c1efdc9a21e4ab451f55b8db867dff6b6",
+                "reference": "4c5c829c1efdc9a21e4ab451f55b8db867dff6b6",
                 "shasum": ""
             },
             "require": {
@@ -1297,7 +1297,7 @@
                 "php",
                 "template"
             ],
-            "time": "2015-10-16 03:51:51"
+            "time": "2015-10-26 08:00:58"
         }
     ],
     "packages-dev": [
@@ -2373,16 +2373,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.14",
+            "version": "4.8.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b4900675926860bef091644849305399b986efa2"
+                "reference": "625f8c345606ed0f3a141dfb88f4116f0e22978e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b4900675926860bef091644849305399b986efa2",
-                "reference": "b4900675926860bef091644849305399b986efa2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/625f8c345606ed0f3a141dfb88f4116f0e22978e",
+                "reference": "625f8c345606ed0f3a141dfb88f4116f0e22978e",
                 "shasum": ""
             },
             "require": {
@@ -2441,7 +2441,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-17 15:03:30"
+            "time": "2015-10-23 06:48:33"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
