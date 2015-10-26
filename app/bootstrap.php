@@ -125,7 +125,8 @@ $app->register(
 );
 $app['translator'] = $app->extend('translator', function(Translator $translator) use ($app) {
     $translator->addLoader('yaml', new YamlFileLoader());
-    $locator = new FileLocator($app['config']['default.i18n.resourceDirs']);
+    $paths = array_map(function ($path) { return realpath(PROJECT_DIR . '/' . $path);}, $app['config']['default.i18n.resourceDirs']);
+    $locator = new FileLocator($paths);
 
     $languages = array_keys($app['languages']);
     foreach ($app['config']['default.i18n.namespace.namespaces'] as $namespace) {
@@ -154,7 +155,7 @@ $app['cache'] = function () use ($app) {
 $app['template'] = function () use ($app) {
     return new TemplateService(
         new HandlebarsAdapter(
-            $app['config']['default.templates.cache_dir'],
+            PROJECT_DIR . '/' .$app['config']['default.templates.cache_dir'],
             $app['translator'],
             $app['config']['default.i18n.namespace.defaultNs'],
             $app['config']['default.i18n.interpolationPrefix'],

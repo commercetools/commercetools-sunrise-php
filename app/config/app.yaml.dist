@@ -13,8 +13,8 @@ default:
       - en
   i18n:
     resourceDirs:
-      - vendor/commercetools/sunrise-design/locales/
-      - app/locales/
+      - vendor/commercetools/sunrise-design/locales
+      - app/locales
     namespace:
       defaultNs: translations
       namespaces:
