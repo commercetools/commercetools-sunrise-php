@@ -86,6 +86,7 @@ class CompileTemplates extends Command
                     'flags' => \LightnCandy::FLAG_BESTPERFORMANCE |
                         \LightnCandy::FLAG_ERROR_EXCEPTION |
                         \LightnCandy::FLAG_NAMEDARG |
+                        \LightnCandy::FLAG_ADVARNAME |
                         \LightnCandy::FLAG_RUNTIMEPARTIAL |
                         \LightnCandy::FLAG_HANDLEBARSJS,
                     'basedir' => $baseDirs,
