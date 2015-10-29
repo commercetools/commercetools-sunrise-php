@@ -23,8 +23,20 @@ class ViewDataCollection implements ArraySerializable
         );
     }
 
-    public function add($value)
+    public function getAt($key)
     {
-        $this->data[] = $value;
+        if (!isset($this->data[$key])) {
+            return null;
+        }
+        return $this->data[$key];
+    }
+
+    public function add($value, $key = null)
+    {
+        if (is_null($key)) {
+            $this->data[] = $value;
+        } else {
+            $this->data[$key] = $value;
+        }
     }
 }

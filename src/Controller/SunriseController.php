@@ -308,20 +308,19 @@ class SunriseController
     protected function getCategories()
     {
         $cacheKey = 'categories';
-
         $categoryData = [];
         if ($this->cache->has($cacheKey)) {
             $cachedCategories = $this->cache->fetch($cacheKey);
             if (!empty($cachedCategories)) {
                 $categoryData = $cachedCategories;
             }
-            $categories = CategoryCollection::fromArray($categoryData, $this->client->getConfig()->getContext());
+            $categories = unserialize($categoryData);
+            $categories->setContext($this->client->getConfig()->getContext());
         } else {
             $helper = new QueryHelper();
             $categories = $helper->getAll($this->client, CategoryQueryRequest::of());
-            $this->cache->store($cacheKey, $categories->toArray(), static::CACHE_TTL);
+            $this->cache->store($cacheKey, serialize($categories), static::CACHE_TTL);
         }
-
         return $categories;
     }
 

@@ -37,15 +37,27 @@ class ProductRepository extends Repository
      * @param $currentPage
      * @param $sort
      * @param null $category
-     * @return \Commercetools\Core\Model\Product\ProductProjectionCollection
+     * @return array
      */
-    public function getProducts(CategoryCollection $categories, $locale, $itemsPerPage, $currentPage, $sort, $category = null)
-    {
+    public function getProducts(
+        CategoryCollection $categories,
+        $locale,
+        $itemsPerPage,
+        $currentPage,
+        $sort,
+        $category = null,
+        $facets = null
+    ){
         $searchRequest = ProductProjectionSearchRequest::of()
             ->sort($sort)
             ->limit($itemsPerPage)
             ->offset(min($itemsPerPage * ($currentPage - 1),100000));
 
+        if (!is_null($facets)) {
+            foreach ($facets as $facet) {
+                $searchRequest->addFacet($facet);
+            }
+        }
         if ($category) {
             $category = $categories->getBySlug($category, $locale);
             if ($category instanceof Category) {
@@ -58,6 +70,6 @@ class ProductRepository extends Repository
         $response = $searchRequest->executeWithClient($this->client);
         $products = $searchRequest->mapResponse($response);
 
-        return [$products, $response->getOffset(), $response->getTotal()];
+        return [$products, $response->getFacets(), $response->getOffset(), $response->getTotal()];
     }
 }

@@ -8,7 +8,10 @@ namespace Commercetools\Sunrise\Controller;
 use Commercetools\Commons\Helper\PriceFinder;
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
+use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Common\Attribute;
+use Commercetools\Core\Model\Product\Facet;
+use Commercetools\Core\Model\Product\FacetResultCollection;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
 use Commercetools\Core\Model\Product\ProductVariant;
@@ -34,6 +37,11 @@ class CatalogController extends SunriseController
      * @var ProductRepository
      */
     protected $productRepository;
+
+    /**
+     * @var FacetResultCollection
+     */
+    protected $facets;
 
     public function __construct(
         Client $client,
@@ -103,8 +111,77 @@ class CatalogController extends SunriseController
     {
         $filter = new ViewData();
         $filter->url = $uri->getPath();
-
+        $filter->categories = $this->getCategoriesFacet();
         return $filter;
+    }
+
+    protected function addToCollection($categoryTree, ViewDataCollection $collection, $ancestors, $categoryId, ViewData $entry)
+    {
+        if (!empty($ancestors)) {
+            $firstAncestor = array_shift($ancestors);
+            $firstAncestorEntry = $categoryTree[$firstAncestor];
+
+            $ancestor = $collection->getAt($firstAncestor);
+            if (is_null($ancestor)) {
+                $firstAncestorEntry->children = new ViewDataCollection();
+                $collection->add($firstAncestorEntry, $firstAncestor);
+            }
+            if (!isset($ancestor->children)) {
+                $firstAncestorEntry->children = new ViewDataCollection();
+            }
+            $this->addToCollection($categoryTree, $firstAncestorEntry->children, $ancestors, $categoryId, $entry);
+        } else {
+            $collection->add($entry, $categoryId);
+        }
+    }
+
+    protected function getCategoriesFacet()
+    {
+        $maxDepth = 1;
+        $categoryFacet = $this->facets->getByName('categories');
+        $categoryData = $this->getCategories();
+
+        $cacheKey = 'category-facet';
+        if (!$this->cache->has($cacheKey)) {
+            $categoryTree = [];
+            foreach ($categoryData as $category) {
+                $categoryEntry = new ViewData();
+                $categoryEntry->value = $category->getId();
+                $categoryEntry->label = (string)$category->getName();
+                $ancestors = $category->getAncestors();
+                $categoryEntry->ancestors = [];
+                if (!is_null($ancestors)) {
+                    foreach ($ancestors as $ancestor) {
+                        $categoryEntry->ancestors[] = $ancestor->getId();
+                    }
+                }
+                $categoryTree[$category->getId()] = $categoryEntry;
+            }
+            $this->cache->store($cacheKey, serialize($categoryTree));
+        } else {
+            $categoryTree = unserialize($this->cache->fetch($cacheKey));
+        }
+
+        $limitedOptions = new ViewDataCollection();
+
+        foreach ($categoryFacet->getTerms() as $term) {
+            $categoryId = $term->getTerm();
+            $categoryEntry = $categoryTree[$categoryId];
+            if (count($categoryEntry->ancestors) > $maxDepth) {
+                continue;
+            }
+            $categoryEntry->count = $term->getCount();
+            $this->addToCollection($categoryTree, $limitedOptions, $categoryEntry->ancestors, $categoryId, $categoryEntry);
+        }
+
+        $categories = new ViewData();
+        $categories->facet = new ViewData();
+        $categories->facet->key = 'category';
+        $categories->facet->label = 'Categories';
+        $categories->facet->available = true;
+        $categories->facet->limitedOptions = $limitedOptions;
+
+        return $categories;
     }
 
     protected function getSortData($currentSort)
@@ -175,27 +252,8 @@ class CatalogController extends SunriseController
     {
         $slug = $request->get('slug');
         $sku = $request->get('sku');
-        $country = \Locale::getRegion($this->locale);
         $product = $this->productRepository->getProductBySlug($slug);
 
-//        if (empty($sku)) {
-//            $productUrl = $this->getLinkFor(
-//                'pdp',
-//                [
-//                    'slug' => (string)$product->getSlug(),
-//                    'sku' => $product->getMasterVariant()->getSku()
-//                ]
-//            );
-//            return new RedirectResponse($productUrl);
-//        }
-
-//        $viewData = json_decode(
-//            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/pdp.json'),
-//            true
-//        );
-//        foreach ($viewData['content']['wishlistWidged']['list'] as &$wish) {
-//            $wish['image'] = '/' . $wish['image'];
-//        }
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page');
 
         $viewData->content->static = $this->getStaticContent();
@@ -328,22 +386,27 @@ class CatalogController extends SunriseController
         $sort = $this->getSort($request, 'sunrise.products.sort')['searchParam'];
         $category = $request->get('category');
 
+        $facetDefinitions = [
+            Facet::of()->setName('categories.id')->setAlias('categories')
+        ];
         /**
          * @var ProductProjectionCollection $products
          * @var PagedSearchResponse $response
          */
-        list($products, $offset, $total) = $this->productRepository->getProducts(
+        list($products, $facets, $offset, $total) = $this->productRepository->getProducts(
             $this->getCategories(),
             $this->locale,
             $itemsPerPage,
             $currentPage,
             $sort,
-            $category
+            $category,
+            $facetDefinitions
         );
 
         $this->applyPagination(new Uri($request->getRequestUri()), $offset, $total, $itemsPerPage);
         $this->pagination->productsCount = $products->count();
         $this->pagination->totalProducts = $total;
+        $this->facets = $facets;
 
         return $products;
     }
