@@ -111,7 +111,9 @@ class CatalogController extends SunriseController
     {
         $filter = new ViewData();
         $filter->url = $uri->getPath();
-        $filter->categories = $this->getCategoriesFacet();
+        $filter->list = new ViewDataCollection();
+        $filter->list->add($this->getCategoriesFacet());
+
         return $filter;
     }
 
@@ -141,7 +143,7 @@ class CatalogController extends SunriseController
         $categoryFacet = $this->facets->getByName('categories');
         $categoryData = $this->getCategories();
 
-        $cacheKey = 'category-facet';
+        $cacheKey = 'category-facet-tree-' . $this->locale;
         if (!$this->cache->has($cacheKey)) {
             $categoryTree = [];
             foreach ($categoryData as $category) {
@@ -176,8 +178,10 @@ class CatalogController extends SunriseController
 
         $categories = new ViewData();
         $categories->facet = new ViewData();
-        $categories->facet->key = 'category';
-        $categories->facet->label = 'Categories';
+        $categories->facet->available = true;
+        $categories->hierarchicalSelectFacet = true;
+        $categories->facet->key = 'product-type';
+        $categories->facet->label = $this->trans('search.filters.productType');
         $categories->facet->available = true;
         $categories->facet->limitedOptions = $limitedOptions;
 

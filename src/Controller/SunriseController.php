@@ -167,7 +167,7 @@ class SunriseController
     {
         $navMenu = new ViewData();
 
-        $cacheKey = 'category-menu';
+        $cacheKey = 'category-menu-' . $this->locale;
         if ($this->cache->has($cacheKey)) {
             $categoryMenu = unserialize($this->cache->fetch($cacheKey));
         } else {
