@@ -2,9 +2,8 @@
   "require": {
     "ext-apcu": "*",
     "ext-mbstring": "*",
-    "commercetools/php-sdk": "^1.0@beta",
+    "commercetools/php-sdk": "dev-develop",
     "commercetools/sunrise-design": "*",
-    "commercetools/sunrise-dmexco": "dev-master",
     "commercetools/commons": "dev-master",
     "silex/silex": "~2.0@dev",
     "cilex/console-service-provider": "^1.1",
@@ -59,12 +58,10 @@
   "scripts": {
     "post-update-cmd": [
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "cp -rf vendor/commercetools/sunrise-dmexco/public web/assets/",
       "app/console.php compile"
     ],
     "post-install-cmd": [
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "cp -rf vendor/commercetools/sunrise-dmexco/public web/assets/",
       "app/console.php compile"
     ]
   }

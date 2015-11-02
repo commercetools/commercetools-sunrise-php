@@ -55,6 +55,11 @@ sunrise:
         attribute: size
         name: sizes
         idPrefix: pdp-size-select
+    details:
+      attributes:
+      - designer
+      - gender
+      - style
 commercetools:
   client_id: <client-id>
   client_secret: <client-secret>

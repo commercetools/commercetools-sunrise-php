@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fa96d4247c792c8405b6bc61a2dc8d4d",
+    "hash": "74107f3dda45ae752dacf3ba3b0ad50a",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -116,16 +116,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "v1.0.0-RC7",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "7fa6b26b6c1ed1c765ba90ada318170355cb6d28"
+                "reference": "1a79cbc2d204b660912cd4aa1252cf219fb4ac89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/7fa6b26b6c1ed1c765ba90ada318170355cb6d28",
-                "reference": "7fa6b26b6c1ed1c765ba90ada318170355cb6d28",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/1a79cbc2d204b660912cd4aa1252cf219fb4ac89",
+                "reference": "1a79cbc2d204b660912cd4aa1252cf219fb4ac89",
                 "shasum": ""
             },
             "require": {
@@ -140,17 +140,18 @@
             "require-dev": {
                 "behat/behat": "^3.0",
                 "doctrine/cache": "^1.4",
+                "fabpot/php-cs-fixer": "@stable",
                 "guzzlehttp/guzzle": "^6.0",
                 "mayflower/php-codebrowser": "^1.0",
                 "monolog/monolog": "^1.12",
-                "pdepend/pdepend": "^1.1",
+                "pdepend/pdepend": "@stable",
                 "phploc/phploc": "^2.0",
-                "phpmd/phpmd": "^1.0",
+                "phpmd/phpmd": "@stable",
                 "phpspec/prophecy-phpunit": "^1.0",
                 "phpunit/phpcov": "*",
                 "phpunit/phpunit": "^4.0",
-                "sebastian/phpcpd": "^1.4",
-                "squizlabs/php_codesniffer": "^1.0"
+                "sebastian/phpcpd": "@stable",
+                "squizlabs/php_codesniffer": "@stable"
             },
             "type": "project",
             "autoload": {
@@ -164,7 +165,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-10-19 15:23:19"
+            "time": "2015-11-02 10:54:38"
         },
         {
             "name": "commercetools/sunrise-design",
@@ -175,35 +176,6 @@
                 "reference": "gh-pages"
             },
             "type": "library"
-        },
-        {
-            "name": "commercetools/sunrise-dmexco",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sphereio/sphere-sunrise-dmexco.git",
-                "reference": "346bcbb3d38d9597bded4491302dc7c76ed23e0f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-dmexco/zipball/346bcbb3d38d9597bded4491302dc7c76ed23e0f",
-                "reference": "346bcbb3d38d9597bded4491302dc7c76ed23e0f",
-                "shasum": ""
-            },
-            "type": "library",
-            "description": "Sunrise dmexco",
-            "homepage": "https://github.com/sphereio/sphere-sunrise-dmexco",
-            "keywords": [
-                "SPHERE.IO",
-                "Sunrise"
-            ],
-            "support": {
-                "email": "support@sphere.io",
-                "forum": "http://support.sphere.io",
-                "issues": "https://github.com/sphereio/sphere-sunrise-dmexco/issues",
-                "source": "https://github.com/sphereio/sphere-sunrise-dmexco/tree/master"
-            },
-            "time": "2015-10-23 09:25:42"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1242,12 +1214,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "4c5c829c1efdc9a21e4ab451f55b8db867dff6b6"
+                "reference": "80efaa4dc2cf75e65ea37cb118b1ed0be52c709c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/4c5c829c1efdc9a21e4ab451f55b8db867dff6b6",
-                "reference": "4c5c829c1efdc9a21e4ab451f55b8db867dff6b6",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/80efaa4dc2cf75e65ea37cb118b1ed0be52c709c",
+                "reference": "80efaa4dc2cf75e65ea37cb118b1ed0be52c709c",
                 "shasum": ""
             },
             "require": {
@@ -1281,7 +1253,7 @@
                 "php",
                 "template"
             ],
-            "time": "2015-10-26 08:00:58"
+            "time": "2015-10-31 11:42:22"
         }
     ],
     "packages-dev": [
@@ -1906,16 +1878,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v80",
+            "version": "v82",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "1b916117abc0fa3c4305eaa864085704b6e8161d"
+                "reference": "ce2b40b0ecf99c2d4fb4cee9edffc5a80cb8b274"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/1b916117abc0fa3c4305eaa864085704b6e8161d",
-                "reference": "1b916117abc0fa3c4305eaa864085704b6e8161d",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/ce2b40b0ecf99c2d4fb4cee9edffc5a80cb8b274",
+                "reference": "ce2b40b0ecf99c2d4fb4cee9edffc5a80cb8b274",
                 "shasum": ""
             },
             "bin": [
@@ -1946,7 +1918,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2015-10-15 14:08:33"
+            "time": "2015-10-31 00:38:28"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -3122,8 +3094,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/php-sdk": 10,
-        "commercetools/sunrise-dmexco": 20,
+        "commercetools/php-sdk": 20,
         "commercetools/commons": 20,
         "silex/silex": 20,
         "zordius/lightncandy": 20,

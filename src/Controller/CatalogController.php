@@ -371,9 +371,11 @@ class CatalogController extends SunriseController
         $productVariant->getAttributes()->setAttributeDefinitions(
             $product->getProductType()->getObj()->getAttributes()
         );
-        foreach ($productVariant->getAttributes() as $attribute) {
+        $attributeList = $this->config['sunrise.products.details.attributes'];
+        foreach ($attributeList as $attributeName) {
+            $attribute = $productVariant->getAttributes()->getByName($attributeName);
             $attributeDefinition = $product->getProductType()->getObj()->getAttributes()->getByName(
-                $attribute->getName()
+                $attributeName
             );
             $attributeData = new ViewData();
             $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
