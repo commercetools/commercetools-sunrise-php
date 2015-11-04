@@ -6,6 +6,7 @@
 namespace Commercetools\Sunrise\Template\Adapter;
 
 
+use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Template\TemplateAdapterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -65,6 +66,9 @@ class HandlebarsAdapter implements TemplateAdapterInterface
 
     public function render($page, $viewData)
     {
+        if ($viewData instanceof ViewData) {
+            $viewData = $viewData->toArray();
+        }
         $renderMethod = 'render' . $this->camelize($page);
         return $this->$renderMethod($viewData);
     }
@@ -98,6 +102,10 @@ class HandlebarsAdapter implements TemplateAdapterInterface
 
     public static function trans($context, $options)
     {
+        if (strstr($context, ':')) {
+            list($bundle, $context) = explode(':', $context, 2);
+            $options['bundle'] = $bundle;
+        }
         $options = isset($options['hash']) ? $options['hash'] : [];
         $bundle = isset($options['bundle']) ? $options['bundle'] : static::$defaultNamespace;
         $locale = isset($options['locale']) ? $options['locale'] : null;
@@ -114,5 +122,14 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         } else {
             return static::$translator->transChoice($context, $count, $args, $bundle, $locale);
         }
+    }
+
+    protected function renderCart($viewData)
+    {
+        /**
+         * @var callable $renderer
+         */
+        $renderer = include($this->templateDir . '/cart.php');
+        return $renderer($viewData);
     }
 }

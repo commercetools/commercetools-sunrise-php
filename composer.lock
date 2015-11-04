@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "74107f3dda45ae752dacf3ba3b0ad50a",
+    "hash": "78bafd6a83058ae8feaf512fd88e5447",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "1a79cbc2d204b660912cd4aa1252cf219fb4ac89"
+                "reference": "23c2de54af04abec7659d825a898e0cd15fbd886"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/1a79cbc2d204b660912cd4aa1252cf219fb4ac89",
-                "reference": "1a79cbc2d204b660912cd4aa1252cf219fb4ac89",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/23c2de54af04abec7659d825a898e0cd15fbd886",
+                "reference": "23c2de54af04abec7659d825a898e0cd15fbd886",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-11-02 10:54:38"
+            "time": "2015-11-04 10:42:44"
         },
         {
             "name": "commercetools/sunrise-design",
@@ -176,6 +176,49 @@
                 "reference": "gh-pages"
             },
             "type": "library"
+        },
+        {
+            "name": "dcro/secure-client-side-session-handler",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dcro/php-secure-client-side-sessions.git",
+                "reference": "1b0e48de06f15fee869870707c39585e3158c2b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dcro/php-secure-client-side-sessions/zipball/1b0e48de06f15fee869870707c39585e3158c2b3",
+                "reference": "1b0e48de06f15fee869870707c39585e3158c2b3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SecureClientSideSessionHandler": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Dan Cotora",
+                    "email": "d@bluevision.ro",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Securely store PHP session information on the client side using cookies (session data is encrypted & compressed)",
+            "keywords": [
+                "client",
+                "cookie",
+                "secure",
+                "session"
+            ],
+            "time": "2014-09-17 17:34:53"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -292,16 +335,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "4ef919b0cf3b1989523138b60163bbcb7ba1ff7e"
+                "reference": "4d0bdbe1206df7440219ce14c972aa57cc5e4982"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/4ef919b0cf3b1989523138b60163bbcb7ba1ff7e",
-                "reference": "4ef919b0cf3b1989523138b60163bbcb7ba1ff7e",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/4d0bdbe1206df7440219ce14c972aa57cc5e4982",
+                "reference": "4d0bdbe1206df7440219ce14c972aa57cc5e4982",
                 "shasum": ""
             },
             "require": {
@@ -346,7 +389,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2015-08-15 19:32:36"
+            "time": "2015-11-03 01:34:55"
         },
         {
             "name": "monolog/monolog",
@@ -564,12 +607,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "f59fa3e7ace127dffa3d4c6fd14b0701f96ec0ed"
+                "reference": "32bed6d4f595af61b2972206cd9a18175d983007"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/f59fa3e7ace127dffa3d4c6fd14b0701f96ec0ed",
-                "reference": "f59fa3e7ace127dffa3d4c6fd14b0701f96ec0ed",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/32bed6d4f595af61b2972206cd9a18175d983007",
+                "reference": "32bed6d4f595af61b2972206cd9a18175d983007",
                 "shasum": ""
             },
             "require": {
@@ -639,7 +682,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2015-10-12 09:29:39"
+            "time": "2015-11-04 01:18:50"
         },
         {
             "name": "symfony/config",
@@ -3098,6 +3141,7 @@
         "commercetools/commons": 20,
         "silex/silex": 20,
         "zordius/lightncandy": 20,
+        "dcro/secure-client-side-session-handler": 20,
         "commercetools/sunrise-scenarios": 20,
         "behat/mink-goutte-driver": 20
     },

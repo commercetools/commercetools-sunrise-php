@@ -1,13 +1,16 @@
 debug: false
 default:
-  locale: en
-  country: us
+  locale: de
+  country: de
   languages:
     - de
     - en
   countries:
     - DE
     - UK
+  currencies:
+    DE: EUR
+    UK: GBP
   fallback_languages:
     de:
       - en
@@ -30,6 +33,10 @@ default:
       - vendor/commercetools/sunrise-dmexco/conf/templates
   cache:
     products: true
+  session:
+    enforceSecureCookie: true
+    encryptionKey:
+    encryptionKeySalt:
 sunrise:
   header:
     callUs: +44 123 456 000

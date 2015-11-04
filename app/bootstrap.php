@@ -7,8 +7,10 @@ namespace Commercetools\Sunrise;
 
 use Commercetools\Core\Cache\CacheAdapterFactory;
 use Commercetools\Core\Client;
+use Commercetools\Sunrise\Controller\CartController;
 use Commercetools\Sunrise\Controller\CatalogController;
 use Commercetools\Sunrise\Model\Config;
+use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Service\ClientFactory;
@@ -19,6 +21,7 @@ use Silex\Application;
 use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
+use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
@@ -61,7 +64,7 @@ $app['config'] = function () use ($app) {
                 // see the previous article "Loading resources" to
                 // see where $delegatingLoader comes from
                 // $delegatingLoader->load($yamlUserFile);
-                $config = array_merge($config, Yaml::parse(file_get_contents($fileName)));
+                $config = array_replace_recursive($config, Yaml::parse(file_get_contents($fileName)));
                 $resources[] = new FileResource($yamlConfigFile);
             } catch (\InvalidArgumentException $e) {}
         }
@@ -110,6 +113,18 @@ $app['languages'] = function () use ($app) {
  */
 $app->register(new LocaleServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
+$app->register(new SessionServiceProvider());
+$app['session.storage.handler'] = function () use ($app) {
+    $encryptionKey = $app['config']['default.session.encryptionKey'];
+    $encryptionKeySalt = $app['config']['default.session.encryptionKeySalt'];
+    $enforceSecureCookie = $app['config']['default.session.enforceSecureCookie'];
+    if (getenv('SESSION_ENCRYPTION_KEY')) {
+        $encryptionKey = getenv('SESSION_ENCRYPTION_KEY');
+        $encryptionKeySalt = getenv('SESSION_ENCRYPTION_KEY_SALT');
+    }
+    \SecureClientSideSessionHandler::$cookieSecure = $enforceSecureCookie;
+    return new \SecureClientSideSessionHandler($encryptionKey, $encryptionKeySalt);
+};
 // Register the monolog logging service
 $app->register(new MonologServiceProvider(), array(
     'monolog.logfile' => 'php://stderr',
@@ -198,9 +213,18 @@ $app['repository.category'] = function () use ($app) {
         $app['client']
     );
 };
+$app['repository.cart'] = function () use ($app) {
+    $locale = $app['locale.converter']->convert($app['locale']);
+    return new CartRepository(
+        $app['config'],
+        $app['cache'],
+        $app['client'],
+        $locale
+    );
+};
 
 /**
- * Controller
+ * Catalog Controller
  */
 $app['catalog.controller'] = function () use ($app) {
     $locale = $app['locale.converter']->convert($app['locale']);
@@ -215,6 +239,23 @@ $app['catalog.controller'] = function () use ($app) {
         $app['repository.product']
     );
 };
+/**
+ * Cart Controller
+ */
+$app['cart.controller'] = function () use ($app) {
+    $locale = $app['locale.converter']->convert($app['locale']);
+    return new CartController(
+        $app['client'],
+        $locale,
+        $app['url_generator'],
+        $app['cache'],
+        $app['translator'],
+        $app['config'],
+        $app['repository.category'],
+        $app['repository.cart'],
+        $app['session']
+    );
+};
 
 /**
  * Routes
@@ -227,6 +268,13 @@ $app->get('/{_locale}/', 'catalog.controller:home')
 $app->get('/{_locale}/search/', 'catalog.controller:search')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('pop');
+$app->post('/{_locale}/cart/add', 'cart.controller:add')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('cartAdd');
+$app->get('/{_locale}/cart', 'cart.controller:index')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('cart');
+
 $app->get('/{_locale}/{category}/', 'catalog.controller:search')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('category');

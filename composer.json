@@ -11,7 +11,8 @@
     "symfony/config": "^2.7",
     "symfony/yaml": "^2.7",
     "symfony/translation": "*",
-    "monolog/monolog": "^1.7"
+    "monolog/monolog": "^1.7",
+    "dcro/secure-client-side-session-handler": "dev-master"
   },
   "require-dev": {
     "commercetools/sunrise-scenarios": "dev-behat",

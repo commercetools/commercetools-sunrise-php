@@ -223,6 +223,7 @@ class SunriseController
     {
         $meta = new ViewData();
         $meta->assetsPath = $this->config['sunrise.assetsPath'];
+        $meta->addToCartFormUrl = $this->generator->generate('cartAdd');
 
         return $meta;
     }

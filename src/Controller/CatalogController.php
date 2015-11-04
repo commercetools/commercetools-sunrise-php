@@ -8,7 +8,6 @@ namespace Commercetools\Sunrise\Controller;
 use Commercetools\Commons\Helper\PriceFinder;
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
-use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Common\Attribute;
 use Commercetools\Core\Model\Product\Facet;
 use Commercetools\Core\Model\Product\FacetResultCollection;
@@ -23,7 +22,6 @@ use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -98,7 +96,7 @@ class CatalogController extends SunriseController
         $viewData->content->filters = $this->getFiltersData($uri);
         $viewData->content->sort = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
         foreach ($products as $key => $product) {
-            $viewData->content->products->list->add($this->getProductOverviewData($product));
+            $viewData->content->products->list->add($this->getProductData($product, $product->getMasterVariant()));
         }
         $viewData->content->pagination = $this->pagination;
         /**
@@ -266,18 +264,11 @@ class CatalogController extends SunriseController
         return ['product-detail', $viewData->toArray()];
     }
 
-    protected function getProductOverviewData(ProductProjection $product)
+    protected function getProductData(ProductProjection $product, ProductVariant $productVariant)
     {
-        $productData = new ViewData();
-        $productVariant = $product->getMasterVariant();
+        $productModel = new ViewData();
 
         $price = PriceFinder::findPriceFor($productVariant->getPrices(), 'EUR');
-        if (!is_null($price->getDiscounted())) {
-            $productData->price = $price->getDiscounted()->getValue();
-            $productData->priceOld = $price->getValue();
-        } else {
-            $productData->price = $price->getValue();
-        }
         $productUrl = $this->generator->generate(
             'pdp',
             [
@@ -285,24 +276,37 @@ class CatalogController extends SunriseController
                 'sku' => $product->getMasterVariant()->getSku()
             ]
         );
+
+        $productModel->url = $productUrl;
+        $productModel->addToCartUrl = $this->generator->generate('cartAdd');
+        $productModel->addToWishListUrl = '';
+        $productModel->addReviewUrl = '';
+
+        $productData = new ViewData();
         $productData->id = $product->getId();
-        $productData->sale = isset($productData->priceOld);
-        $productData->text = (string)$product->getName();
-        $productData->text = (string)$product->getName();
-        $productData->text = (string)$product->getName();
-        $productData->text = (string)$product->getName();
+        $productData->sale = isset($productModel->priceOld);
+        $productData->name = (string)$product->getName();
         $productData->description = (string)$product->getDescription();
-        $productData->url = $productUrl;
-        $productData->imageUrl = (string)$productVariant->getImages()->getAt(0)->getUrl();
-        $productData->images = new ViewDataCollection();
+
+        if (!is_null($price->getDiscounted())) {
+            $productData->price = $price->getDiscounted()->getValue();
+            $productData->priceOld = $price->getValue();
+        } else {
+            $productData->price = $price->getValue();
+        }
+
+        $productData->gallery = new ViewData();
+        $productData->gallery->mainImage = (string)$productVariant->getImages()->getAt(0)->getUrl();
+        $productData->gallery->list = new ViewDataCollection();
         foreach ($productVariant->getImages() as $image) {
             $imageData = new ViewData();
             $imageData->thumbImage = $image->getUrl();
             $imageData->bigImage = $image->getUrl();
-            $productData->images->add($imageData);
+            $productData->gallery->list->add($imageData);
         }
+        $productModel->data = $productData;
 
-        return $productData;
+        return $productModel;
     }
 
     protected function getProductDetailData(ProductProjection $product, $sku)
@@ -318,33 +322,7 @@ class CatalogController extends SunriseController
             throw new NotFoundHttpException("resource not found");
         }
 
-        $productUrl = $this->getLinkFor(
-            'pdp',
-            ['slug' => (string)$product->getSlug(), 'sku' => $productVariant->getSku()]
-        );
-        $productData = new ViewData();
-        $productData->id = $product->getId();
-        $productData->text = (string)$product->getName();
-        $productData->description = (string)$product->getDescription();
-        $productData->sku = $productVariant->getSku();
-        $productData->url = $productUrl;
-        $productData->imageUrl = (string)$productVariant->getImages()->getAt(0)->getUrl();
-        $price = PriceFinder::findPriceFor($productVariant->getPrices(), 'EUR');
-        if (!is_null($price->getDiscounted())) {
-            $productData->price = $price->getDiscounted()->getValue();
-            $productData->priceOld = $price->getValue();
-        } else {
-            $productData->price = $price->getValue();
-        }
-
-        $productData->images = new ViewDataCollection();
-        foreach ($productVariant->getImages() as $image) {
-            $imageData = new ViewData();
-            $imageData->thumbImage = $image->getUrl();
-            $imageData->bigImage = $image->getUrl();
-            $productData->images->add($imageData);
-        }
-
+        $productModel = $this->getProductData($product, $productVariant);
 
         $selectorConfig = $this->config['sunrise.products.variantsSelector'];
         $selectorName = $selectorConfig['name'];
@@ -365,9 +343,10 @@ class CatalogController extends SunriseController
                 )
             );
         }
-        $productData->$selectorName = $variantsSelector;
+        $productModel->$selectorName = $variantsSelector;
 
-        $productData->details = new ViewDataCollection();
+        $productModel->details = new ViewData();
+        $productModel->details->list = new ViewDataCollection();
         $productVariant->getAttributes()->setAttributeDefinitions(
             $product->getProductType()->getObj()->getAttributes()
         );
@@ -379,10 +358,9 @@ class CatalogController extends SunriseController
             );
             $attributeData = new ViewData();
             $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
-            $productData->details->add($attributeData);
+            $productModel->details->list->add($attributeData);
         }
-
-        return $productData;
+        return $productModel;
     }
 
     protected function getProducts(Request $request)
