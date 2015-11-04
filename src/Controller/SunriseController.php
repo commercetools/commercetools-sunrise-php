@@ -225,6 +225,13 @@ class SunriseController
         $meta->assetsPath = $this->config['sunrise.assetsPath'];
         $meta->addToCartFormUrl = $this->generator->generate('cartAdd');
 
+        $bagItems = new ViewDataCollection();
+        for ($i = 1; $i < 10; $i++) {
+            $bagItems->add($i);
+        }
+        $meta->bagItems = $bagItems;
+
+
         return $meta;
     }
 

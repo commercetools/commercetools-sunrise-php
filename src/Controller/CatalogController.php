@@ -220,16 +220,6 @@ class CatalogController extends SunriseController
         $static->sizeDefaultItem->selected = empty($sku);
         $static->sizeDefaultItem->id = "pdp-size-select-first-option";
 
-        $bagItems = new ViewDataCollection();
-        for ($i = 1; $i < 10; $i++) {
-            $bagItem = new ViewData();
-            $bagItem->text = $i;
-            $bagItem->value = $i;
-            $bagItem->id = 'pdp-bag-items-' . $i;
-            $bagItems->add($bagItem);
-        }
-        $static->bagItems = $bagItems;
-
         return $static;
     }
 

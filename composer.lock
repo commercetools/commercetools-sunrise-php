@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "23c2de54af04abec7659d825a898e0cd15fbd886"
+                "reference": "e8d058be15db9cac7701c24f251fbe134390f9da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/23c2de54af04abec7659d825a898e0cd15fbd886",
-                "reference": "23c2de54af04abec7659d825a898e0cd15fbd886",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/e8d058be15db9cac7701c24f251fbe134390f9da",
+                "reference": "e8d058be15db9cac7701c24f251fbe134390f9da",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-11-04 10:42:44"
+            "time": "2015-11-04 16:38:52"
         },
         {
             "name": "commercetools/sunrise-design",
