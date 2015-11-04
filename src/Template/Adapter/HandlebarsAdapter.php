@@ -102,11 +102,11 @@ class HandlebarsAdapter implements TemplateAdapterInterface
 
     public static function trans($context, $options)
     {
+        $options = isset($options['hash']) ? $options['hash'] : [];
         if (strstr($context, ':')) {
             list($bundle, $context) = explode(':', $context, 2);
             $options['bundle'] = $bundle;
         }
-        $options = isset($options['hash']) ? $options['hash'] : [];
         $bundle = isset($options['bundle']) ? $options['bundle'] : static::$defaultNamespace;
         $locale = isset($options['locale']) ? $options['locale'] : null;
         $count = isset($options['count']) ? $options['count'] : null;

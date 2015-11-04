@@ -22,6 +22,8 @@ default:
       defaultNs: translations
       namespaces:
         - translations
+        - home
+        - catalog
     cache_dir: cache/i18n
     interpolationPrefix: __
     interpolationSuffix: __

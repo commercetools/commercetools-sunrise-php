@@ -146,14 +146,17 @@ $app['translator'] = $app->extend('translator', function(Translator $translator)
     $languages = array_keys($app['languages']);
     foreach ($app['config']['default.i18n.namespace.namespaces'] as $namespace) {
         foreach ($languages as $language) {
-            $files = $locator->locate($language . '/' . $namespace . '.yaml', null, false);
-            if (is_array($files)) {
-                foreach ($files as $file) {
-                    $translator->addResource('yaml', $file, $language, $namespace);
+            try {
+                $files = $locator->locate($language . '/' . $namespace . '.yaml', null, false);
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+
+                        $translator->addResource('yaml', $file, $language, $namespace);
+                    }
+                } elseif ($files) {
+                    $translator->addResource('yaml', $files, $language, $namespace);
                 }
-            } else {
-                $translator->addResource('yaml', $files, $language, $namespace);
-            }
+            } catch (\InvalidArgumentException $e) {}
         }
     }
     return $translator;
