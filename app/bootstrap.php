@@ -14,6 +14,7 @@ use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Service\ClientFactory;
+use Commercetools\Sunrise\Service\CookieSessionServiceProvider;
 use Commercetools\Sunrise\Service\LocaleConverter;
 use Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter;
 use Commercetools\Sunrise\Template\TemplateService;
@@ -21,7 +22,6 @@ use Silex\Application;
 use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
-use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
@@ -113,7 +113,7 @@ $app['languages'] = function () use ($app) {
  */
 $app->register(new LocaleServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
-$app->register(new SessionServiceProvider());
+$app->register(new CookieSessionServiceProvider());
 $app['session.storage.handler'] = function () use ($app) {
     $encryptionKey = $app['config']['default.session.encryptionKey'];
     $encryptionKeySalt = $app['config']['default.session.encryptionKeySalt'];
@@ -238,6 +238,7 @@ $app['catalog.controller'] = function () use ($app) {
         $app['cache'],
         $app['translator'],
         $app['config'],
+        $app['session'],
         $app['repository.category'],
         $app['repository.product']
     );
@@ -254,9 +255,9 @@ $app['cart.controller'] = function () use ($app) {
         $app['cache'],
         $app['translator'],
         $app['config'],
+        $app['session'],
         $app['repository.category'],
-        $app['repository.cart'],
-        $app['session']
+        $app['repository.cart']
     );
 };
 

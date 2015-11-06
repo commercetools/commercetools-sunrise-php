@@ -8,6 +8,7 @@ namespace Commercetools\Sunrise\Controller;
 
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
+use Commercetools\Core\Model\Cart\Cart;
 use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
@@ -26,11 +27,6 @@ class CartController extends SunriseController
      */
     protected $cartRepository;
 
-    /**
-     * @var Session
-     */
-    protected $session;
-
     public function __construct(
         Client $client,
         $locale,
@@ -38,14 +34,13 @@ class CartController extends SunriseController
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         Config $config,
+        Session $session,
         CategoryRepository $categoryRepository,
-        CartRepository $cartRepository,
-        Session $session
+        CartRepository $cartRepository
     )
     {
-        parent::__construct($client, $locale, $generator, $cache, $translator, $config, $categoryRepository);
+        parent::__construct($client, $locale, $generator, $cache, $translator, $config, $session, $categoryRepository);
         $this->cartRepository = $cartRepository;
-        $this->session = $session;
     }
 
     public function add(Request $request)
@@ -53,18 +48,29 @@ class CartController extends SunriseController
         $productId = $request->get('productId');
         $variantId = (int)$request->get('variantId');
         $quantity = (int)$request->get('quantity');
-        $sku = $request->get('sku');
+        $sku = $request->get('productSku');
         $slug = $request->get('productSlug');
         $cartId = $this->session->get('cartId');
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('default.currencies.'. $country);
         $cart = $this->cartRepository->addLineItem($cartId, $productId, $variantId, $quantity, $currency, $country);
         $this->session->set('cartId', $cart->getId());
+
+        $this->session->set('cartNumItems', $this->getItemCount($cart));
         $this->session->save();
 
         return new RedirectResponse(
             $this->generator->generate('pdp', ['slug' => $slug, 'sku' => $sku])
         );
+    }
+
+    protected function getItemCount(Cart $cart)
+    {
+        $count = 0;
+        foreach ($cart->getLineItems() as $lineItem) {
+            $count+= $lineItem->getQuantity();
+        }
+        return $count;
     }
 
     public function index()

@@ -23,6 +23,7 @@ use Commercetools\Sunrise\Template\TemplateService;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -91,6 +92,10 @@ class SunriseController
      */
     private $defaultNamespace;
 
+    /**
+     * @var Session
+     */
+    protected $session;
 
     public function __construct(
         Client $client,
@@ -99,9 +104,11 @@ class SunriseController
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         Config $config,
+        Session $session,
         CategoryRepository $categoryRepository
     )
     {
+        $this->session = $session;
         $this->locale = $locale;
         $this->generator = $generator;
         $this->translator = $translator;
@@ -157,7 +164,8 @@ class SunriseController
         $header->user = new ViewData();
         $header->user->isLoggedIn = false;
         $header->user->signIn = new Url('Login', '');
-        $header->miniCart = new Url('MiniCart', '');
+        $header->miniCart = new Url('MiniCart', $this->generator->generate('cart'));
+        $header->miniCart->numItems = $this->session->get('cartNumItems', 0);
         $header->navMenu = $this->getNavMenu();
 
         return $header;

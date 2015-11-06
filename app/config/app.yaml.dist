@@ -61,9 +61,9 @@ sunrise:
         formValue: price-desc
         searchParam: price desc
     variantsSelector:
-        attribute: size
-        name: sizes
-        idPrefix: pdp-size-select
+      main:
+      - size
+      - color
     details:
       attributes:
       - designer

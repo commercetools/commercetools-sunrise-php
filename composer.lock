@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "78bafd6a83058ae8feaf512fd88e5447",
+    "hash": "eca5e4cbf0c909a1d03cba97745a391a",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -116,16 +116,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "dev-develop",
+            "version": "v1.0.0-RC8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "e8d058be15db9cac7701c24f251fbe134390f9da"
+                "reference": "47160140665e560a47492c9df8ae0cd94af0e1fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/e8d058be15db9cac7701c24f251fbe134390f9da",
-                "reference": "e8d058be15db9cac7701c24f251fbe134390f9da",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/47160140665e560a47492c9df8ae0cd94af0e1fe",
+                "reference": "47160140665e560a47492c9df8ae0cd94af0e1fe",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-11-04 16:38:52"
+            "time": "2015-10-30 14:57:24"
         },
         {
             "name": "commercetools/sunrise-design",
@@ -1257,12 +1257,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "80efaa4dc2cf75e65ea37cb118b1ed0be52c709c"
+                "reference": "5753dec40ddaf8b5c70a1837bf0ff4d8e8647506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/80efaa4dc2cf75e65ea37cb118b1ed0be52c709c",
-                "reference": "80efaa4dc2cf75e65ea37cb118b1ed0be52c709c",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/5753dec40ddaf8b5c70a1837bf0ff4d8e8647506",
+                "reference": "5753dec40ddaf8b5c70a1837bf0ff4d8e8647506",
                 "shasum": ""
             },
             "require": {
@@ -1296,7 +1296,7 @@
                 "php",
                 "template"
             ],
-            "time": "2015-10-31 11:42:22"
+            "time": "2015-11-05 07:14:57"
         }
     ],
     "packages-dev": [
@@ -1872,24 +1872,24 @@
         },
         {
             "name": "fabpot/goutte",
-            "version": "v3.1.1",
+            "version": "v3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/Goutte.git",
-                "reference": "751a3dc5c4d86ec3e97c9f27133ef9694d9243cc"
+                "reference": "3cbc6ed222422a28400e470050f14928a153207e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/751a3dc5c4d86ec3e97c9f27133ef9694d9243cc",
-                "reference": "751a3dc5c4d86ec3e97c9f27133ef9694d9243cc",
+                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/3cbc6ed222422a28400e470050f14928a153207e",
+                "reference": "3cbc6ed222422a28400e470050f14928a153207e",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.0",
                 "php": ">=5.5.0",
-                "symfony/browser-kit": "~2.1",
-                "symfony/css-selector": "~2.1",
-                "symfony/dom-crawler": "~2.1"
+                "symfony/browser-kit": "~2.1|~3.0",
+                "symfony/css-selector": "~2.1|~3.0",
+                "symfony/dom-crawler": "~2.1|~3.0"
             },
             "type": "application",
             "extra": {
@@ -1917,7 +1917,7 @@
             "keywords": [
                 "scraper"
             ],
-            "time": "2015-08-29 16:16:56"
+            "time": "2015-11-05 12:58:44"
         },
         {
             "name": "heroku/heroku-buildpack-php",
@@ -3137,7 +3137,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/php-sdk": 20,
+        "commercetools/php-sdk": 10,
         "commercetools/commons": 20,
         "silex/silex": 20,
         "zordius/lightncandy": 20,

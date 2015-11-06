@@ -124,6 +124,11 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         }
     }
 
+    public static function json($context)
+    {
+        return json_encode($context);
+    }
+
     protected function renderCart($viewData)
     {
         /**

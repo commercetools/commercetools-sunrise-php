@@ -11,9 +11,11 @@ use Commercetools\Core\Client;
 use Commercetools\Core\Model\Common\Attribute;
 use Commercetools\Core\Model\Product\Facet;
 use Commercetools\Core\Model\Product\FacetResultCollection;
+use Commercetools\Core\Model\Product\Product;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
 use Commercetools\Core\Model\Product\ProductVariant;
+use Commercetools\Core\Model\ProductType\ProductType;
 use Commercetools\Core\Response\PagedSearchResponse;
 use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
@@ -23,6 +25,7 @@ use Commercetools\Sunrise\Model\ViewDataCollection;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -48,28 +51,19 @@ class CatalogController extends SunriseController
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         Config $config,
+        Session $session,
         CategoryRepository $categoryRepository,
         ProductRepository $productRepository
     )
     {
-        parent::__construct($client, $locale, $generator, $cache, $translator, $config, $categoryRepository);
+        parent::__construct($client, $locale, $generator, $cache, $translator, $config, $session, $categoryRepository);
         $this->productRepository = $productRepository;
     }
 
 
     public function home(Request $request)
     {
-        $viewData = json_decode(
-            file_get_contents(PROJECT_DIR . '/vendor/commercetools/sunrise-design/templates/home.json'),
-            true
-        );
-        foreach ($viewData['content']['wishlistWidged']['list'] as &$wish) {
-            $wish['image'] = '/' . $wish['image'];
-        }
-        $viewData = array_merge(
-            $viewData,
-            $this->getViewData('Sunrise - Home')->toArray()
-        );
+        $viewData = $this->getViewData('Sunrise - Home')->toArray();
 
         return ['home', $viewData];
     }
@@ -244,17 +238,18 @@ class CatalogController extends SunriseController
     {
         $slug = $request->get('slug');
         $sku = $request->get('sku');
-        $product = $this->productRepository->getProductBySlug($slug);
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page');
 
         $viewData->content->static = $this->getStaticContent();
-        $viewData->content->product = $this->getProductDetailData($product, $sku);
+        $product = $this->productRepository->getProductBySlug($slug);
+        $productData = $this->getProductDetailData($product, $sku);
+        $viewData->content->product = $productData;
 
         return ['product-detail', $viewData->toArray()];
     }
 
-    protected function getProductData(ProductProjection $product, ProductVariant $productVariant)
+    protected function getProductData(ProductProjection $product, ProductVariant $productVariant, $selectSku = null)
     {
         $productModel = new ViewData();
 
@@ -263,7 +258,7 @@ class CatalogController extends SunriseController
             'pdp',
             [
                 'slug' => (string)$product->getSlug(),
-                'sku' => $product->getMasterVariant()->getSku()
+                'sku' => $productVariant->getSku()
             ]
         );
 
@@ -274,16 +269,28 @@ class CatalogController extends SunriseController
 
         $productData = new ViewData();
         $productData->id = $product->getId();
-        $productData->sale = isset($productModel->priceOld);
+        $productData->variantId = $productVariant->getId();
+        $productData->slug = (string)$product->getSlug();
+        $productData->sku = $productVariant->getSku();
         $productData->name = (string)$product->getName();
         $productData->description = (string)$product->getDescription();
 
-        if (!is_null($price->getDiscounted())) {
-            $productData->price = $price->getDiscounted()->getValue();
-            $productData->priceOld = $price->getValue();
-        } else {
-            $productData->price = $price->getValue();
+        $productType = $product->getProductType()->getObj();
+        if (!is_null($productType)) {
+            list($attributes, $variantKeys, $variantIdentifiers) = $this->getVariantSelectors($product, $productType, $selectSku);
+            $productData->variants = $variantKeys;
+            $productData->variantIdentifiers = $variantIdentifiers;
+
+            $productData->attributes = $attributes;
         }
+
+        if (!is_null($price->getDiscounted())) {
+            $productData->price = (string)$price->getDiscounted()->getValue();
+            $productData->priceOld = (string)$price->getValue();
+        } else {
+            $productData->price = (string)$price->getValue();
+        }
+        $productModel->sale = isset($productData->priceOld);
 
         $productData->gallery = new ViewData();
         $productData->gallery->mainImage = (string)$productVariant->getImages()->getAt(0)->getUrl();
@@ -301,9 +308,8 @@ class CatalogController extends SunriseController
 
     protected function getProductDetailData(ProductProjection $product, $sku)
     {
-        $emptySku = false;
+        $requestSku = $sku;
         if (empty($sku)) {
-            $emptySku = true;
             $sku = $product->getMasterVariant()->getSku();
         }
 
@@ -312,28 +318,7 @@ class CatalogController extends SunriseController
             throw new NotFoundHttpException("resource not found");
         }
 
-        $productModel = $this->getProductData($product, $productVariant);
-
-        $selectorConfig = $this->config['sunrise.products.variantsSelector'];
-        $selectorName = $selectorConfig['name'];
-        $variantsSelector = new ViewDataCollection();
-        foreach ($product->getAllVariants() as $variant) {
-            /**
-             * @var ProductVariant $variant
-             */
-            $variant->getAttributes()->setAttributeDefinitions($product->getProductType()->getObj()->getAttributes());
-            $selectorAttribute = $variant->getAttributes()->getByName($selectorConfig['attribute']);
-            $variantsSelector->add(
-                $this->getSelectorData(
-                    $selectorAttribute,
-                    $variant->getSku(),
-                    $product->getSlug(),
-                    (!$emptySku ? $sku: null),
-                    $selectorConfig['idPrefix']
-                )
-            );
-        }
-        $productModel->$selectorName = $variantsSelector;
+        $productModel = $this->getProductData($product, $productVariant, $requestSku);
 
         $productModel->details = new ViewData();
         $productModel->details->list = new ViewDataCollection();
@@ -351,6 +336,69 @@ class CatalogController extends SunriseController
             $productModel->details->list->add($attributeData);
         }
         return $productModel;
+    }
+
+    public function getVariantSelectors(ProductProjection $product, ProductType $productType, $sku)
+    {
+        $variantSelectors = $this->config['sunrise.products.variantsSelector'][$productType->getName()];
+        $variants = [];
+        $attributes = [];
+        /**
+         * @var ProductVariant $variant
+         */
+        foreach ($product->getAllVariants() as $variant) {
+            $variantId = $variant->getId();
+            $variant->getAttributes()->setAttributeDefinitions($productType->getAttributes());
+            $selected = ($sku == $variant->getSku());
+            foreach ($variantSelectors as $attributeName) {
+                $attribute = $variant->getAttributes()->getByName($attributeName);
+                if ($attribute) {
+                    $value = (string)$attribute->getValue();
+                    $variants[$variantId][$attributeName] = $value;
+                    if (!isset($attributes[$attributeName])) {
+                        $attributes[$attributeName] = [
+                            'key' => $attributeName,
+                            'name' => (string)$attribute->getName(),
+                        ];
+                    }
+                    if (!isset($attributes[$attributeName]['list'][$value])) {
+                        $attributes[$attributeName]['list'][$value] = [
+                            'text' => $value,
+                            'value' => $value,
+                            'selected' => $selected
+                        ];
+                    }
+                }
+            }
+        }
+
+        $variantKeys = [];
+        foreach ($variants as $variantId => $variantAttributes) {
+            foreach ($variantSelectors as $selectorX) {
+                foreach ($variantSelectors as $selectorY) {
+                    if ($selectorX == $selectorY) {
+                        continue;
+                    }
+                    if (isset($variantAttributes[$selectorX]) && isset($variantAttributes[$selectorY])) {
+                        $valueX = $variantAttributes[$selectorX];
+                        $valueY = $variantAttributes[$selectorY];
+                        if (
+                            isset($attributes[$selectorX]['selectData'][$valueX][$selectorY]) &&
+                            in_array($valueY, $attributes[$selectorX]['selectData'][$valueX][$selectorY])
+                        ) {
+                            continue;
+                        }
+                        $attributes[$selectorX]['selectData'][$valueX][$selectorY][] = $valueY;
+                    }
+                }
+            }
+            if (count($variantAttributes) == count($variantSelectors)) {
+                $variantKey = implode('-', $variantAttributes);
+                $variantKeys[$variantKey] = $variantId;
+            }
+        }
+
+        return [$attributes, $variantKeys, $variantSelectors];
     }
 
     protected function getProducts(Request $request)
