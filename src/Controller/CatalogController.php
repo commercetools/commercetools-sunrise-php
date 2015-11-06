@@ -251,6 +251,11 @@ class CatalogController extends SunriseController
 
     protected function getProductData(ProductProjection $product, ProductVariant $productVariant, $selectSku = null)
     {
+        $cacheKey = 'product-' . $productVariant->getSku() . '-' . $this->locale;
+        if ($this->config['default.cache.products'] && $this->cache->has($cacheKey)) {
+            return unserialize($this->cache->fetch($cacheKey));
+        }
+
         $productModel = new ViewData();
 
         $price = PriceFinder::findPriceFor($productVariant->getPrices(), 'EUR');
@@ -303,6 +308,27 @@ class CatalogController extends SunriseController
         }
         $productModel->data = $productData;
 
+        if (!is_null($productType)) {
+            $productModel->details = new ViewData();
+            $productModel->details->list = new ViewDataCollection();
+            $productVariant->getAttributes()->setAttributeDefinitions(
+                $productType->getAttributes()
+            );
+            $attributeList = $this->config['sunrise.products.details.attributes'];
+            foreach ($attributeList as $attributeName) {
+                $attribute = $productVariant->getAttributes()->getByName($attributeName);
+                $attributeDefinition = $productType->getAttributes()->getByName(
+                    $attributeName
+                );
+                $attributeData = new ViewData();
+                $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
+                $productModel->details->list->add($attributeData);
+            }
+        }
+
+        $productModel = $productModel->toArray();
+        $this->cache->store($cacheKey, serialize($productModel));
+
         return $productModel;
     }
 
@@ -320,21 +346,7 @@ class CatalogController extends SunriseController
 
         $productModel = $this->getProductData($product, $productVariant, $requestSku);
 
-        $productModel->details = new ViewData();
-        $productModel->details->list = new ViewDataCollection();
-        $productVariant->getAttributes()->setAttributeDefinitions(
-            $product->getProductType()->getObj()->getAttributes()
-        );
-        $attributeList = $this->config['sunrise.products.details.attributes'];
-        foreach ($attributeList as $attributeName) {
-            $attribute = $productVariant->getAttributes()->getByName($attributeName);
-            $attributeDefinition = $product->getProductType()->getObj()->getAttributes()->getByName(
-                $attributeName
-            );
-            $attributeData = new ViewData();
-            $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
-            $productModel->details->list->add($attributeData);
-        }
+
         return $productModel;
     }
 
