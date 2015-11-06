@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eca5e4cbf0c909a1d03cba97745a391a",
+    "hash": "78bafd6a83058ae8feaf512fd88e5447",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -116,16 +116,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "v1.0.0-RC8",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "47160140665e560a47492c9df8ae0cd94af0e1fe"
+                "reference": "28526db4bfeb8651fc9a7047adf7aa0ecaf6cd84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/47160140665e560a47492c9df8ae0cd94af0e1fe",
-                "reference": "47160140665e560a47492c9df8ae0cd94af0e1fe",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/28526db4bfeb8651fc9a7047adf7aa0ecaf6cd84",
+                "reference": "28526db4bfeb8651fc9a7047adf7aa0ecaf6cd84",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-10-30 14:57:24"
+            "time": "2015-11-06 13:22:30"
         },
         {
             "name": "commercetools/sunrise-design",
@@ -3137,7 +3137,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/php-sdk": 10,
+        "commercetools/php-sdk": 20,
         "commercetools/commons": 20,
         "silex/silex": 20,
         "zordius/lightncandy": 20,

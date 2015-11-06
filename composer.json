@@ -2,7 +2,7 @@
   "require": {
     "ext-apcu": "*",
     "ext-mbstring": "*",
-    "commercetools/php-sdk": "^1.0@beta",
+    "commercetools/php-sdk": "dev-develop",
     "commercetools/sunrise-design": "*",
     "commercetools/commons": "dev-master",
     "silex/silex": "~2.0@dev",
