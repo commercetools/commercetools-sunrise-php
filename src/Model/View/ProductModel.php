@@ -89,10 +89,6 @@ class ProductModel
         $productData = new ViewData();
         $productData->id = $product->getId();
         $productData->slug = (string)$product->getSlug();
-        if ($selectSku) {
-            $productData->variantId = $productVariant->getId();
-            $productData->sku = $productVariant->getSku();
-        }
         $productData->name = (string)$product->getName();
         $productData->description = (string)$product->getDescription();
 
@@ -100,6 +96,11 @@ class ProductModel
         list($attributes, $variantKeys, $variantIdentifiers) = $this->getVariantSelectors($product, $productType, $selectSku);
         $productData->variants = $variantKeys;
         $productData->variantIdentifiers = $variantIdentifiers;
+
+        if ($selectSku || count($variantIdentifiers) == 0) {
+            $productData->variantId = $productVariant->getId();
+            $productData->sku = $productVariant->getSku();
+        }
 
         $productData->attributes = $attributes;
 
@@ -127,16 +128,18 @@ class ProductModel
         $productVariant->getAttributes()->setAttributeDefinitions(
             $productType->getAttributes()
         );
-        $attributeList = $this->config['sunrise.products.details.attributes.'.$productType->getName()];
-        foreach ($attributeList as $attributeName) {
-            $attribute = $productVariant->getAttributes()->getByName($attributeName);
-            if ($attribute) {
-                $attributeDefinition = $productType->getAttributes()->getByName(
-                    $attributeName
-                );
-                $attributeData = new ViewData();
-                $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
-                $productModel->details->list->add($attributeData);
+        if (isset($this->config['sunrise.products.details.attributes.'.$productType->getName()])) {
+            $attributeList = $this->config['sunrise.products.details.attributes.'.$productType->getName()];
+            foreach ($attributeList as $attributeName) {
+                $attribute = $productVariant->getAttributes()->getByName($attributeName);
+                if ($attribute) {
+                    $attributeDefinition = $productType->getAttributes()->getByName(
+                        $attributeName
+                    );
+                    $attributeData = new ViewData();
+                    $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
+                    $productModel->details->list->add($attributeData);
+                }
             }
         }
 
@@ -166,7 +169,10 @@ class ProductModel
 
     public function getVariantSelectors(ProductProjection $product, ProductType $productType, $sku)
     {
-        $variantSelectors = $this->config['sunrise.products.variantsSelector'][$productType->getName()];
+        $variantSelectors = [];
+        if (isset($this->config['sunrise.products.variantsSelector'][$productType->getName()])) {
+            $variantSelectors = $this->config['sunrise.products.variantsSelector'][$productType->getName()];
+        }
         $variants = [];
         $attributes = [];
         /**
@@ -174,6 +180,9 @@ class ProductModel
          */
         foreach ($product->getAllVariants() as $variant) {
             $variantId = $variant->getId();
+            if (is_null($variant->getAttributes())) {
+                continue;
+            }
             $variant->getAttributes()->setAttributeDefinitions($productType->getAttributes());
             $selected = ($sku == $variant->getSku());
             foreach ($variantSelectors as $attributeName) {
@@ -202,9 +211,10 @@ class ProductModel
         }
 
         $variantKeys = [];
+        $identifiers = array_values(array_intersect($variantSelectors, array_keys($attributes)));
         foreach ($variants as $variantId => $variantAttributes) {
-            foreach ($variantSelectors as $selectorX) {
-                foreach ($variantSelectors as $selectorY) {
+            foreach ($identifiers as $selectorX) {
+                foreach ($identifiers as $selectorY) {
                     if ($selectorX == $selectorY) {
                         continue;
                     }
@@ -222,12 +232,12 @@ class ProductModel
                     }
                 }
             }
-            if (count($variantAttributes) == count(array_keys($attributes))) {
+            if (count($variantAttributes) == count($identifiers)) {
                 $variantKey = implode('-', $variantAttributes);
                 $variantKeys[$variantKey] = $variantId;
             }
         }
 
-        return [$attributes, $variantKeys, $variantSelectors];
+        return [$attributes, $variantKeys, $identifiers];
     }
 }
