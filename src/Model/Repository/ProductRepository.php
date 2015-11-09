@@ -26,7 +26,6 @@ class ProductRepository extends Repository
     {
         $cacheKey = static::NAME . '-' . $slug;
         $productRequest = ProductProjectionBySlugGetRequest::ofSlugAndContext($slug, $this->client->getConfig()->getContext());
-        $productRequest->expand('productType');
         return $this->retrieve(static::NAME, $cacheKey, $productRequest);
     }
 

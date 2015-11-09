@@ -62,13 +62,14 @@ sunrise:
         searchParam: price desc
     variantsSelector:
       main:
-      - size
       - color
+      - size
     details:
       attributes:
-      - designer
-      - gender
-      - style
+        main:
+        - designer
+        - gender
+        - style
 commercetools:
   client_id: <client-id>
   client_secret: <client-secret>

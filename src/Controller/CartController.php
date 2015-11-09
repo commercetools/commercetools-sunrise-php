@@ -12,6 +12,7 @@ use Commercetools\Core\Model\Cart\Cart;
 use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
+use Commercetools\Sunrise\Model\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -36,10 +37,21 @@ class CartController extends SunriseController
         Config $config,
         Session $session,
         CategoryRepository $categoryRepository,
+        ProductTypeRepository $productTypeRepository,
         CartRepository $cartRepository
     )
     {
-        parent::__construct($client, $locale, $generator, $cache, $translator, $config, $session, $categoryRepository);
+        parent::__construct(
+            $client,
+            $locale,
+            $generator,
+            $cache,
+            $translator,
+            $config,
+            $session,
+            $categoryRepository,
+            $productTypeRepository
+        );
         $this->cartRepository = $cartRepository;
     }
 
@@ -59,9 +71,12 @@ class CartController extends SunriseController
         $this->session->set('cartNumItems', $this->getItemCount($cart));
         $this->session->save();
 
-        return new RedirectResponse(
-            $this->generator->generate('pdp', ['slug' => $slug, 'sku' => $sku])
-        );
+        if (empty($sku)) {
+            $redirectUrl = $this->generator->generate('pdp-master', ['slug' => $slug]);
+        } else {
+            $redirectUrl = $this->generator->generate('pdp', ['slug' => $slug, 'sku' => $sku]);
+        }
+        return new RedirectResponse($redirectUrl);
     }
 
     protected function getItemCount(Cart $cart)

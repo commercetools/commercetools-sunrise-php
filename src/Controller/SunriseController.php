@@ -14,6 +14,7 @@ use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Request\Categories\CategoryQueryRequest;
 use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
+use Commercetools\Sunrise\Model\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use Commercetools\Sunrise\Model\View\Header;
 use Commercetools\Sunrise\Model\View\Tree;
@@ -78,6 +79,11 @@ class SunriseController
     protected $categoryRepository;
 
     /**
+     * @var ProductTypeRepository
+     */
+    protected $productTypeRepository;
+
+    /**
      * @var string
      */
     private $interpolationPrefix;
@@ -105,7 +111,8 @@ class SunriseController
         TranslatorInterface $translator,
         Config $config,
         Session $session,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        ProductTypeRepository $productTypeRepository
     )
     {
         $this->session = $session;
@@ -116,6 +123,7 @@ class SunriseController
         $this->cache = $cache;
         $this->client = $client;
         $this->categoryRepository = $categoryRepository;
+        $this->productTypeRepository = $productTypeRepository;
 
         $this->defaultNamespace = $this->config['default.i18n.namespace.defaultNs'];
         $this->interpolationPrefix = $this->config['default.i18n.interpolationPrefix'];

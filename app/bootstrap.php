@@ -13,6 +13,7 @@ use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductRepository;
+use Commercetools\Sunrise\Model\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\Service\ClientFactory;
 use Commercetools\Sunrise\Service\CookieSessionServiceProvider;
 use Commercetools\Sunrise\Service\LocaleConverter;
@@ -216,6 +217,14 @@ $app['repository.category'] = function () use ($app) {
         $app['client']
     );
 };
+$app['repository.productType'] = function () use ($app) {
+    return new ProductTypeRepository(
+        $app['config'],
+        $app['cache'],
+        $app['client']
+    );
+};
+
 $app['repository.cart'] = function () use ($app) {
     $locale = $app['locale.converter']->convert($app['locale']);
     return new CartRepository(
@@ -240,6 +249,7 @@ $app['catalog.controller'] = function () use ($app) {
         $app['config'],
         $app['session'],
         $app['repository.category'],
+        $app['repository.productType'],
         $app['repository.product']
     );
 };
@@ -257,6 +267,7 @@ $app['cart.controller'] = function () use ($app) {
         $app['config'],
         $app['session'],
         $app['repository.category'],
+        $app['repository.productType'],
         $app['repository.cart']
     );
 };
@@ -283,6 +294,7 @@ $app->get('/{_locale}/{category}/', 'catalog.controller:search')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('category');
 $app->get('/{_locale}/{slug}.html', 'catalog.controller:detail')
+    ->bind('pdp-master')
     ->assert('_locale', LOCALE_PATTERN);
 $app->get('/{_locale}/{slug}/{sku}.html', 'catalog.controller:detail')
     ->assert('_locale', LOCALE_PATTERN)
