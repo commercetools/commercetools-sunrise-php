@@ -149,6 +149,18 @@ class CartController extends SunriseController
                     $cartLineItem->price = (string)$price->getValue();
                 }
                 $cartLineItem->total = $lineItem->getTotalPrice();
+                $cartLineItem->attributes = new ViewDataCollection();
+                $cartAttributes = $this->config['sunrise.cart.attributes'];
+                foreach ($cartAttributes as $attributeName) {
+                    $attribute = $variant->getAttributes()->getByName($attributeName);
+                    if ($attribute) {
+                        $lineItemAttribute = new ViewData();
+                        $lineItemAttribute->label = $attributeName;
+                        $lineItemAttribute->key = $attributeName;
+                        $lineItemAttribute->value = (string)$attribute->getValue();
+                        $cartLineItem->attributes->add($lineItemAttribute);
+                    }
+                }
                 $cartItems->list->add($cartLineItem);
             }
         }

@@ -54,6 +54,10 @@ sunrise:
     - 12
     - 24
     - 48
+  cart:
+    attributes:
+    - color
+    - size
   products:
     sort:
       new:

@@ -46,10 +46,14 @@ class Repository
      * @param int $ttl
      * @return mixed
      */
-    protected function retrieveAll($repository, $cacheKey, QueryAllRequestInterface $request, $ttl = self::CACHE_TTL)
-    {
+    protected function retrieveAll(
+        $repository, $cacheKey,
+        QueryAllRequestInterface $request,
+        $force = false,
+        $ttl = self::CACHE_TTL
+    ) {
         $data = [];
-        if ($this->config['default.cache.' . $repository] && $this->cache->has($cacheKey)) {
+        if (!$force && $this->config['default.cache.' . $repository] && $this->cache->has($cacheKey)) {
             $cachedData = $this->cache->fetch($cacheKey);
             if (!empty($cachedData)) {
                 $data = $cachedData;
@@ -72,9 +76,9 @@ class Repository
      * @param int $ttl
      * @return \Commercetools\Core\Model\Common\JsonDeserializeInterface|null
      */
-    protected function retrieve($repository, $cacheKey, AbstractApiRequest $request, $ttl = self::CACHE_TTL)
+    protected function retrieve($repository, $cacheKey, AbstractApiRequest $request, $force = false, $ttl = self::CACHE_TTL)
     {
-        if ($this->config['default.cache.' . $repository] && $this->cache->has($cacheKey)) {
+        if (!$force && $this->config['default.cache.' . $repository] && $this->cache->has($cacheKey)) {
             $cachedData = $this->cache->fetch($cacheKey);
             if (empty($cachedData)) {
                 throw new NotFoundHttpException("resource not found");

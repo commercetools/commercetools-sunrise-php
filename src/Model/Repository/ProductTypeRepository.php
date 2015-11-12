@@ -16,15 +16,19 @@ class ProductTypeRepository extends Repository
     /**
      * @return ProductTypeCollection
      */
-    public function getTypes()
+    public function getTypes($force = false)
     {
         $cacheKey = static::NAME;
         $productTypeRequest = ProductTypeQueryRequest::of();
-        return $this->retrieveAll(static::NAME, $cacheKey, $productTypeRequest);
+        return $this->retrieveAll(static::NAME, $cacheKey, $productTypeRequest, $force);
     }
 
     public function getById($id)
     {
-        return $this->getTypes()->getById($id);
+        $type = $this->getTypes()->getById($id);
+        if (is_null($type)) {
+            $type = $this->getTypes(true)->getById($id);
+        }
+        return $type;
     }
 }
