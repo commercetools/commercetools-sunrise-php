@@ -128,13 +128,13 @@ $app['session.storage.handler'] = function () use ($app) {
 };
 // Register the monolog logging service
 $app->register(new MonologServiceProvider(), array(
-    'monolog.logfile' => 'php://stderr',
+    'monolog.logfile' => $app['config']['default.log.file'],
 ));
 
 $app->register(
     new TranslationServiceProvider(),
     [
-        'translator.cache_dir' => $app['config']['default.i18n.cache_dir'],
+        'translator.cache_dir' => PROJECT_DIR . '/' . $app['config']['default.i18n.cache_dir'],
         'debug' => $app['config']['debug'],
         'domains' => $app['config']['default.i18n.namespaces']
     ]
@@ -151,7 +151,6 @@ $app['translator'] = $app->extend('translator', function(Translator $translator)
                 $files = $locator->locate($language . '/' . $namespace . '.yaml', null, false);
                 if (is_array($files)) {
                     foreach ($files as $file) {
-
                         $translator->addResource('yaml', $file, $language, $namespace);
                     }
                 } elseif ($files) {

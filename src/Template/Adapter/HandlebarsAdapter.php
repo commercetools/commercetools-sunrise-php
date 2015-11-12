@@ -110,7 +110,6 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         $bundle = isset($options['bundle']) ? $options['bundle'] : static::$defaultNamespace;
         $locale = isset($options['locale']) ? $options['locale'] : null;
         $count = isset($options['count']) ? $options['count'] : null;
-
         $args = [];
         foreach ($options as $key => $value) {
             $key = static::$interpolationPrefix . $key . static::$interpolationSuffix;

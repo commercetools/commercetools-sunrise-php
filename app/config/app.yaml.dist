@@ -1,7 +1,9 @@
-debug: false
+debug: true
 default:
   locale: de
   country: de
+  log:
+    file: php://stderr
   languages:
     - de
     - en
@@ -24,6 +26,7 @@ default:
         - translations
         - home
         - catalog
+        - checkout
     cache_dir: cache/i18n
     interpolationPrefix: __
     interpolationSuffix: __
@@ -34,6 +37,8 @@ default:
       - templates
       - vendor/commercetools/sunrise-dmexco/conf/templates
   cache:
+    categories: true
+    productTypes: true
     products: true
   session:
     enforceSecureCookie: true

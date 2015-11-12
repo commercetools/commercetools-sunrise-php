@@ -56,14 +56,17 @@ class ProductModel
 
     public function getProductData(ProductProjection $product, ProductVariant $productVariant, $locale, $selectSku = null)
     {
-        $cacheKey = 'product-model-' . $productVariant->getSku() . '-' . $locale;
+        $cacheKey = 'product-model-' . $productVariant->getSku() . $selectSku . '-' . $locale;
         if ($this->config['default.cache.products'] && $this->cache->has($cacheKey)) {
             return unserialize($this->cache->fetch($cacheKey));
         }
 
+        $country = \Locale::getRegion($locale);
+        $currency = $this->config['default.currencies.'.$country];
+
         $productModel = new ViewData();
 
-        $price = PriceFinder::findPriceFor($productVariant->getPrices(), 'EUR');
+        $price = PriceFinder::findPriceFor($productVariant->getPrices(), $currency, $country);
         if (empty($selectSku)) {
             $productUrl = $this->generator->generate(
                 'pdp-master',
@@ -113,7 +116,7 @@ class ProductModel
         $productModel->sale = isset($productData->priceOld);
 
         $productData->gallery = new ViewData();
-        $productData->gallery->mainImage = (string)$productVariant->getImages()->getAt(0)->getUrl();
+        $productData->gallery->mainImage = (string)$productVariant->getImages()->current()->getUrl();
         $productData->gallery->list = new ViewDataCollection();
         foreach ($productVariant->getImages() as $image) {
             $imageData = new ViewData();

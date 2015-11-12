@@ -148,7 +148,7 @@ class CatalogController extends SunriseController
     {
         $maxDepth = 1;
         $categoryFacet = $this->facets->getByName('categories');
-        $categoryData = $this->getCategories();
+        $categoryData = $this->categoryRepository->getCategories();
 
         $cacheKey = 'category-facet-tree-' . $this->locale;
         if (!$this->cache->has($cacheKey)) {
@@ -279,7 +279,7 @@ class CatalogController extends SunriseController
          * @var PagedSearchResponse $response
          */
         list($products, $facets, $offset, $total) = $this->productRepository->getProducts(
-            $this->getCategories(),
+            $this->categoryRepository->getCategories(),
             $this->locale,
             $itemsPerPage,
             $currentPage,

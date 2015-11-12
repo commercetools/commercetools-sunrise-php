@@ -10,10 +10,13 @@ use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Cart\Cart;
 use Commercetools\Core\Model\Cart\CartDraft;
+use Commercetools\Core\Model\Common\Address;
 use Commercetools\Core\Request\Carts\CartByIdGetRequest;
 use Commercetools\Core\Request\Carts\CartCreateRequest;
 use Commercetools\Core\Request\Carts\CartUpdateRequest;
 use Commercetools\Core\Request\Carts\Command\CartAddLineItemAction;
+use Commercetools\Core\Request\Carts\Command\CartSetShippingAddressAction;
+use Commercetools\Core\Request\Carts\Command\CartSetShippingMethodAction;
 use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository;
 
@@ -83,6 +86,11 @@ class CartRepository extends Repository
             $cartCreateRequest = CartCreateRequest::ofDraft($cartDraft);
             $cartResponse = $cartCreateRequest->executeWithClient($this->client);
             $cart = $cartCreateRequest->mapResponse($cartResponse);
+
+            $cartUpdateRequest = CartUpdateRequest::ofIdAndVersion($cart->getId(), $cart->getVersion());
+            $cartUpdateRequest->addAction(CartSetShippingAddressAction::of()->setAddress(Address::of()->setCountry($country)));
+            $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
+            $cart = $cartUpdateRequest->mapResponse($cartResponse);
         }
 
         return $cart;

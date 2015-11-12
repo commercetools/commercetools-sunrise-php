@@ -54,11 +54,12 @@ class Repository
             if (!empty($cachedData)) {
                 $data = $cachedData;
             }
-            $result = $request->mapResult($data, $this->client->getConfig()->getContext());
+            $result = unserialize($data);
+            $result->setContext($this->client->getConfig()->getContext());
         } else {
             $helper = new QueryHelper();
             $result = $helper->getAll($this->client, $request);
-            $this->store($repository, $cacheKey, $result->toArray(), $ttl);
+            $this->store($repository, $cacheKey, serialize($result), $ttl);
         }
 
         return $result;

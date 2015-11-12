@@ -11,7 +11,7 @@ use Commercetools\Sunrise\Model\Repository;
 
 class ProductTypeRepository extends Repository
 {
-    const NAME = 'product-types';
+    const NAME = 'productTypes';
 
     /**
      * @return ProductTypeCollection

@@ -326,28 +326,6 @@ class SunriseController
         return $args;
     }
 
-    /**
-     * @return CategoryCollection
-     */
-    protected function getCategories()
-    {
-        $cacheKey = 'categories';
-        $categoryData = [];
-        if ($this->cache->has($cacheKey)) {
-            $cachedCategories = $this->cache->fetch($cacheKey);
-            if (!empty($cachedCategories)) {
-                $categoryData = $cachedCategories;
-            }
-            $categories = unserialize($categoryData);
-            $categories->setContext($this->client->getConfig()->getContext());
-        } else {
-            $helper = new QueryHelper();
-            $categories = $helper->getAll($this->client, CategoryQueryRequest::of());
-            $this->cache->store($cacheKey, serialize($categories), static::CACHE_TTL);
-        }
-        return $categories;
-    }
-
     protected function getLinkFor($site, $params)
     {
         return $this->generator->generate($site, $params);

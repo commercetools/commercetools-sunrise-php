@@ -9,6 +9,7 @@ namespace Commercetools\Sunrise\Controller;
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Cart\Cart;
+use Commercetools\Core\Model\Common\Money;
 use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
@@ -82,8 +83,10 @@ class CartController extends SunriseController
     protected function getItemCount(Cart $cart)
     {
         $count = 0;
-        foreach ($cart->getLineItems() as $lineItem) {
-            $count+= $lineItem->getQuantity();
+        if ($cart->getLineItems()) {
+            foreach ($cart->getLineItems() as $lineItem) {
+                $count+= $lineItem->getQuantity();
+            }
         }
         return $count;
     }
@@ -91,24 +94,61 @@ class CartController extends SunriseController
     public function index()
     {
         $viewData = $this->getViewData('Sunrise - Cart');
-        $viewData->cartItems = $this->getCartItems();
+        $cartId = $this->session->get('cartId');
+        $cart = $this->cartRepository->getCart($cartId);
 
+        $viewData->content = new ViewData();
+        $viewData->content->cart = $this->getCart($cart);
 
         return ['cart', $viewData];
     }
 
-    public function getCartItems()
+    protected function getCart(Cart $cart)
+    {
+        $cartModel = new ViewData();
+        $cartModel->itemsTotal = $this->getItemCount($cart);
+        if ($cart->getTaxedPrice()) {
+            $salexTax = Money::ofCurrencyAndAmount(
+                $cart->getTaxedPrice()->getTotalGross()->getCurrencyCode(),
+                $cart->getTaxedPrice()->getTotalGross()->getCentAmount() -
+                    $cart->getTaxedPrice()->getTotalNet()->getCentAmount(),
+                $cart->getContext()
+            );
+            $cartModel->salesTax = $salexTax;
+            $cartModel->subtotal = $cart->getTaxedPrice()->getTotalNet();
+            $cartModel->total = $cart->getTotalPrice();
+        }
+        $cartModel->lineItems = $this->getCartLineItems($cart);
+
+        return $cartModel;
+    }
+
+    public function getCartLineItems(Cart $cart)
     {
         $cartItems = new ViewData();
         $cartItems->list = new ViewDataCollection();
-
-        $cart = $this->cartRepository->getCart();
 
         $lineItems = $cart->getLineItems();
 
         if (!is_null($lineItems)) {
             foreach ($lineItems as $lineItem) {
+                $variant = $lineItem->getVariant();
                 $cartLineItem = new ViewData();
+                $cartLineItem->url = (string)$this->generator->generate(
+                    'pdp-master',
+                    ['slug' => (string)$lineItem->getProductSlug()]
+                );
+                $cartLineItem->name = (string)$lineItem->getName();
+                $cartLineItem->image = (string)$variant->getImages()->current()->getUrl();
+                $cartLineItem->sku = $variant->getSku();
+                $price = $lineItem->getPrice();
+                if (!is_null($price->getDiscounted())) {
+                    $cartLineItem->price = (string)$price->getDiscounted()->getValue();
+                    $cartLineItem->priceOld = (string)$price->getValue();
+                } else {
+                    $cartLineItem->price = (string)$price->getValue();
+                }
+                $cartLineItem->total = $lineItem->getTotalPrice();
                 $cartItems->list->add($cartLineItem);
             }
         }
