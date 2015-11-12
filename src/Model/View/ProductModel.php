@@ -131,7 +131,7 @@ class ProductModel
         $productVariant->getAttributes()->setAttributeDefinitions(
             $productType->getAttributes()
         );
-        if (isset($this->config['sunrise.products.details.attributes.'.$productType->getName()])) {
+        if (isset($this->config['sunrise.products.details.attributes'][$productType->getName()])) {
             $attributeList = $this->config['sunrise.products.details.attributes.'.$productType->getName()];
             foreach ($attributeList as $attributeName) {
                 $attribute = $productVariant->getAttributes()->getByName($attributeName);
