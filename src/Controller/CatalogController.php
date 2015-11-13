@@ -98,10 +98,9 @@ class CatalogController extends SunriseController
         $viewData->jumboTron = new ViewData();
         $viewData->content->products = new ViewData();
         $viewData->content->products->list = new ViewDataCollection();
-        $viewData->content->static = $this->getStaticContent();
-        $viewData->content->display = $this->getDisplayContent($this->getItemsPerPage($request));
+        $viewData->content->displaySelector = $this->getDisplayContent($this->getItemsPerPage($request));
         $viewData->content->filters = $this->getFiltersData($uri);
-        $viewData->content->sort = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
+        $viewData->content->sortSelector = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
                 $this->productModel->getProductData($product, $product->getMasterVariant(), $this->locale)
@@ -197,53 +196,34 @@ class CatalogController extends SunriseController
 
     protected function getSortData($currentSort)
     {
-        $sortData = new ViewDataCollection();
+        $sortData = new ViewData();
+        $sortData->list = new ViewDataCollection();
 
         foreach ($this->config['sunrise.products.sort'] as $sort) {
             $entry = new ViewData();
             $entry->value = $sort['formValue'];
-            $entry->label = $this->trans('search.sort.' . $sort['formValue']);
+            $entry->text = $this->trans('search.sort.' . $sort['formValue']);
             if ($currentSort == $sort) {
                 $entry->selected = true;
             }
-            $sortData->add($entry);
+            $sortData->list->add($entry);
         }
-
         return $sortData;
-    }
-
-    protected function getStaticContent()
-    {
-        $static = new ViewData();
-        $static->productCountSeparatorText = $this->trans('filter.productCountSeparator');
-        $static->displaySelectorText = $this->trans('filter.itemsPerPage');
-        $static->saleText = $this->trans('product.saleText');
-        $static->productDetailsText = $this->trans('product.detailsText');
-        $static->deliveryAndReturnsText = $this->trans('product.deliveryReturnsText');
-        $static->standardDeliveryText = $this->trans('product.standardDeliveryText');
-        $static->expressDeliveryText = $this->trans('product.expressDeliveryText');
-        $static->freeReturnsText = $this->trans('product.freeReturnsText');
-        $static->moreDeliveryInfoText = $this->trans('product.moreDeliveryInfoText');
-        $static->sizeDefaultItem = new ViewData();
-        $static->sizeDefaultItem->text = $this->trans('product.sizeDefaultItem');
-        $static->sizeDefaultItem->selected = empty($sku);
-        $static->sizeDefaultItem->id = "pdp-size-select-first-option";
-
-        return $static;
     }
 
     protected function getDisplayContent($currentCount)
     {
-        $display = new ViewDataCollection();
+        $display = new ViewData();
+        $display->list = new ViewDataCollection();
 
         foreach ($this->config->get('sunrise.itemsPerPage') as $count) {
             $entry = new ViewData();
             $entry->value = $count;
-            $entry->text = $count;
+            $entry->name = $count;
             if ($currentCount == $count) {
                 $entry->selected = true;
             }
-            $display->add($entry);
+            $display->list->add($entry);
         }
 
         return $display;
@@ -256,7 +236,6 @@ class CatalogController extends SunriseController
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page');
 
-        $viewData->content->static = $this->getStaticContent();
         $product = $this->productRepository->getProductBySlug($slug);
         $productData = $this->productModel->getProductDetailData($product, $sku, $this->locale);
         $viewData->content->product = $productData;
@@ -289,8 +268,8 @@ class CatalogController extends SunriseController
         );
 
         $this->applyPagination(new Uri($request->getRequestUri()), $offset, $total, $itemsPerPage);
-        $this->pagination->productsCount = $products->count();
-        $this->pagination->totalProducts = $total;
+        $this->pagination->currentPage = $products->count(); // @todo this is actually the count of products
+        $this->pagination->totalPages = $total; // @todo this is actually the total count of products
         $this->facets = $facets;
 
         return $products;
