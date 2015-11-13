@@ -3,7 +3,7 @@
     "ext-apcu": "*",
     "ext-mbstring": "*",
     "commercetools/php-sdk": "dev-develop",
-    "commercetools/sunrise-design": "*",
+    "commercetools/sunrise-design": "dev-master",
     "commercetools/commons": "dev-master",
     "silex/silex": "~2.0@dev",
     "cilex/console-service-provider": "^1.1",
@@ -32,16 +32,8 @@
   },
   "repositories": [
     {
-      "type": "package",
-      "package": {
-        "name": "commercetools/sunrise-design",
-        "version": "0.9.5",
-        "source": {
-          "url": "https://github.com/sphereio/sphere-sunrise-design",
-          "type": "git",
-          "reference": "gh-pages"
-        }
-      }
+      "type": "vcs",
+      "url": "https://github.com/sphereio/sphere-sunrise-design"
     },
     {
       "type": "vcs",
@@ -58,11 +50,11 @@
   ],
   "scripts": {
     "post-update-cmd": [
-      "cp -rf vendor/commercetools/sunrise-design/assets web/",
+      "cp -rf vendor/commercetools/sunrise-design/output/assets web/",
       "app/console.php compile"
     ],
     "post-install-cmd": [
-      "cp -rf vendor/commercetools/sunrise-design/assets web/",
+      "cp -rf vendor/commercetools/sunrise-design/output/assets web/",
       "app/console.php compile"
     ]
   }
