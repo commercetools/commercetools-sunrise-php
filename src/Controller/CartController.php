@@ -67,8 +67,6 @@ class CartController extends SunriseController
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('default.currencies.'. $country);
         $cart = $this->cartRepository->addLineItem($cartId, $productId, $variantId, $quantity, $currency, $country);
-        $this->session->set('cartId', $cart->getId());
-
         $this->session->set('cartNumItems', $this->getItemCount($cart));
         $this->session->save();
 
@@ -78,6 +76,31 @@ class CartController extends SunriseController
             $redirectUrl = $this->generator->generate('pdp', ['slug' => $slug, 'sku' => $sku]);
         }
         return new RedirectResponse($redirectUrl);
+    }
+
+    public function changeLineItem(Request $request)
+    {
+        $lineItemId = $request->get('lineItemId');
+        $lineItemCount = (int)$request->get('lineItemCount');
+        $cartId = $this->session->get('cartId');
+        $cart = $this->cartRepository->changeLineItemQuantity($cartId, $lineItemId, $lineItemCount);
+
+        $this->session->set('cartNumItems', $this->getItemCount($cart));
+        $this->session->save();
+
+        return new RedirectResponse($this->generator->generate('cart'));
+    }
+
+    public function deleteLineItem(Request $request)
+    {
+        $lineItemId = $request->get('lineItemId');
+        $cartId = $this->session->get('cartId');
+        $cart = $this->cartRepository->deleteLineItem($cartId, $lineItemId);
+
+        $this->session->set('cartNumItems', $this->getItemCount($cart));
+        $this->session->save();
+
+        return new RedirectResponse($this->generator->generate('cart'));
     }
 
     protected function getItemCount(Cart $cart)
@@ -99,6 +122,11 @@ class CartController extends SunriseController
 
         $viewData->content = new ViewData();
         $viewData->content->cart = $this->getCart($cart);
+        $viewData->meta->_links = new ViewData();
+        $viewData->meta->_links->deleteLineItem = new ViewData();
+        $viewData->meta->_links->deleteLineItem->href = $this->generator->generate('lineItemDelete');
+        $viewData->meta->_links->changeLineItem = new ViewData();
+        $viewData->meta->_links->changeLineItem->href = $this->generator->generate('lineItemChange');
 
         return ['cart', $viewData];
     }
@@ -134,6 +162,8 @@ class CartController extends SunriseController
             foreach ($lineItems as $lineItem) {
                 $variant = $lineItem->getVariant();
                 $cartLineItem = new ViewData();
+                $cartLineItem->lineItemId = $lineItem->getId();
+                $cartLineItem->quantity = $lineItem->getQuantity();
                 $cartLineItem->url = (string)$this->generator->generate(
                     'pdp-master',
                     ['slug' => (string)$lineItem->getProductSlug()]

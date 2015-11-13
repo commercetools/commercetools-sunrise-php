@@ -285,6 +285,12 @@ $app->get('/{_locale}/search/', 'catalog.controller:search')
 $app->post('/{_locale}/cart/add', 'cart.controller:add')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('cartAdd');
+$app->post('/{_locale}/cart/delete', 'cart.controller:deleteLineItem')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('lineItemDelete');
+$app->post('/{_locale}/cart/change', 'cart.controller:changeLineItem')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('lineItemChange');
 $app->get('/{_locale}/cart', 'cart.controller:index')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('cart');

@@ -15,6 +15,8 @@ use Commercetools\Core\Request\Carts\CartByIdGetRequest;
 use Commercetools\Core\Request\Carts\CartCreateRequest;
 use Commercetools\Core\Request\Carts\CartUpdateRequest;
 use Commercetools\Core\Request\Carts\Command\CartAddLineItemAction;
+use Commercetools\Core\Request\Carts\Command\CartChangeLineItemQuantityAction;
+use Commercetools\Core\Request\Carts\Command\CartRemoveLineItemAction;
 use Commercetools\Core\Request\Carts\Command\CartSetShippingAddressAction;
 use Commercetools\Core\Request\Carts\Command\CartSetShippingMethodAction;
 use Commercetools\Sunrise\Model\Config;
@@ -63,6 +65,34 @@ class CartRepository extends Repository
         );
         $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
         $cart = $cartUpdateRequest->mapResponse($cartResponse);
+        return $cart;
+    }
+
+    public function deleteLineItem($cartId, $lineItemId)
+    {
+        $cart = $this->getCart($cartId);
+
+        $cartUpdateRequest = CartUpdateRequest::ofIdAndVersion($cart->getId(), $cart->getVersion());
+        $cartUpdateRequest->addAction(
+            CartRemoveLineItemAction::ofLineItemId($lineItemId)
+        );
+        $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
+        $cart = $cartUpdateRequest->mapResponse($cartResponse);
+
+        return $cart;
+    }
+
+    public function changeLineItemQuantity($cartId, $lineItemId, $quantity)
+    {
+        $cart = $this->getCart($cartId);
+
+        $cartUpdateRequest = CartUpdateRequest::ofIdAndVersion($cart->getId(), $cart->getVersion());
+        $cartUpdateRequest->addAction(
+            CartChangeLineItemQuantityAction::ofLineItemIdAndQuantity($lineItemId, $quantity)
+        );
+        $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
+        $cart = $cartUpdateRequest->mapResponse($cartResponse);
+
         return $cart;
     }
 

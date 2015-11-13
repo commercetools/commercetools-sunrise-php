@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6aa4c23bae2a5cb22006e01606ec15a2",
+    "hash": "69a25240a9a8d51d14e9535b75d64a21",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -169,36 +169,13 @@
         },
         {
             "name": "commercetools/sunrise-design",
-            "version": "dev-master",
+            "version": "0.16.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sphereio/sphere-sunrise-design.git",
-                "reference": "69d05c9332deb9c038ffbcdab136a2788eadca6d"
+                "url": "https://github.com/sphereio/sphere-sunrise-design",
+                "reference": "gh-pages"
             },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/sphere-sunrise-design/zipball/69d05c9332deb9c038ffbcdab136a2788eadca6d",
-                "reference": "69d05c9332deb9c038ffbcdab136a2788eadca6d",
-                "shasum": ""
-            },
-            "type": "library",
-            "license": [
-                "MIT"
-            ],
-            "description": "Compiles Handlebars templates with JSON data, outputting static HTML files.",
-            "homepage": "https://github.com/sphereio/sphere-sunrise-design",
-            "keywords": [
-                "SPHERE.IO",
-                "Sunrise",
-                "template"
-            ],
-            "support": {
-                "email": "support@sphere.io",
-                "forum": "http://support.sphere.io",
-                "issues": "https://github.com/sphereio/sphere-sunrise-design/issues",
-                "source": "https://github.com/sphereio/sphere-sunrise-design/tree/master"
-            },
-            "time": "2015-11-13 09:31:46"
+            "type": "library"
         },
         {
             "name": "dcro/secure-client-side-session-handler",
@@ -3161,7 +3138,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "commercetools/php-sdk": 20,
-        "commercetools/sunrise-design": 20,
         "commercetools/commons": 20,
         "silex/silex": 20,
         "zordius/lightncandy": 20,

@@ -18,7 +18,7 @@ default:
       - en
   i18n:
     resourceDirs:
-      - vendor/commercetools/sunrise-design/output/locales
+      - vendor/commercetools/sunrise-design/locales
       - app/locales
     namespace:
       defaultNs: translations
@@ -27,11 +27,12 @@ default:
         - home
         - catalog
         - checkout
+        - common
     cache_dir: cache/i18n
     interpolationPrefix: __
     interpolationSuffix: __
   templates:
-    base: vendor/commercetools/sunrise-design/output/templates
+    base: vendor/commercetools/sunrise-design/templates
     cache_dir: cache/templates
     templateDirs:
       - templates
