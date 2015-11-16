@@ -15,6 +15,7 @@ use Commercetools\Core\Request\Categories\CategoryQueryRequest;
 use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductTypeRepository;
+use Commercetools\Sunrise\Model\View\ViewLink;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use Commercetools\Sunrise\Model\View\Header;
 use Commercetools\Sunrise\Model\View\Tree;
@@ -239,7 +240,9 @@ class SunriseController
     {
         $meta = new ViewData();
         $meta->assetsPath = $this->config['sunrise.assetsPath'];
-        $meta->addToCartFormUrl = $this->generator->generate('cartAdd');
+        $meta->_links = new ViewData();
+        $meta->_links->home = new ViewLink($this->generator->generate('home'));
+        $meta->_links->newProducts = new ViewLink($this->generator->generate('category', ['category' => 'new']));
 
         $bagItems = new ViewDataCollection();
         for ($i = 1; $i < 10; $i++) {

@@ -14,6 +14,7 @@ use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductTypeRepository;
+use Commercetools\Sunrise\Model\View\ViewLink;
 use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -120,14 +121,11 @@ class CartController extends SunriseController
         $viewData = $this->getViewData('Sunrise - Cart');
         $cartId = $this->session->get('cartId');
         $cart = $this->cartRepository->getCart($cartId);
-
         $viewData->content = new ViewData();
         $viewData->content->cart = $this->getCart($cart);
-        $viewData->meta->_links = new ViewData();
-        $viewData->meta->_links->deleteLineItem = new ViewData();
-        $viewData->meta->_links->deleteLineItem->href = $this->generator->generate('lineItemDelete');
-        $viewData->meta->_links->changeLineItem = new ViewData();
-        $viewData->meta->_links->changeLineItem->href = $this->generator->generate('lineItemChange');
+        $viewData->meta->_links->continueShopping = new ViewLink($this->generator->generate('home'));
+        $viewData->meta->_links->deleteLineItem = new ViewLink($this->generator->generate('lineItemDelete'));
+        $viewData->meta->_links->changeLineItem = new ViewLink($this->generator->generate('lineItemChange'));
 
         return ['cart', $viewData];
     }

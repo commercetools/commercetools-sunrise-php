@@ -16,6 +16,7 @@ use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Model\Repository\ProductTypeRepository;
+use Commercetools\Sunrise\Model\View\ViewLink;
 use Commercetools\Sunrise\Model\View\ProductModel;
 use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Model\ViewDataCollection;
@@ -76,8 +77,29 @@ class CatalogController extends SunriseController
 
     public function home(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Home')->toArray();
-
+        $viewData = $this->getViewData('Sunrise - Home');
+        $viewData->content->banners = new ViewData();
+        $viewData->content->banners->bannerOne = new ViewData();
+        $viewData->content->banners->bannerOne->first = new ViewLink(
+            $this->generator->generate('category', ['category' => 'accessories'])
+        );
+        $viewData->content->banners->bannerOne->second = new ViewLink(
+            $this->generator->generate('category', ['category' => 'women'])
+        );
+        $viewData->content->banners->bannerTwo = new ViewData();
+        $viewData->content->banners->bannerTwo->first = new ViewLink(
+            $this->generator->generate('category', ['category' => 'men'])
+        );
+        $viewData->content->banners->bannerThree = new ViewData();
+        $viewData->content->banners->bannerThree->first = new ViewLink(
+            $this->generator->generate('category', ['category' => 'shoes'])
+        );
+        $viewData->content->banners->bannerThree->third = new ViewLink(
+            $this->generator->generate('category', ['category' => 'accessories-women-sunglasses'])
+        );
+        $viewData->content->banners->bannerThree->fourth = new ViewLink(
+            $this->generator->generate('category', ['category' => 'accessories-women-sunglasses'])
+        );
         return ['home', $viewData];
     }
 
@@ -88,7 +110,6 @@ class CatalogController extends SunriseController
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Overview Page');
 
-        $viewData->content = new ViewData();
         $viewData->content->text = "Women";
         $viewData->content->banner = new ViewData();
         $viewData->content->banner->text = "Women";
