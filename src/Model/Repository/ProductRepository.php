@@ -25,15 +25,23 @@ class ProductRepository extends Repository
      */
     public function getProductBySlug($slug, $locale = null)
     {
-        $language = \Locale::getPrimaryLanguage($locale);
         $cacheKey = static::NAME . '-' . $slug . '-' . $locale;
-        $productRequest = ProductProjectionSearchRequest::of();
-        $productRequest->addFilter(Filter::of()->setName('slug.'.$language)->setValue($slug));
-        /**
-         * @var ProductProjectionCollection $products
-         */
-        $products = $this->retrieve(static::NAME, $cacheKey, $productRequest);
-        $product = $products->current();
+
+//        $language = \Locale::getPrimaryLanguage($locale);
+//        $productRequest = ProductProjectionSearchRequest::of();
+//        $productRequest->addFilter(Filter::of()->setName('slug.'.$language)->setValue($slug));
+//        /**
+//         * @var ProductProjectionCollection $products
+//         */
+//        $products = $this->retrieve(static::NAME, $cacheKey, $productRequest);
+//        $product = $products->current();
+
+        $productRequest = ProductProjectionBySlugGetRequest::ofSlugAndContext(
+            $slug,
+            $this->client->getConfig()->getContext()
+        );
+        $product = $this->retrieve(static::NAME, $cacheKey, $productRequest);
+
         return $product;
     }
 

@@ -63,7 +63,7 @@ class CompileTemplates extends Command
         $outputDir = $projectDir . '/' . $config->get('default.templates.cache_dir');
         $baseDirs = array_merge($templateDirs, [$vendorTemplateDir]);
 
-        $iterator = new \DirectoryIterator($vendorTemplateDir);
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($vendorTemplateDir));
 
         if (!file_exists(dirname($outputDir))) {
             mkdir(dirname($outputDir));
@@ -72,10 +72,11 @@ class CompileTemplates extends Command
             mkdir($outputDir);
         }
         foreach ($iterator as $file) {
+            $templateSubDir = str_replace($vendorTemplateDir, '', dirname($file->getPathName()));
             if ($file->isFile() && in_array($file->getExtension(), ['hbs'])) {
                 foreach ($templateDirs as $dir) {
-                    if (file_exists($dir . '/' . $file->getFilename())) {
-                        $file = new \SplFileInfo($dir . '/' . $file->getFilename());
+                    if (file_exists($dir . $templateSubDir . '/' . $file->getFilename())) {
+                        $file = new \SplFileInfo($dir . $templateSubDir . '/' . $file->getFilename());
                         break;
                     }
                 }
@@ -99,7 +100,10 @@ class CompileTemplates extends Command
                     ]
                 ]);
                 $fileName = $file->getBasename($file->getExtension() ? '.' . $file->getExtension() : '');
-                file_put_contents($outputDir . '/' . $fileName . '.php', $phpStr);
+                if (!file_exists($outputDir . $templateSubDir)) {
+                    mkdir($outputDir . $templateSubDir);
+                }
+                file_put_contents($outputDir . $templateSubDir . '/' . $fileName . '.php', $phpStr);
             }
         }
 

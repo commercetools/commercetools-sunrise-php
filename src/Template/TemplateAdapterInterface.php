@@ -8,5 +8,5 @@ namespace Commercetools\Sunrise\Template;
 
 interface TemplateAdapterInterface
 {
-    public function render($page, $viewData);
+    public function render($template, $viewData);
 }

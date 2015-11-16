@@ -48,7 +48,7 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         $this->templateDir = $templateDir;
     }
 
-    protected function camelize($scored)
+    private function camelize($scored)
     {
         return ucfirst(
             implode(
@@ -64,13 +64,32 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         );
     }
 
-    public function render($page, $viewData)
+    /**
+     * @param $pageFile
+     * @return callable
+     */
+    private function getRenderer($pageFile)
+    {
+        $rendererFile = realpath($this->templateDir . '/' . $pageFile);
+        if (!is_file($rendererFile)) {
+            throw new \InvalidArgumentException();
+        }
+
+        return include($rendererFile);
+    }
+
+    public function render($template, $viewData)
     {
         if ($viewData instanceof ViewData) {
             $viewData = $viewData->toArray();
         }
-        $renderMethod = 'render' . $this->camelize($page);
-        return $this->$renderMethod($viewData);
+        $renderMethod = 'render' . $this->camelize($template);
+        if (method_exists($this, $renderMethod)) {
+            return $this->$renderMethod($viewData);
+        }
+
+        $renderer = $this->getRenderer($template . '.php');
+        return $renderer($viewData);
     }
 
     protected function renderProductDetail($viewData)
@@ -78,7 +97,7 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         /**
          * @var callable $renderer
          */
-        $renderer = include($this->templateDir . '/pdp.php');
+        $renderer = $this->getRenderer('pdp.php');
         return $renderer($viewData);
     }
 
@@ -87,16 +106,7 @@ class HandlebarsAdapter implements TemplateAdapterInterface
         /**
          * @var callable $renderer
          */
-        $renderer = include($this->templateDir . '/pop.php');
-        return $renderer($viewData);
-    }
-
-    protected function renderHome($viewData)
-    {
-        /**
-         * @var callable $renderer
-         */
-        $renderer = include($this->templateDir . '/home.php');
+        $renderer = $this->getRenderer('pop.php');
         return $renderer($viewData);
     }
 
@@ -126,14 +136,5 @@ class HandlebarsAdapter implements TemplateAdapterInterface
     public static function json($context)
     {
         return json_encode($context);
-    }
-
-    protected function renderCart($viewData)
-    {
-        /**
-         * @var callable $renderer
-         */
-        $renderer = include($this->templateDir . '/cart.php');
-        return $renderer($viewData);
     }
 }
