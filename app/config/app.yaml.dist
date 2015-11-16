@@ -16,6 +16,8 @@ default:
   fallback_languages:
     de:
       - en
+    en:
+      - de
   i18n:
     resourceDirs:
       - vendor/commercetools/sunrise-design/locales
