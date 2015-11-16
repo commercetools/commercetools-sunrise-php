@@ -23,6 +23,7 @@ use Silex\Application;
 use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
+use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
@@ -114,18 +115,18 @@ $app['languages'] = function () use ($app) {
  */
 $app->register(new LocaleServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
-$app->register(new CookieSessionServiceProvider());
-$app['session.storage.handler'] = function () use ($app) {
-    $encryptionKey = $app['config']['default.session.encryptionKey'];
-    $encryptionKeySalt = $app['config']['default.session.encryptionKeySalt'];
-    $enforceSecureCookie = $app['config']['default.session.enforceSecureCookie'];
-    if (getenv('SESSION_ENCRYPTION_KEY')) {
-        $encryptionKey = getenv('SESSION_ENCRYPTION_KEY');
-        $encryptionKeySalt = getenv('SESSION_ENCRYPTION_KEY_SALT');
-    }
-    \SecureClientSideSessionHandler::$cookieSecure = $enforceSecureCookie;
-    return new \SecureClientSideSessionHandler($encryptionKey, $encryptionKeySalt);
-};
+$app->register(new SessionServiceProvider());
+//$app['session.storage.handler'] = function () use ($app) {
+//    $encryptionKey = $app['config']['default.session.encryptionKey'];
+//    $encryptionKeySalt = $app['config']['default.session.encryptionKeySalt'];
+//    $enforceSecureCookie = $app['config']['default.session.enforceSecureCookie'];
+//    if (getenv('SESSION_ENCRYPTION_KEY')) {
+//        $encryptionKey = getenv('SESSION_ENCRYPTION_KEY');
+//        $encryptionKeySalt = getenv('SESSION_ENCRYPTION_KEY_SALT');
+//    }
+//    \SecureClientSideSessionHandler::$cookieSecure = $enforceSecureCookie;
+//    return new \SecureClientSideSessionHandler($encryptionKey, $encryptionKeySalt);
+//};
 // Register the monolog logging service
 $app->register(new MonologServiceProvider(), array(
     'monolog.logfile' => $app['config']['default.log.file'],

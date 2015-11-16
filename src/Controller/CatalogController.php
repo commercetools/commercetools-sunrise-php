@@ -103,7 +103,7 @@ class CatalogController extends SunriseController
         $viewData->content->sortSelector = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
-                $this->productModel->getProductData($product, $product->getMasterVariant(), $this->locale)
+                $this->productModel->getProductOverviewData($product, $product->getMasterVariant(), $this->locale)
             );
         }
         $viewData->content->pagination = $this->pagination;
@@ -236,7 +236,7 @@ class CatalogController extends SunriseController
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page');
 
-        $product = $this->productRepository->getProductBySlug($slug);
+        $product = $this->productRepository->getProductBySlug($slug, $this->locale);
         $productData = $this->productModel->getProductDetailData($product, $sku, $this->locale);
         $viewData->content->product = $productData;
 
@@ -245,6 +245,8 @@ class CatalogController extends SunriseController
 
     protected function getProducts(Request $request)
     {
+        $country = \Locale::getRegion($this->locale);
+        $currency = $this->config->get('default.currencies.'. $country);
         $itemsPerPage = $this->getItemsPerPage($request);
         $currentPage = $this->getCurrentPage($request);
         $sort = $this->getSort($request, 'sunrise.products.sort')['searchParam'];
@@ -263,6 +265,8 @@ class CatalogController extends SunriseController
             $itemsPerPage,
             $currentPage,
             $sort,
+            $currency,
+            $country,
             $category,
             $facetDefinitions
         );

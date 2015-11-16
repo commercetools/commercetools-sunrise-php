@@ -83,7 +83,8 @@ class Repository
             if (empty($cachedData)) {
                 throw new NotFoundHttpException("resource not found");
             }
-            $result = $request->mapResult($cachedData, $this->client->getConfig()->getContext());
+            $result = unserialize($cachedData);
+            $result->setContext($this->client->getConfig()->getContext());
         } else {
             $response = $request->executeWithClient($this->client);
 
@@ -92,7 +93,7 @@ class Repository
                 throw new NotFoundHttpException("resource not found");
             }
             $result = $request->mapResponse($response);
-            $this->store($repository, $cacheKey, $response->toArray(), $ttl);
+            $this->store($repository, $cacheKey, serialize($result), $ttl);
         }
 
         return $result;

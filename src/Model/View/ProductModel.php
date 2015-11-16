@@ -54,9 +54,15 @@ class ProductModel
         $this->generator = $generator;
     }
 
-    public function getProductData(ProductProjection $product, ProductVariant $productVariant, $locale, $selectSku = null)
-    {
-        $cacheKey = 'product-model-' . $productVariant->getSku() . $selectSku . '-' . $locale;
+    protected function getProductData(
+        $cachePrefix,
+        ProductProjection $product,
+        ProductVariant $productVariant,
+        $locale,
+        $includeDetails,
+        $selectSku = null
+    ) {
+        $cacheKey = $cachePrefix . '-' . $productVariant->getSku() . $selectSku . '-' . $locale;
         if ($this->config['default.cache.products'] && $this->cache->has($cacheKey)) {
             return unserialize($this->cache->fetch($cacheKey));
         }
@@ -66,7 +72,11 @@ class ProductModel
 
         $productModel = new ViewData();
 
-        $price = PriceFinder::findPriceFor($productVariant->getPrices(), $currency, $country);
+        if ($productVariant->getPrice()) {
+            $price = $productVariant->getPrice();
+        } else {
+            $price = PriceFinder::findPriceFor($productVariant->getPrices(), $currency, $country);
+        }
         if (empty($selectSku)) {
             $productUrl = $this->generator->generate(
                 'pdp-master',
@@ -93,19 +103,6 @@ class ProductModel
         $productData->id = $product->getId();
         $productData->slug = (string)$product->getSlug();
         $productData->name = (string)$product->getName();
-        $productData->description = (string)$product->getDescription();
-
-        $productType = $this->productTypeRepository->getById($product->getProductType()->getId());
-        list($attributes, $variantKeys, $variantIdentifiers) = $this->getVariantSelectors($product, $productType, $selectSku);
-        $productData->variants = $variantKeys;
-        $productData->variantIdentifiers = $variantIdentifiers;
-
-        if ($selectSku || count($variantIdentifiers) == 0) {
-            $productData->variantId = $productVariant->getId();
-            $productData->sku = $productVariant->getSku();
-        }
-
-        $productData->attributes = $attributes;
 
         if (!is_null($price->getDiscounted())) {
             $productData->price = (string)$price->getDiscounted()->getValue();
@@ -124,32 +121,59 @@ class ProductModel
             $imageData->bigImage = $image->getUrl();
             $productData->gallery->list->add($imageData);
         }
-        $productModel->data = $productData;
 
-        $productModel->details = new ViewData();
-        $productModel->details->list = new ViewDataCollection();
-        $productVariant->getAttributes()->setAttributeDefinitions(
-            $productType->getAttributes()
-        );
-        if (isset($this->config['sunrise.products.details.attributes'][$productType->getName()])) {
-            $attributeList = $this->config['sunrise.products.details.attributes.'.$productType->getName()];
-            foreach ($attributeList as $attributeName) {
-                $attribute = $productVariant->getAttributes()->getByName($attributeName);
-                if ($attribute) {
-                    $attributeDefinition = $productType->getAttributes()->getByName(
-                        $attributeName
-                    );
-                    $attributeData = new ViewData();
-                    $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
-                    $productModel->details->list->add($attributeData);
+        if ($includeDetails) {
+            $productData->description = (string)$product->getDescription();
+
+            $productType = $this->productTypeRepository->getById($product->getProductType()->getId());
+            list($attributes, $variantKeys, $variantIdentifiers) = $this->getVariantSelectors($product, $productType, $selectSku);
+            $productData->variants = $variantKeys;
+            $productData->variantIdentifiers = $variantIdentifiers;
+
+            if ($selectSku || count($variantIdentifiers) == 0) {
+                $productData->variantId = $productVariant->getId();
+                $productData->sku = $productVariant->getSku();
+            }
+
+            $productData->attributes = $attributes;
+
+
+            $productModel->details = new ViewData();
+            $productModel->details->list = new ViewDataCollection();
+            $productVariant->getAttributes()->setAttributeDefinitions(
+                $productType->getAttributes()
+            );
+            if (isset($this->config['sunrise.products.details.attributes'][$productType->getName()])) {
+                $attributeList = $this->config['sunrise.products.details.attributes.'.$productType->getName()];
+                foreach ($attributeList as $attributeName) {
+                    $attribute = $productVariant->getAttributes()->getByName($attributeName);
+                    if ($attribute) {
+                        $attributeDefinition = $productType->getAttributes()->getByName(
+                            $attributeName
+                        );
+                        $attributeData = new ViewData();
+                        $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
+                        $productModel->details->list->add($attributeData);
+                    }
                 }
             }
-        }
 
+        }
+        $productModel->data = $productData;
         $productModel = $productModel->toArray();
+
         $this->cache->store($cacheKey, serialize($productModel));
 
         return $productModel;
+    }
+
+    public function getProductOverviewData(
+        ProductProjection $product,
+        ProductVariant $productVariant,
+        $locale
+    ){
+        $cachePrefix = 'product-overview-model';
+        return $this->getProductData($cachePrefix, $product, $productVariant, $locale, true);
     }
 
     public function getProductDetailData(ProductProjection $product, $sku, $locale)
@@ -164,8 +188,8 @@ class ProductModel
             throw new NotFoundHttpException("resource not found");
         }
 
-        $productModel = $this->getProductData($product, $productVariant, $locale, $requestSku);
-
+        $cachePrefix = 'product-detail-model';
+        $productModel = $this->getProductData($cachePrefix, $product, $productVariant, $locale, true, $requestSku);
 
         return $productModel;
     }
