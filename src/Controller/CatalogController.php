@@ -120,7 +120,7 @@ class CatalogController extends SunriseController
         $viewData->content->products = new ViewData();
         $viewData->content->products->list = new ViewDataCollection();
         $viewData->content->displaySelector = $this->getDisplayContent($this->getItemsPerPage($request));
-        $viewData->content->filters = $this->getFiltersData($uri);
+//        $viewData->content->facets = $this->getFiltersData($uri);
         $viewData->content->sortSelector = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
@@ -204,12 +204,11 @@ class CatalogController extends SunriseController
         }
 
         $categories = new ViewData();
+        $categories->hierarchicalSelectFacet = true;
         $categories->facet = new ViewData();
         $categories->facet->available = true;
-        $categories->hierarchicalSelectFacet = true;
-        $categories->facet->key = 'product-type';
         $categories->facet->label = $this->trans('search.filters.productType');
-        $categories->facet->available = true;
+        $categories->facet->key = 'product-type';
         $categories->facet->limitedOptions = $limitedOptions;
 
         return $categories;
