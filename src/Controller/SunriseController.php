@@ -243,12 +243,12 @@ class SunriseController
         $meta->_links = new ViewData();
         $meta->_links->home = new ViewLink($this->generator->generate('home'));
         $meta->_links->newProducts = new ViewLink($this->generator->generate('category', ['category' => 'new']));
-
+        $meta->_links->addToCart = new ViewLink($this->generator->generate('cartAdd'));
         $bagItems = new ViewDataCollection();
         for ($i = 1; $i < 10; $i++) {
             $bagItems->add($i);
         }
-        $meta->bagItems = $bagItems;
+        $meta->bagQuantityOptions = $bagItems;
 
 
         return $meta;
@@ -369,11 +369,11 @@ class SunriseController
 
         if ($currentPage > 1) {
             $prevPage = $currentPage - 1;
-            $pagination->prevPage = $this->getPageUrl($uri, $prevPage);
+            $pagination->previousUrl = $this->getPageUrl($uri, $prevPage)->url;
         }
         if ($currentPage < $totalPages) {
             $nextPage = $currentPage + 1;
-            $pagination->nextPage = $this->getPageUrl($uri, $nextPage);
+            $pagination->nextUrl = $this->getPageUrl($uri, $nextPage)->url;
         }
 
         $this->pagination = $pagination;

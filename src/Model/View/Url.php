@@ -10,8 +10,8 @@ use Commercetools\Sunrise\Model\ViewData;
 
 class Url extends ViewData
 {
-    protected $text;
-    protected $url;
+    public $text;
+    public $url;
 
     public function __construct($text, $url)
     {

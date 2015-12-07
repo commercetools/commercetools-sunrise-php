@@ -222,7 +222,7 @@ class CatalogController extends SunriseController
         foreach ($this->config['sunrise.products.sort'] as $sort) {
             $entry = new ViewData();
             $entry->value = $sort['formValue'];
-            $entry->text = $this->trans('search.sort.' . $sort['formValue']);
+            $entry->label = $this->trans('search.sort.' . $sort['formValue']);
             if ($currentSort == $sort) {
                 $entry->selected = true;
             }
@@ -239,7 +239,7 @@ class CatalogController extends SunriseController
         foreach ($this->config->get('sunrise.itemsPerPage') as $count) {
             $entry = new ViewData();
             $entry->value = $count;
-            $entry->name = $count;
+            $entry->label = $count;
             if ($currentCount == $count) {
                 $entry->selected = true;
             }

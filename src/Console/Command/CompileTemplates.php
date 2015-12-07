@@ -6,6 +6,7 @@
 namespace Commercetools\Sunrise\Console\Command;
 
 use Commercetools\Sunrise\Model\Config;
+use LightnCandy\LightnCandy;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,7 +18,7 @@ class CompileTemplates extends Command
     protected function getTemplateEngine()
     {
         if (is_null($this->templateEngine)) {
-            $this->templateEngine = new \LightnCandy();
+            $this->templateEngine = new LightnCandy();
         }
         return $this->templateEngine;
     }
@@ -83,13 +84,13 @@ class CompileTemplates extends Command
                 $templateFile = $file->openFile();
                 $contents = $templateFile->fread($file->getSize());
 
-                $phpStr = \LightnCandy::compile($contents, [
-                    'flags' => \LightnCandy::FLAG_BESTPERFORMANCE |
-                        \LightnCandy::FLAG_ERROR_EXCEPTION |
-                        \LightnCandy::FLAG_NAMEDARG |
-                        \LightnCandy::FLAG_ADVARNAME |
-                        \LightnCandy::FLAG_RUNTIMEPARTIAL |
-                        \LightnCandy::FLAG_HANDLEBARSJS,
+                $phpStr = LightnCandy::compile($contents, [
+                    'flags' => LightnCandy::FLAG_BESTPERFORMANCE |
+                        LightnCandy::FLAG_ERROR_EXCEPTION |
+                        LightnCandy::FLAG_NAMEDARG |
+                        LightnCandy::FLAG_ADVARNAME |
+                        LightnCandy::FLAG_RUNTIMEPARTIAL |
+                        LightnCandy::FLAG_HANDLEBARSJS,
                     'basedir' => $baseDirs,
                     'fileext' => [
                         '.hbs',

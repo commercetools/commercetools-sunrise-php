@@ -54,6 +54,7 @@ class ProductModel
         $this->generator = $generator;
     }
 
+
     protected function getProductData(
         $cachePrefix,
         ProductProjection $product,
@@ -71,6 +72,8 @@ class ProductModel
         $currency = $this->config['default.currencies.'.$country];
 
         $productModel = new ViewData();
+        $productModelProduct = new ViewData();
+        $productModelVariant = new ViewData();
 
         if ($productVariant->getPrice()) {
             $price = $productVariant->getPrice();
@@ -94,52 +97,48 @@ class ProductModel
             );
         }
 
-        $productModel->url = $productUrl;
-        $productModel->addToCartUrl = $this->generator->generate('cartAdd');
-        $productModel->addToWishListUrl = '';
-        $productModel->addReviewUrl = '';
-
-        $productData = new ViewData();
-        $productData->id = $product->getId();
-        $productData->slug = (string)$product->getSlug();
-        $productData->name = (string)$product->getName();
+        $productModelVariant->variantId = $productVariant->getId();
+        $productModelVariant->url = $productUrl;
+        $productModelVariant->productId = $product->getId();
+        $productModelVariant->slug = (string)$product->getSlug();
+        $productModelVariant->name = (string)$product->getName();
 
         if (!is_null($price->getDiscounted())) {
-            $productData->price = (string)$price->getDiscounted()->getValue();
-            $productData->priceOld = (string)$price->getValue();
+            $productModelVariant->price = (string)$price->getDiscounted()->getValue();
+            $productModelVariant->priceOld = (string)$price->getValue();
         } else {
-            $productData->price = (string)$price->getValue();
+            $productModelVariant->price = (string)$price->getValue();
         }
-        $productModel->sale = isset($productData->priceOld);
+        $productModel->sale = isset($productModelVariant->priceOld);
 
-        $productData->gallery = new ViewData();
-        $productData->gallery->mainImage = (string)$productVariant->getImages()->current()->getUrl();
-        $productData->gallery->list = new ViewDataCollection();
+        $productModelProduct->gallery = new ViewData();
+        $productModelVariant->image = (string)$productVariant->getImages()->current()->getUrl();
+        $productModelProduct->gallery->list = new ViewDataCollection();
         foreach ($productVariant->getImages() as $image) {
             $imageData = new ViewData();
             $imageData->thumbImage = $image->getUrl();
             $imageData->bigImage = $image->getUrl();
-            $productData->gallery->list->add($imageData);
+            $productModelProduct->gallery->list->add($imageData);
         }
 
         if ($includeDetails) {
-            $productData->description = (string)$product->getDescription();
+            $productModelVariant->description = (string)$product->getDescription();
 
             $productType = $this->productTypeRepository->getById($product->getProductType()->getId());
             list($attributes, $variantKeys, $variantIdentifiers) = $this->getVariantSelectors($product, $productType, $selectSku);
-            $productData->variants = $variantKeys;
-            $productData->variantIdentifiers = $variantIdentifiers;
+            $productModelProduct->variants = $variantKeys;
+            $productModelProduct->variantIdentifiers = $variantIdentifiers;
 
             if ($selectSku || count($variantIdentifiers) == 0) {
-                $productData->variantId = $productVariant->getId();
-                $productData->sku = $productVariant->getSku();
+                $productModelVariant->variantId = $productVariant->getId();
+                $productModelVariant->sku = $productVariant->getSku();
             }
 
-            $productData->attributes = $attributes;
+            $productModelVariant->attributes = $attributes;
 
 
-            $productModel->details = new ViewData();
-            $productModel->details->list = new ViewDataCollection();
+            $productModelProduct->details = new ViewData();
+            $productModelProduct->details->list = new ViewDataCollection();
             $productVariant->getAttributes()->setAttributeDefinitions(
                 $productType->getAttributes()
             );
@@ -153,15 +152,17 @@ class ProductModel
                         );
                         $attributeData = new ViewData();
                         $attributeData->text = (string)$attributeDefinition->getLabel() . ': ' . (string)$attribute->getValue();
-                        $productModel->details->list->add($attributeData);
+                        $productModelProduct->details->list->add($attributeData);
                     }
                 }
             }
 
         }
-        $productModel->data = $productData;
-        $productModel = $productModel->toArray();
 
+        $productModel->product = $productModelProduct;
+        $productModel->product->variant = $productModelVariant;
+
+        $productModel = $productModel->toArray();
         $this->cache->store($cacheKey, serialize($productModel));
 
         return $productModel;
@@ -191,7 +192,10 @@ class ProductModel
         $cachePrefix = 'product-detail-model';
         $productModel = $this->getProductData($cachePrefix, $product, $productVariant, $locale, true, $requestSku);
 
-        return $productModel;
+        if (isset($productModel['product'])) {
+            return $productModel['product'];
+        }
+        return [];
     }
 
     public function getVariantSelectors(ProductProjection $product, ProductType $productType, $sku)
@@ -225,7 +229,7 @@ class ProductModel
                     }
                     if (!isset($attributes[$attributeName]['list'][$value])) {
                         $attributes[$attributeName]['list'][$value] = [
-                            'text' => $value,
+                            'label' => $value,
                             'value' => $value,
                             'selected' => false
                         ];

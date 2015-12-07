@@ -83,7 +83,7 @@ class CartController extends SunriseController
     public function changeLineItem(Request $request)
     {
         $lineItemId = $request->get('lineItemId');
-        $lineItemCount = (int)$request->get('lineItemCount');
+        $lineItemCount = (int)$request->get('quantity');
         $cartId = $this->session->get('cartId');
         $cart = $this->cartRepository->changeLineItemQuantity($cartId, $lineItemId, $lineItemCount);
 
