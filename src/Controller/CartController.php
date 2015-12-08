@@ -133,7 +133,7 @@ class CartController extends SunriseController
     protected function getCart(Cart $cart)
     {
         $cartModel = new ViewData();
-        $cartModel->itemsTotal = $this->getItemCount($cart);
+        $cartModel->totalItems = $this->getItemCount($cart);
         if ($cart->getTaxedPrice()) {
             $salexTax = Money::ofCurrencyAndAmount(
                 $cart->getTaxedPrice()->getTotalGross()->getCurrencyCode(),
@@ -142,9 +142,17 @@ class CartController extends SunriseController
                 $cart->getContext()
             );
             $cartModel->salesTax = $salexTax;
-            $cartModel->subtotal = $cart->getTaxedPrice()->getTotalNet();
-            $cartModel->total = $cart->getTotalPrice();
+            $cartModel->subtotalPrice = $cart->getTaxedPrice()->getTotalNet();
+            $cartModel->totalPrice = $cart->getTotalPrice();
         }
+        if ($cart->getShippingInfo()) {
+            $shippingInfo = $cart->getShippingInfo();
+            $cartModel->shippingMethod = new ViewData();
+            $cartModel->shippingMethod->value = $shippingInfo->getShippingMethodName();
+            $cartModel->shippingMethod->label = $shippingInfo->getShippingMethodName();
+            $cartModel->shippingMethod->price = (string)$shippingInfo->getPrice();
+        }
+
         $cartModel->lineItems = $this->getCartLineItems($cart);
 
         return $cartModel;
@@ -161,6 +169,8 @@ class CartController extends SunriseController
             foreach ($lineItems as $lineItem) {
                 $variant = $lineItem->getVariant();
                 $cartLineItem = new ViewData();
+                $cartLineItem->productId = $lineItem->getProductId();
+                $cartLineItem->variantId = $variant->getId();
                 $cartLineItem->lineItemId = $lineItem->getId();
                 $cartLineItem->quantity = $lineItem->getQuantity();
                 $cartLineItem->url = (string)$this->generator->generate(
@@ -177,7 +187,7 @@ class CartController extends SunriseController
                 } else {
                     $cartLineItem->price = (string)$price->getValue();
                 }
-                $cartLineItem->total = $lineItem->getTotalPrice();
+                $cartLineItem->totalPrice = $lineItem->getTotalPrice();
                 $cartLineItem->attributes = new ViewDataCollection();
                 $cartAttributes = $this->config['sunrise.cart.attributes'];
                 foreach ($cartAttributes as $attributeName) {

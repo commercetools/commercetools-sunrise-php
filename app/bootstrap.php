@@ -14,6 +14,7 @@ use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
 use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Model\Repository\ProductTypeRepository;
+use Commercetools\Sunrise\Model\Repository\ShippingMethodRepository;
 use Commercetools\Sunrise\Service\ClientFactory;
 use Commercetools\Sunrise\Service\CookieSessionServiceProvider;
 use Commercetools\Sunrise\Service\LocaleConverter;
@@ -231,10 +232,18 @@ $app['repository.cart'] = function () use ($app) {
         $app['config'],
         $app['cache'],
         $app['client'],
+        $app['repository.shippingMethod'],
         $locale
     );
 };
 
+$app['repository.shippingMethod'] = function () use ($app) {
+    return new ShippingMethodRepository(
+        $app['config'],
+        $app['cache'],
+        $app['client']
+    );
+};
 /**
  * Catalog Controller
  */
