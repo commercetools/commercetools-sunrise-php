@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "69a25240a9a8d51d14e9535b75d64a21",
+    "hash": "32755352a766e281dbf66ce8e2dce7ee",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "c57f2ee839258669e35476ea9dc332efcf81dca8"
+                "reference": "2ddd99d7fa7702446612b4803e669d07b0c6c59e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/c57f2ee839258669e35476ea9dc332efcf81dca8",
-                "reference": "c57f2ee839258669e35476ea9dc332efcf81dca8",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/2ddd99d7fa7702446612b4803e669d07b0c6c59e",
+                "reference": "2ddd99d7fa7702446612b4803e669d07b0c6c59e",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-12-11 14:31:20"
+            "time": "2015-12-14 12:56:13"
         },
         {
             "name": "commercetools/sunrise-design",
