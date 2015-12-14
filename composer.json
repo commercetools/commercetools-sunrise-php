@@ -1,4 +1,13 @@
 {
+  "name": "commercetools/sunrise",
+  "type": "project",
+  "license": "MIT",
+  "homepage": "https://github.com/sphereio/commercetools-sunrise-php",
+  "support": {
+    "email": "support@sphere.io",
+    "forum": "http://support.sphere.io",
+    "issues": "https://github.com/sphereio/commercetools-sunrise-php/issues"
+  },
   "require": {
     "ext-apcu": "*",
     "ext-mbstring": "*",

@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "8b2ab3bac973dfcce22828e16354883ff548650e"
+                "reference": "c57f2ee839258669e35476ea9dc332efcf81dca8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/8b2ab3bac973dfcce22828e16354883ff548650e",
-                "reference": "8b2ab3bac973dfcce22828e16354883ff548650e",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/c57f2ee839258669e35476ea9dc332efcf81dca8",
+                "reference": "c57f2ee839258669e35476ea9dc332efcf81dca8",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +139,7 @@
             },
             "require-dev": {
                 "behat/behat": "^3.0",
-                "doctrine/cache": "^1.4",
+                "doctrine/cache": "dev-master",
                 "fabpot/php-cs-fixer": "@stable",
                 "guzzlehttp/guzzle": "^6.0",
                 "mayflower/php-codebrowser": "^1.0",
@@ -165,7 +165,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2015-12-08 16:22:28"
+            "time": "2015-12-11 14:31:20"
         },
         {
             "name": "commercetools/sunrise-design",
@@ -1343,12 +1343,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "ff776f1dff31caec58fc388ac121a649f0f0a361"
+                "reference": "9bad415ecad589428f400c7b3b649f87aa272edf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/ff776f1dff31caec58fc388ac121a649f0f0a361",
-                "reference": "ff776f1dff31caec58fc388ac121a649f0f0a361",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/9bad415ecad589428f400c7b3b649f87aa272edf",
+                "reference": "9bad415ecad589428f400c7b3b649f87aa272edf",
                 "shasum": ""
             },
             "require": {
@@ -1382,7 +1382,7 @@
                 "php",
                 "template"
             ],
-            "time": "2015-12-08 04:04:00"
+            "time": "2015-12-10 01:38:22"
         }
     ],
     "packages-dev": [
@@ -2007,16 +2007,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v83",
+            "version": "v87",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "71f0f07375eed9f0e8417d290192e9331cbbb4cd"
+                "reference": "af49086b7f051af17c2a079150188b77bca7d595"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/71f0f07375eed9f0e8417d290192e9331cbbb4cd",
-                "reference": "71f0f07375eed9f0e8417d290192e9331cbbb4cd",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/af49086b7f051af17c2a079150188b77bca7d595",
+                "reference": "af49086b7f051af17c2a079150188b77bca7d595",
                 "shasum": ""
             },
             "bin": [
@@ -2047,7 +2047,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2015-11-16 16:11:11"
+            "time": "2015-12-11 20:12:26"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -2458,16 +2458,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.19",
+            "version": "4.8.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b2caaf8947aba5e002d42126723e9d69795f32b4"
+                "reference": "ea76b17bced0500a28098626b84eda12dbcf119c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b2caaf8947aba5e002d42126723e9d69795f32b4",
-                "reference": "b2caaf8947aba5e002d42126723e9d69795f32b4",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ea76b17bced0500a28098626b84eda12dbcf119c",
+                "reference": "ea76b17bced0500a28098626b84eda12dbcf119c",
                 "shasum": ""
             },
             "require": {
@@ -2526,7 +2526,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-11-30 08:18:59"
+            "time": "2015-12-12 07:45:58"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
