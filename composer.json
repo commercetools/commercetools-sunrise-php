@@ -9,6 +9,7 @@
     "issues": "https://github.com/sphereio/commercetools-sunrise-php/issues"
   },
   "require": {
+    "php": ">=5.5",
     "ext-apcu": "*",
     "ext-mbstring": "*",
     "commercetools/php-sdk": "dev-develop",

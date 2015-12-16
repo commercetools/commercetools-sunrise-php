@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "32755352a766e281dbf66ce8e2dce7ee",
+    "hash": "f45c766c0331c151be7c6ad4d338a88d",
     "packages": [
         {
             "name": "cilex/console-service-provider",
@@ -2007,16 +2007,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v87",
+            "version": "v89",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "af49086b7f051af17c2a079150188b77bca7d595"
+                "reference": "dabeac9552e7c6cc9422117fa57497b3155ac24f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/af49086b7f051af17c2a079150188b77bca7d595",
-                "reference": "af49086b7f051af17c2a079150188b77bca7d595",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/dabeac9552e7c6cc9422117fa57497b3155ac24f",
+                "reference": "dabeac9552e7c6cc9422117fa57497b3155ac24f",
                 "shasum": ""
             },
             "bin": [
@@ -2047,7 +2047,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2015-12-11 20:12:26"
+            "time": "2015-12-15 16:38:44"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -3250,6 +3250,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "php": ">=5.5",
         "ext-apcu": "*",
         "ext-mbstring": "*"
     },
