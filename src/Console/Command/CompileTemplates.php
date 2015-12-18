@@ -104,7 +104,7 @@ class CompileTemplates extends Command
                 if (!file_exists($outputDir . $templateSubDir)) {
                     mkdir($outputDir . $templateSubDir);
                 }
-                file_put_contents($outputDir . $templateSubDir . '/' . $fileName . '.php', $phpStr);
+                file_put_contents($outputDir . $templateSubDir . '/' . $fileName . '.php', '<?php' . PHP_EOL . $phpStr . ';');
             }
         }
 

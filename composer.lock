@@ -1343,12 +1343,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "9bad415ecad589428f400c7b3b649f87aa272edf"
+                "reference": "9bb6e16fb34da7b051d6edc5fa0746a5967df509"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/9bad415ecad589428f400c7b3b649f87aa272edf",
-                "reference": "9bad415ecad589428f400c7b3b649f87aa272edf",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/9bb6e16fb34da7b051d6edc5fa0746a5967df509",
+                "reference": "9bb6e16fb34da7b051d6edc5fa0746a5967df509",
                 "shasum": ""
             },
             "require": {
@@ -1382,7 +1382,7 @@
                 "php",
                 "template"
             ],
-            "time": "2015-12-10 01:38:22"
+            "time": "2015-12-17 10:10:49"
         }
     ],
     "packages-dev": [
