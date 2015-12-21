@@ -38,6 +38,8 @@ class SunriseController
     const SORT_ELEMENT = 'sort';
     const SORT_DEFAULT = 'new';
 
+    const CSRF_TOKEN_FORM = 'csrfToken';
+
     const CACHE_TTL = 3600;
     /**
      * @var TemplateService
@@ -173,8 +175,8 @@ class SunriseController
         $header->user = new ViewData();
         $header->user->isLoggedIn = false;
         $header->user->signIn = new Url('Login', '');
-        $header->miniCart = new Url('MiniCart', $this->generator->generate('cart'));
-        $header->miniCart->numItems = $this->session->get('cartNumItems', 0);
+        $header->miniCart = new ViewData();
+        $header->miniCart->totalItems = $this->session->get('cartNumItems', 0);
         $header->navMenu = $this->getNavMenu();
 
         return $header;
@@ -244,6 +246,8 @@ class SunriseController
         $meta->_links->home = new ViewLink($this->generator->generate('home'));
         $meta->_links->newProducts = new ViewLink($this->generator->generate('category', ['category' => 'new']));
         $meta->_links->addToCart = new ViewLink($this->generator->generate('cartAdd'));
+        $meta->_links->cart = new ViewLink($this->generator->generate('cart'));
+        $meta->csrfToken = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
         $bagItems = new ViewDataCollection();
         for ($i = 1; $i < 10; $i++) {
             $bagItems->add($i);
@@ -252,6 +256,25 @@ class SunriseController
 
 
         return $meta;
+    }
+
+    protected function validateCsrfToken($formName, $token)
+    {
+        $storedToken = $this->session->get($formName);
+        $this->session->remove($formName);
+        if ($storedToken == $token) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getCsrfToken($formName)
+    {
+        $token=hash("sha512",mt_rand(0,mt_getrandmax()));
+        $this->session->set($formName, $token);
+
+        return $token;
     }
 
     protected function getFooterData()

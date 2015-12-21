@@ -10,6 +10,7 @@ use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Cart\Cart;
 use Commercetools\Core\Model\Common\Money;
+use Commercetools\Core\Model\Common\ResourceIdentifier;
 use Commercetools\Sunrise\Model\Config;
 use Commercetools\Sunrise\Model\Repository\CartRepository;
 use Commercetools\Sunrise\Model\Repository\CategoryRepository;
@@ -19,12 +20,15 @@ use Commercetools\Sunrise\Model\ViewData;
 use Commercetools\Sunrise\Model\ViewDataCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CartController extends SunriseController
 {
+    const CSRF_TOKEN_NAME = 'csrfToken';
+
     /**
      * @var CartRepository
      */
@@ -57,8 +61,27 @@ class CartController extends SunriseController
         $this->cartRepository = $cartRepository;
     }
 
+    public function index()
+    {
+        $viewData = $this->getViewData('Sunrise - Cart');
+        $cartId = $this->session->get('cartId');
+        $cart = $this->cartRepository->getCart($cartId);
+        $viewData->content = new ViewData();
+        $viewData->content->cart = $this->getCart($cart);
+        $viewData->meta->_links->continueShopping = new ViewLink($this->generator->generate('home'));
+        $viewData->meta->_links->deleteLineItem = new ViewLink($this->generator->generate('lineItemDelete'));
+        $viewData->meta->_links->changeLineItem = new ViewLink($this->generator->generate('lineItemChange'));
+        $viewData->meta->_links->checkout = new ViewLink($this->generator->generate('checkout'));
+
+        return ['cart', $viewData];
+    }
+
     public function add(Request $request)
     {
+        // TODO: enable if product add form has a csrf token
+//        if (!$this->validateCsrfToken(static::CSRF_TOKEN_FORM, $request->get(static::CSRF_TOKEN_NAME))) {
+//            throw new \InvalidArgumentException('CSRF Token invalid');
+//        }
         $productId = $request->get('productId');
         $variantId = (int)$request->get('variantId');
         $quantity = (int)$request->get('quantity');
@@ -82,6 +105,9 @@ class CartController extends SunriseController
 
     public function changeLineItem(Request $request)
     {
+        if (!$this->validateCsrfToken(static::CSRF_TOKEN_FORM, $request->get(static::CSRF_TOKEN_NAME))) {
+            throw new \InvalidArgumentException('CSRF Token invalid');
+        }
         $lineItemId = $request->get('lineItemId');
         $lineItemCount = (int)$request->get('quantity');
         $cartId = $this->session->get('cartId');
@@ -105,6 +131,40 @@ class CartController extends SunriseController
         return new RedirectResponse($this->generator->generate('cart'));
     }
 
+    public function checkout(Request $request)
+    {
+        $userId = $this->session->get('userId');
+        if (is_null($userId)) {
+            return $this->checkoutSignin($request);
+        }
+
+        return $this->checkoutShipping($request);
+    }
+
+    public function checkoutSignin(Request $request)
+    {
+        $viewData = $this->getViewData('Sunrise - Checkout - Signin');
+        return ['checkout-signin', $viewData];
+    }
+
+    public function checkoutShipping(Request $request)
+    {
+        $viewData = $this->getViewData('Sunrise - Checkout - Shipping');
+        return ['checkout-shipping', $viewData];
+    }
+
+    public function checkoutPayment(Request $request)
+    {
+        $viewData = $this->getViewData('Sunrise - Checkout - Payment');
+        return ['checkout-payment', $viewData];
+    }
+
+    public function checkoutConfirmation(Request $request)
+    {
+        $viewData = $this->getViewData('Sunrise - Checkout - Confirmation');
+        return ['checkout-confirmation', $viewData];
+    }
+
     protected function getItemCount(Cart $cart)
     {
         $count = 0;
@@ -114,20 +174,6 @@ class CartController extends SunriseController
             }
         }
         return $count;
-    }
-
-    public function index()
-    {
-        $viewData = $this->getViewData('Sunrise - Cart');
-        $cartId = $this->session->get('cartId');
-        $cart = $this->cartRepository->getCart($cartId);
-        $viewData->content = new ViewData();
-        $viewData->content->cart = $this->getCart($cart);
-        $viewData->meta->_links->continueShopping = new ViewLink($this->generator->generate('home'));
-        $viewData->meta->_links->deleteLineItem = new ViewLink($this->generator->generate('lineItemDelete'));
-        $viewData->meta->_links->changeLineItem = new ViewLink($this->generator->generate('lineItemChange'));
-
-        return ['cart', $viewData];
     }
 
     protected function getCart(Cart $cart)
@@ -158,7 +204,7 @@ class CartController extends SunriseController
         return $cartModel;
     }
 
-    public function getCartLineItems(Cart $cart)
+    protected function getCartLineItems(Cart $cart)
     {
         $cartItems = new ViewData();
         $cartItems->list = new ViewDataCollection();

@@ -292,6 +292,21 @@ $app->get('/{_locale}/', 'catalog.controller:home')
 $app->get('/{_locale}/search/', 'catalog.controller:search')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('pop');
+$app->get('/{_locale}/checkout', 'cart.controller:checkout')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('checkout');
+$app->get('/{_locale}/checkout/signin', 'cart.controller:checkoutSignin')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('checkoutSignin');
+$app->get('/{_locale}/checkout/shipping', 'cart.controller:checkoutShipping')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('checkoutShipping');
+$app->get('/{_locale}/checkout/payment', 'cart.controller:checkoutPayment')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('checkoutPayment');
+$app->get('/{_locale}/checkout/confirmation', 'cart.controller:checkoutConfirmation')
+    ->assert('_locale', LOCALE_PATTERN)
+    ->bind('checkoutConfirmation');
 $app->post('/{_locale}/cart/add', 'cart.controller:add')
     ->assert('_locale', LOCALE_PATTERN)
     ->bind('cartAdd');
