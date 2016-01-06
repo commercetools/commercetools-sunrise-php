@@ -95,7 +95,7 @@ class CompileTemplates extends Command
                     'fileext' => [
                         '.hbs',
                     ],
-                    'hbhelpers' => [
+                    'helpers' => [
                         'i18n' => '\Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter::trans',
                         'json' => '\Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter::json'
                     ]

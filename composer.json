@@ -17,7 +17,7 @@
     "commercetools/commons": "dev-master",
     "silex/silex": "~2.0@dev",
     "cilex/console-service-provider": "^1.1",
-    "zordius/lightncandy": "dev-master",
+    "zordius/lightncandy": "^0.90",
     "symfony/config": "^2.7",
     "symfony/yaml": "^2.7",
     "symfony/translation": "*",
@@ -60,10 +60,6 @@
     {
       "type": "vcs",
       "url": "https://github.com/sphereio/commercetools-php-commons"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/sphereio/sphere-sunrise-dmexco"
     }
   ],
   "scripts": {

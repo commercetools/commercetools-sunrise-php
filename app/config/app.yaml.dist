@@ -25,11 +25,14 @@ default:
     namespace:
       defaultNs: translations
       namespaces:
-        - translations
-        - home
         - catalog
         - checkout
-        - common
+        - home
+        - mix-match
+        - my-account
+        - my-account-login
+        - no-search-result
+        - translations
     cache_dir: cache/i18n
     interpolationPrefix: __
     interpolationSuffix: __
