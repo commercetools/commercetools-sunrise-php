@@ -1,26 +1,25 @@
 #!/usr/bin/env php
 <?php
-/**
- * @author @ct-jensschulze <jens.schulze@commercetools.de>
- */
 
-use Commercetools\Sunrise\Console\Command\Hello;
-use Commercetools\Sunrise\Console\Command\CompileTemplates;
-use Cilex\Provider\Console\ConsoleServiceProvider;
+use Commercetools\Sunrise\AppKernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Debug\Debug;
 
 set_time_limit(0);
 
-$app = require_once __DIR__.'/bootstrap.php';
+/**
+ * @var Composer\Autoload\ClassLoader $loader
+ */
+$loader = require __DIR__.'/bootstrap.php';
 
-$app->register(new ConsoleServiceProvider(), array(
-    'console.name'              => 'Sunrise',
-    'console.version'           => '0.1.0',
-    'console.project_directory' => PROJECT_DIR
-));
+$input = new ArgvInput();
+$env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
+$debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && $env !== 'prod';
+if ($debug) {
+    Debug::enable();
+}
 
-$application = $app['console'];
-$application->add(new Hello());
-$application->add(new CompileTemplates());
-$application->run();
-
-?>
+$kernel = new AppKernel($env, $debug);
+$application = new Application($kernel);
+$application->run($input);

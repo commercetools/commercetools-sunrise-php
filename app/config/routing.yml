@@ -1,0 +1,52 @@
+_home:
+  path:      /
+  defaults:  { _controller: app.catalog.controller:home }
+home:
+  path: /{_locale}/
+  defaults:  { _controller: app.catalog.controller:home }
+pop:
+  path: /{_locale}/search/
+  defaults:  { _controller: app.catalog.controller:search }
+
+checkout:
+  path: /{_locale}/checkout
+  defaults:  { _controller: app.cart.controller:checkoutAction }
+checkoutSignin:
+  path: /{_locale}/checkout/signin
+  defaults:  { _controller: app.cart.controller:checkoutSignin }
+checkoutShipping:
+  path: /{_locale}/checkout/shipping
+  defaults:  { _controller: app.cart.controller:checkoutShipping }
+checkoutPayment:
+  path: /{_locale}/checkout/payment
+  defaults:  { _controller: app.cart.controller:checkoutPayment }
+checkoutConfirmation:
+  path: /{_locale}/checkout/confirmation
+  defaults:  { _controller: app.cart.controller:checkoutConfirmation }
+
+cartAdd:
+  path: /{_locale}/cart/add
+  defaults:  { _controller: app.cart.controller:add }
+lineItemDelete:
+  path: /{_locale}/cart/delete
+  defaults:  { _controller: app.cart.controller:deleteLineItem }
+lineItemChange:
+  path: /{_locale}/cart/change
+  defaults:  { _controller: app.cart.controller:changeLineItem }
+cart:
+  path: /{_locale}/cart
+  defaults:  { _controller: app.cart.controller:index }
+
+category:
+  path: /{_locale}/{category}/
+  defaults:  { _controller: app.catalog.controller:search }
+pdp-master:
+  path: /{_locale}/{slug}.html
+  defaults:  { _controller: app.catalog.controller:detail }
+pdp:
+  path: /{_locale}/{slug}/{sku}.html
+  defaults:  { _controller: app.catalog.controller:detail }
+
+random:
+  path: /random/{limit}
+  defaults: { _controller: AppBundle:Micro:random }

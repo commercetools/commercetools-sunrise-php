@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="app" synthetic="true" />
+        <service id="app.cache" class="Commercetools\Core\Cache\CacheAdapterInterface">
+            <factory service="app.cache.factory" method="get" />
+        </service>
+        <service id="app.cache.factory" class="Commercetools\Core\Cache\CacheAdapterFactory" />
+        <service id="commercetools.client.factory" class="Commercetools\Sunrise\AppBundle\Service\ClientFactory" />
+        <service id="commercetools.client" class="Commercetools\Core\Client">
+            <factory service="commercetools.client.factory" method="build"/>
+            <argument type="service" id="app.locale" />
+            <argument>%app.commercetools%</argument>
+            <argument>%app.fallback_languages%</argument>
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="logger" on-invalid="null" />
+        </service>
+        <service id="app.repository.category" class="Commercetools\Sunrise\AppBundle\Repository\CategoryRepository">
+            <argument>%app.config%</argument>
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="commercetools.client"/>
+        </service>
+        <service id="app.repository.cart" class="Commercetools\Sunrise\AppBundle\Repository\CartRepository">
+            <argument>%app.config%</argument>
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="commercetools.client"/>
+        </service>
+        <service id="app.repository.product" class="Commercetools\Sunrise\AppBundle\Repository\ProductRepository">
+            <argument>%app.config%</argument>
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="commercetools.client"/>
+        </service>
+        <service id="app.repository.product_type" class="Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository">
+            <argument>%app.config%</argument>
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="commercetools.client"/>
+        </service>
+        <service id="app.repository.shipping_method" class="Commercetools\Sunrise\AppBundle\Repository\ShippingMethodRepository">
+            <argument>%app.config%</argument>
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="commercetools.client"/>
+        </service>
+        <service id="app.catalog.controller" class="Commercetools\Sunrise\AppBundle\Controller\CatalogController">
+            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.locale" />
+            <argument type="service" id="app.route_generator" />
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="translator"/>
+            <argument type="service" id="templating"/>
+            <argument>%app.config%</argument>
+            <argument type="service" id="session"/>
+            <argument type="service" id="app.repository.category"/>
+            <argument type="service" id="app.repository.product_type"/>
+            <argument type="service" id="app.repository.product"/>
+        </service>
+        <service id="app.locale" class="Symfony\Component\HttpFoundation\Request">
+            <factory service="app.request" method="getLocale" />
+        </service>
+        <service id="app.request" class="Symfony\Component\HttpFoundation\Request">
+            <factory service="request_stack" method="getCurrentRequest" />
+        </service>
+        <service id="app.route_generator" class="Symfony\Component\Routing\Generator\UrlGeneratorInterface">
+            <factory service="router" method="getGenerator" />
+        </service>
+    </services>
+</container>

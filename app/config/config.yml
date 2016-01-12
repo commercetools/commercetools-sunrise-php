@@ -1,0 +1,14 @@
+framework:
+  secret: micr0
+  profiler: { only_exceptions: false }
+  templating:
+    engines: ['twig', 'handlebars']
+  default_locale: en
+  session:
+      save_path: ~
+handlebars:
+  cache: %kernel.cache_dir%/handlebars
+  paths:
+    - /Users/jensschulze/workspace/commercetools-sunrise-php/vendor/commercetools/sunrise-design/templates
+imports:
+  - { resource: 'app.yaml' }
