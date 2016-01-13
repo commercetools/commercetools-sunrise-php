@@ -1,12 +1,15 @@
 _home:
   path:      /
   defaults:  { _controller: app.catalog.controller:home }
+  methods:  [GET, HEAD]
 home:
   path: /{_locale}/
   defaults:  { _controller: app.catalog.controller:home }
+  methods:  [GET, HEAD]
 pop:
   path: /{_locale}/search/
   defaults:  { _controller: app.catalog.controller:search }
+  methods:  [GET, HEAD]
 
 checkout:
   path: /{_locale}/checkout
@@ -27,26 +30,34 @@ checkoutConfirmation:
 cartAdd:
   path: /{_locale}/cart/add
   defaults:  { _controller: app.cart.controller:add }
+  methods:  [POST]
 lineItemDelete:
   path: /{_locale}/cart/delete
   defaults:  { _controller: app.cart.controller:deleteLineItem }
+  methods:  [POST]
 lineItemChange:
   path: /{_locale}/cart/change
   defaults:  { _controller: app.cart.controller:changeLineItem }
+  methods:  [POST]
 cart:
   path: /{_locale}/cart
   defaults:  { _controller: app.cart.controller:index }
+  methods:  [GET, HEAD]
 
 category:
   path: /{_locale}/{category}/
   defaults:  { _controller: app.catalog.controller:search }
+  methods:  [GET, HEAD]
 pdp-master:
   path: /{_locale}/{slug}.html
   defaults:  { _controller: app.catalog.controller:detail }
+  methods:  [GET, HEAD]
 pdp:
   path: /{_locale}/{slug}/{sku}.html
   defaults:  { _controller: app.catalog.controller:detail }
+  methods:  [GET, HEAD]
 
 random:
   path: /random/{limit}
   defaults: { _controller: AppBundle:Micro:random }
+  methods:  [GET, HEAD]

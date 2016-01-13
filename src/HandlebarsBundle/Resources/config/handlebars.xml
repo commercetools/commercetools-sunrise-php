@@ -12,7 +12,15 @@
     <services>
         <service id="handlebars" class="%handlebars.class%">
             <argument type="service" id="handlebars.loader" />
+            <argument type="service" id="handlebars.helper" />
             <argument />
+        </service>
+        <service id="handlebars.template.paths" class="Commercetools\Sunrise\HandlebarsBundle\Loader\FilesystemLoader">
+            <factory service="handlebars.loader.filesystem" method="getPaths" />
+        </service>
+        <service id="handlebars.template.finder" class="Commercetools\Sunrise\HandlebarsBundle\CacheWarmer\TemplateFinder">
+            <argument type="service" id="templating.name_parser" />
+            <argument type="service" id="handlebars.template.paths" />
         </service>
         <service id="handlebars.loader" alias="handlebars.loader.filesystem" />
         <service id="handlebars.loader.filesystem" class="%handlebars.loader.filesystem.class%">
@@ -20,13 +28,16 @@
         <service id="handlebars.cache_warmer" class="%handlebars.cache_warmer.class%" public="false">
             <tag name="kernel.cache_warmer" />
             <argument type="service" id="service_container" />
-            <argument type="service" id="templating.finder" />
+            <argument type="service" id="handlebars.template.finder" />
         </service>
         <service id="templating.engine.handlebars" class="%templating.engine.handlebars.class%" public="false">
             <argument type="service" id="handlebars"/>
             <argument type="service" id="templating.name_parser"/>
             <argument type="service" id="templating.locator" />
             <tag name="templating.engine" />
+        </service>
+        <service id="handlebars.helper" class="Commercetools\Sunrise\HandlebarsBundle\HandlebarsHelper">
+            <argument type="service" id="translator" />
         </service>
     </services>
 </container>

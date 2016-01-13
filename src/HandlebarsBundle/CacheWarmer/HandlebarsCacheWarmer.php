@@ -25,7 +25,7 @@ class HandlebarsCacheWarmer implements CacheWarmerInterface
      */
     public function __construct(ContainerInterface $container, TemplateFinderInterface $finder)
     {
-        // We don't inject the SmartyEngine directly as it depends on the
+        // We don't inject the HandlebarsEngine directly as it depends on the
         // template locator (via the loader) which might be a cached one.
         // The cached template locator is available once the TemplatePathsCacheWarmer
         // has been warmed up
@@ -39,9 +39,12 @@ class HandlebarsCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp($cacheDir)
     {
-        $engine = $this->container->get('templating.engine.handlebars');
+        $engine = $this->container->get('handlebars');
         $logger = $this->container->has('logger') ? $this->container->get('logger') : null;
         foreach ($this->finder->findAllTemplates() as $template) {
+            if (!in_array($template->get('engine'), ['hbs', 'handlebars'])) {
+                continue;
+            }
             try {
                 $engine->compile($template);
             } catch (\Exception $e) {

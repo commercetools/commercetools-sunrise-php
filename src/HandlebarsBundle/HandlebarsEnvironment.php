@@ -30,7 +30,7 @@ class HandlebarsEnvironment
     protected $autoReload;
     protected $debug;
 
-    public function __construct(FilesystemLoader $loader, $options = [])
+    public function __construct(FilesystemLoader $loader, HandlebarsHelper $helper, $options = [])
     {
         $this->loader = $loader;
         $this->options = array_merge([
@@ -54,13 +54,19 @@ class HandlebarsEnvironment
         $this->setCache($this->options['cache']);
     }
 
-    public function compile($source)
+    public function compile($name)
     {
+        $source = $this->loader->getSource($name);
+        $cacheKey = $this->getCacheFilename($name);
+
+        $phpStr = '';
         try {
             $phpStr = LightnCandy::compile($source, $this->options);
         } catch (\Exception $e) {
             var_dump($e);
         }
+        $this->cache->write($cacheKey, '<?php // ' . $name . PHP_EOL . $phpStr);
+
         return $phpStr;
     }
 
@@ -114,8 +120,7 @@ class HandlebarsEnvironment
         } else if ($this->isAutoReload() && $this->isTemplateFresh($name, $this->cache->getTimestamp($cacheKey))) {
             return $this->cache->load($cacheKey);
         }
-        $phpStr = $this->compile($this->loader->getSource($name));
-        $this->cache->write($cacheKey, '<?php ' . $phpStr);
+        $this->compile($name);
 
         return $this->cache->load($cacheKey);
     }

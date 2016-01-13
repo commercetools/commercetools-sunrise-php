@@ -5,10 +5,17 @@ framework:
     engines: ['twig', 'handlebars']
   default_locale: en
   session:
-      save_path: ~
+    save_path: ~
+  translator:
+    paths:
+    - '%kernel.root_dir%/locales/en'
+    - '%kernel.root_dir%/../vendor/commercetools/sunrise-design/locales/en'
 handlebars:
   cache: %kernel.cache_dir%/handlebars
   paths:
     - /Users/jensschulze/workspace/commercetools-sunrise-php/vendor/commercetools/sunrise-design/templates
+  helpers:
+    i18n: Commercetools\Sunrise\HandlebarsBundle\HandlebarsHelper::trans
+    json: Commercetools\Sunrise\HandlebarsBundle\HandlebarsHelper::json
 imports:
   - { resource: 'app.yaml' }

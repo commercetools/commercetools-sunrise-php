@@ -67,12 +67,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "90156aaec501d71bbf364f77effcdf4e65ace97d"
+                "reference": "cd28f1c005afb5d05db7a7d02fa54d86c001070a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/8cea1e98537a3bbe5bcfdd576e200550e0a8f0bf",
-                "reference": "90156aaec501d71bbf364f77effcdf4e65ace97d",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/cd28f1c005afb5d05db7a7d02fa54d86c001070a",
+                "reference": "cd28f1c005afb5d05db7a7d02fa54d86c001070a",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +86,7 @@
             },
             "require-dev": {
                 "behat/behat": "^3.0",
-                "doctrine/cache": "dev-master",
+                "doctrine/cache": "^1.5",
                 "fabpot/php-cs-fixer": "@stable",
                 "guzzlehttp/guzzle": "^6.0",
                 "mayflower/php-codebrowser": "^1.0",
@@ -111,7 +111,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-01-06 13:40:28"
+            "time": "2016-01-13 11:57:36"
         },
         {
             "name": "commercetools/sunrise-design",
@@ -814,16 +814,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "d762ee5b099a29044603cd4649851e81aa66cb47"
+                "reference": "dd8998b7c846f6909f4e7a5f67fabebfc412a4f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/d762ee5b099a29044603cd4649851e81aa66cb47",
-                "reference": "d762ee5b099a29044603cd4649851e81aa66cb47",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/dd8998b7c846f6909f4e7a5f67fabebfc412a4f7",
+                "reference": "dd8998b7c846f6909f4e7a5f67fabebfc412a4f7",
                 "shasum": ""
             },
             "require": {
@@ -858,7 +858,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2015-12-10 14:48:13"
+            "time": "2016-01-06 13:31:20"
         },
         {
             "name": "pimple/pimple",
@@ -1519,16 +1519,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.23.1",
+            "version": "v1.23.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6"
+                "reference": "ae53fc2c312fdee63773b75cb570304f85388b08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
-                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ae53fc2c312fdee63773b75cb570304f85388b08",
+                "reference": "ae53fc2c312fdee63773b75cb570304f85388b08",
                 "shasum": ""
             },
             "require": {
@@ -1576,7 +1576,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-11-05 12:49:06"
+            "time": "2016-01-11 14:02:19"
         },
         {
             "name": "zordius/lightncandy",
@@ -1683,16 +1683,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v90",
+            "version": "v91",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "5f56ed1ea916bbeec16bf85bec0c99583e33331a"
+                "reference": "381d12e06534b7d059d42407c96588826d5e4ab4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/5f56ed1ea916bbeec16bf85bec0c99583e33331a",
-                "reference": "5f56ed1ea916bbeec16bf85bec0c99583e33331a",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/381d12e06534b7d059d42407c96588826d5e4ab4",
+                "reference": "381d12e06534b7d059d42407c96588826d5e4ab4",
                 "shasum": ""
             },
             "bin": [
@@ -1723,7 +1723,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2015-12-18 14:29:45"
+            "time": "2016-01-08 00:59:08"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
