@@ -1,0 +1,32 @@
+framework:
+  secret: micr0
+  profiler: { only_exceptions: false }
+  templating:
+    engines: ['twig', 'handlebars']
+  assets:
+  default_locale: en
+  session:
+    save_path: ~
+  translator:
+    paths:
+    - '%kernel.root_dir%/../vendor/commercetools/sunrise-design/translations'
+handlebars:
+  cache: %kernel.cache_dir%/handlebars
+  paths:
+    - /Users/jensschulze/workspace/commercetools-sunrise-php/vendor/commercetools/sunrise-design/templates
+  helpers:
+    i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
+    json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
+monolog:
+  handlers:
+    main:
+      type: stream
+      path: "%kernel.logs_dir%/%kernel.environment%.log"
+      level: debug
+      channels: [!event]
+    console:
+      type:   console
+      bubble: false
+      channels: [!event, !doctrine]
+imports:
+  - { resource: 'app_dist.yaml' }

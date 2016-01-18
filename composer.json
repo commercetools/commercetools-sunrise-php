@@ -12,30 +12,27 @@
     "php": ">=5.5",
     "ext-apcu": "*",
     "ext-mbstring": "*",
-    "commercetools/php-sdk": "dev-develop",
+    "commercetools/php-sdk": "^1.0@beta",
     "commercetools/sunrise-design": "*",
     "commercetools/commons": "dev-master",
-    "silex/silex": "~2.0@dev",
-    "cilex/console-service-provider": "^1.1",
-    "zordius/lightncandy": "^0.90",
-    "symfony/config": "^2.7",
-    "symfony/yaml": "^2.7",
+    "symfony/symfony": "^3.0",
+    "jays-de/handlebars-bundle": "dev-master",
+    "symfony/config": "^3.0",
+    "symfony/yaml": "^3.0",
     "symfony/translation": "*",
     "monolog/monolog": "^1.7",
-    "dcro/secure-client-side-session-handler": "dev-master"
+    "dcro/secure-client-side-session-handler": "dev-master",
+    "sensio/framework-extra-bundle": "^3.0",
+    "symfony/monolog-bundle": "^2.8"
   },
   "require-dev": {
-    "commercetools/sunrise-scenarios": "dev-behat",
-    "behat/mink": "^1.6",
-    "behat/behat": "^3.0",
-    "behat/mink-extension": "^2.0",
-    "behat/mink-selenium2-driver": "^1.2",
-    "behat/mink-goutte-driver": "dev-master",
     "heroku/heroku-buildpack-php": "*",
     "phpunit/phpunit": "^4.7"
   },
   "autoload": {
-    "psr-4": {"Commercetools\\Sunrise\\": "src/"}
+    "psr-4": {
+      "Commercetools\\Sunrise\\": ["src/"]
+    }
   },
   "autoload-dev": {
     "psr-4": {"Commercetools\\Sunrise\\": ["tests/unit/", "tests/integration/", "tests/behat/"]}
@@ -61,15 +58,5 @@
       "type": "vcs",
       "url": "https://github.com/sphereio/commercetools-php-commons"
     }
-  ],
-  "scripts": {
-    "post-update-cmd": [
-      "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "app/console.php compile"
-    ],
-    "post-install-cmd": [
-      "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "app/console.php compile"
-    ]
-  }
+  ]
 }

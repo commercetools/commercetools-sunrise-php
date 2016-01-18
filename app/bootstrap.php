@@ -16,33 +16,49 @@ use Commercetools\Sunrise\Model\Repository\ProductRepository;
 use Commercetools\Sunrise\Model\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\Model\Repository\ShippingMethodRepository;
 use Commercetools\Sunrise\Service\ClientFactory;
-use Commercetools\Sunrise\Service\CookieSessionServiceProvider;
 use Commercetools\Sunrise\Service\LocaleConverter;
 use Commercetools\Sunrise\Template\Adapter\HandlebarsAdapter;
 use Commercetools\Sunrise\Template\TemplateService;
-use Silex\Application;
-use Silex\Provider\LocaleServiceProvider;
-use Silex\Provider\MonologServiceProvider;
-use Silex\Provider\ServiceControllerServiceProvider;
-use Silex\Provider\SessionServiceProvider;
-use Silex\Provider\TranslationServiceProvider;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Yaml;
 
-require __DIR__.'/../vendor/autoload.php';
-
 define('PROJECT_DIR', dirname(__DIR__));
+
+$loader = require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/AppKernel.php';
+// auto-load annotations
+AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+
+$kernel = new AppKernel('dev', true);
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
+$response->send();
+$kernel->terminate($request, $response);
+
+exit();
+
+
+
+
+
+
+
+
+
+
+
 define('CONFIG_DEBUG', true);
 
 const LOCALE_PATTERN = '[a-z]{2}([_-][a-z]{2})?';
 
-$app = new Application();
 
 $app['config'] = function () use ($app) {
     $cachePath = PROJECT_DIR . '/cache/config.php';
