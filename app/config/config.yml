@@ -4,12 +4,16 @@ framework:
   templating:
     engines: ['twig', 'handlebars']
   assets:
+    base_path: /assets/
   default_locale: en
   session:
     save_path: ~
   translator:
     paths:
     - '%kernel.root_dir%/../vendor/commercetools/sunrise-design/translations'
+twig:
+  debug:            "%kernel.debug%"
+  strict_variables: "%kernel.debug%"
 handlebars:
   cache: %kernel.cache_dir%/handlebars
   paths:

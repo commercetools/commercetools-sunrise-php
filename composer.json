@@ -37,6 +37,11 @@
   "autoload-dev": {
     "psr-4": {"Commercetools\\Sunrise\\": ["tests/unit/", "tests/integration/", "tests/behat/"]}
   },
+  "scripts": {
+    "assetInstall": "php app/console.php assets:install web/assets",
+    "post-update-cmd": "@assetInstall",
+    "post-install-cmd": "@assetInstall"
+  },
   "repositories": [
     {
       "type": "package",
