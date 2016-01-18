@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a4c42c52ce136bb8c298fd88a3687ddc",
-    "content-hash": "08f3111e90a0ba3828156378738b33ce",
+    "hash": "79c16c9429a8e4ec09610f2e67a55032",
+    "content-hash": "560b5f803011d5f16d1b31bbf441037b",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -734,6 +734,57 @@
                 "uri"
             ],
             "time": "2015-11-03 01:34:55"
+        },
+        {
+            "name": "jays-de/handlebars-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jayS-de/HandlebarsBundle.git",
+                "reference": "51bcaa62b1f2ea59f57f0bef2122b4ed55abb170"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/51bcaa62b1f2ea59f57f0bef2122b4ed55abb170",
+                "reference": "51bcaa62b1f2ea59f57f0bef2122b4ed55abb170",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5",
+                "symfony/framework-bundle": "^3.0",
+                "zordius/lightncandy": "^0.90"
+            },
+            "require-dev": {
+                "symfony/yaml": "^3.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "JaySDe\\HandlebarsBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jens Schulze",
+                    "email": "jens.schulze@commercetools.de"
+                },
+                {
+                    "name": "Community contributions",
+                    "homepage": "https://github.com/jays-de/HandlebarsBundle/contributors"
+                }
+            ],
+            "description": "This Symfony3 bundle provides integration for the handlebars template engine.",
+            "homepage": "https://github.com/jayS-de/HandlebarsBundle",
+            "keywords": [
+                "handlebars",
+                "symfony",
+                "templating"
+            ],
+            "time": "2016-01-18 14:08:50"
         },
         {
             "name": "monolog/monolog",
@@ -2579,6 +2630,7 @@
     "stability-flags": {
         "commercetools/php-sdk": 20,
         "commercetools/commons": 20,
+        "jays-de/handlebars-bundle": 20,
         "dcro/secure-client-side-session-handler": 20
     },
     "prefer-stable": false,

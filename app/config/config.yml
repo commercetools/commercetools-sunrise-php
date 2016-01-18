@@ -8,14 +8,13 @@ framework:
     save_path: ~
   translator:
     paths:
-    - '%kernel.root_dir%/locales/en'
-    - '%kernel.root_dir%/../vendor/commercetools/sunrise-design/locales/en'
+    - '%kernel.root_dir%/../vendor/commercetools/sunrise-design/translations'
 handlebars:
   cache: %kernel.cache_dir%/handlebars
   paths:
     - /Users/jensschulze/workspace/commercetools-sunrise-php/vendor/commercetools/sunrise-design/templates
   helpers:
-    i18n: Commercetools\Sunrise\HandlebarsBundle\HandlebarsHelper::trans
-    json: Commercetools\Sunrise\HandlebarsBundle\HandlebarsHelper::json
+    i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
+    json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
 imports:
   - { resource: 'app.yaml' }

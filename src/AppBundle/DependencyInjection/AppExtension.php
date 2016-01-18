@@ -6,7 +6,6 @@
 
 namespace Commercetools\Sunrise\AppBundle\DependencyInjection;
 
-use Commercetools\Sunrise\AppBundle\Model\Config;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;

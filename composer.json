@@ -16,7 +16,7 @@
     "commercetools/sunrise-design": "*",
     "commercetools/commons": "dev-master",
     "symfony/symfony": "^3.0",
-    "zordius/lightncandy": "^0.90",
+    "jays-de/handlebars-bundle": "dev-master",
     "symfony/config": "^3.0",
     "symfony/yaml": "^3.0",
     "symfony/translation": "*",

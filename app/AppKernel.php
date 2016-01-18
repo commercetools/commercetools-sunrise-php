@@ -3,7 +3,7 @@
 namespace Commercetools\Sunrise;
 
 use Commercetools\Sunrise\AppBundle\AppBundle;
-use Commercetools\Sunrise\HandlebarsBundle\HandlebarsBundle;
+use JaySDe\HandlebarsBundle\HandlebarsBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
