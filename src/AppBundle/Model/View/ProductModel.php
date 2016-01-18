@@ -64,18 +64,17 @@ class ProductModel
         $selectSku = null
     ) {
         $cacheKey = $cachePrefix . '-' . $productVariant->getSku() . $selectSku . '-' . $locale;
-        if ($this->config['default.cache.products'] && $this->cache->has($cacheKey)) {
+        if ($this->config['cache.products'] && $this->cache->has($cacheKey)) {
             return unserialize($this->cache->fetch($cacheKey));
         }
 
         $country = \Locale::getRegion($locale);
-        $currency = $this->config['default.currencies.'.$country];
+        $currency = $this->config['currencies.'.$country];
 
         $productModel = new ViewData();
         $productModelProduct = new ViewData();
         $productModelVariant = new ViewData();
-
-        if ($productVariant->getPrice()) {
+        if (!is_null($productVariant->getPrice())) {
             $price = $productVariant->getPrice();
         } else {
             $price = PriceFinder::findPriceFor($productVariant->getPrices(), $currency, $country);

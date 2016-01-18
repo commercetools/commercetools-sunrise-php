@@ -274,7 +274,7 @@ class CatalogController extends SunriseController
     protected function getProducts(Request $request)
     {
         $country = \Locale::getRegion($this->locale);
-        $currency = $this->config->get('default.currencies.'. $country);
+        $currency = $this->config->get('currencies.'. $country);
         $itemsPerPage = $this->getItemsPerPage($request);
         $currentPage = $this->getCurrentPage($request);
         $sort = $this->getSort($request, 'sunrise.products.sort')['searchParam'];

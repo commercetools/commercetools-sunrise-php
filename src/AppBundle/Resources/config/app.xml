@@ -56,7 +56,14 @@
             <argument type="service" id="app.repository.product_type"/>
             <argument type="service" id="app.repository.product"/>
         </service>
-        <service id="app.locale" class="Symfony\Component\HttpFoundation\Request">
+        <service id="app.locale" class="string">
+            <factory service="app.locale.converter" method="convert" />
+            <argument type="service" id="app.locale.request" />
+        </service>
+        <service id="app.locale.converter" class="Commercetools\Sunrise\AppBundle\Service\LocaleConverter">
+            <argument>DE</argument>
+        </service>
+        <service id="app.locale.request" class="Symfony\Component\HttpFoundation\Request">
             <factory service="app.request" method="getLocale" />
         </service>
         <service id="app.request" class="Symfony\Component\HttpFoundation\Request">

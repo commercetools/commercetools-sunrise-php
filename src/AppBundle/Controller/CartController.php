@@ -87,7 +87,7 @@ class CartController extends SunriseController
         $slug = $request->get('productSlug');
         $cartId = $this->session->get('cartId');
         $country = \Locale::getRegion($this->locale);
-        $currency = $this->config->get('default.currencies.'. $country);
+        $currency = $this->config->get('currencies.'. $country);
         $cart = $this->cartRepository->addLineItem($cartId, $productId, $variantId, $quantity, $currency, $country);
         $this->session->set('cartId', $cart->getId());
         $this->session->set('cartNumItems', $this->getItemCount($cart));

@@ -130,9 +130,9 @@ class SunriseController
         $this->categoryRepository = $categoryRepository;
         $this->productTypeRepository = $productTypeRepository;
 
-        $this->defaultNamespace = $this->config['default.i18n.namespace.defaultNs'];
-        $this->interpolationPrefix = $this->config['default.i18n.interpolationPrefix'];
-        $this->interpolationSuffix = $this->config['default.i18n.interpolationSuffix'];
+        $this->defaultNamespace = $this->config['i18n.namespace.defaultNs'];
+        $this->interpolationPrefix = $this->config['i18n.interpolationPrefix'];
+        $this->interpolationSuffix = $this->config['i18n.interpolationSuffix'];
     }
 
     protected function getViewData($title)

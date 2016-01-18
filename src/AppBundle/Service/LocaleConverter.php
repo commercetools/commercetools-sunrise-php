@@ -3,25 +3,21 @@
  * @author @ct-jensschulze <jens.schulze@commercetools.de>
  */
 
-namespace Commercetools\Sunrise\Service;
-
-
-use Silex\Application;
+namespace Commercetools\Sunrise\AppBundle\Service;
 
 class LocaleConverter
 {
-    private $app;
+    private $country;
 
-    public function __construct(Application $app)
+    public function __construct($country)
     {
-        $this->app = $app;
+        $this->country = $country;
     }
-
     public function convert($locale)
     {
         $parts = \Locale::parseLocale($locale);
         if (!isset($parts['region'])) {
-            $parts['region'] = $this->app['country'];
+            $parts['region'] = $this->country;
         }
         $locale = \Locale::canonicalize(\Locale::composeLocale($parts));
 

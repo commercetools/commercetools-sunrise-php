@@ -10,6 +10,14 @@ pop:
   path: /{_locale}/search/
   defaults:  { _controller: app.catalog.controller:search }
   methods:  [GET, HEAD]
+pdp-master:
+  path: /{_locale}/{slug}.html
+  defaults:  { _controller: app.catalog.controller:detail }
+  methods:  [GET, HEAD]
+pdp:
+  path: /{_locale}/{slug}/{sku}.html
+  defaults:  { _controller: app.catalog.controller:detail }
+  methods:  [GET, HEAD]
 
 checkout:
   path: /{_locale}/checkout
@@ -47,14 +55,6 @@ cart:
 category:
   path: /{_locale}/{category}/
   defaults:  { _controller: app.catalog.controller:search }
-  methods:  [GET, HEAD]
-pdp-master:
-  path: /{_locale}/{slug}.html
-  defaults:  { _controller: app.catalog.controller:detail }
-  methods:  [GET, HEAD]
-pdp:
-  path: /{_locale}/{slug}/{sku}.html
-  defaults:  { _controller: app.catalog.controller:detail }
   methods:  [GET, HEAD]
 
 random:

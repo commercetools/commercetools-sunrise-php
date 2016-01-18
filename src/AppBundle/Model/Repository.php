@@ -57,7 +57,7 @@ class Repository
         $ttl = self::CACHE_TTL
     ) {
         $data = [];
-        if (!$force && $this->config['default.cache.' . $repository] && $this->cache->has($cacheKey)) {
+        if (!$force && $this->config['cache.' . $repository] && $this->cache->has($cacheKey)) {
             $cachedData = $this->cache->fetch($cacheKey);
             if (!empty($cachedData)) {
                 $data = $cachedData;
@@ -82,7 +82,7 @@ class Repository
      */
     protected function retrieve($repository, $cacheKey, AbstractApiRequest $request, $force = false, $ttl = self::CACHE_TTL)
     {
-        if (!$force && $this->config['default.cache.' . $repository] && $this->cache->has($cacheKey)) {
+        if (!$force && $this->config['cache.' . $repository] && $this->cache->has($cacheKey)) {
             $cachedData = $this->cache->fetch($cacheKey);
             if (empty($cachedData)) {
                 throw new NotFoundHttpException("resource not found");
@@ -105,7 +105,7 @@ class Repository
 
     protected function store($repository, $cacheKey, $data, $ttl)
     {
-        if ($this->config['default.cache.' . $repository]) {
+        if ($this->config['cache.' . $repository]) {
             $this->cache->store($cacheKey, $data, $ttl);
         }
     }

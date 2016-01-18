@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "79c16c9429a8e4ec09610f2e67a55032",
-    "content-hash": "560b5f803011d5f16d1b31bbf441037b",
+    "hash": "93188390c99eac061cb94fd538c69903",
+    "content-hash": "278bece3c796abf0c0a9df5698b4db76",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -63,16 +63,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "dev-develop",
+            "version": "v1.0.0-RC9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "cd28f1c005afb5d05db7a7d02fa54d86c001070a"
+                "reference": "d5a7ba129d1aacbe4460e31e5d2f26bd911f7963"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/cd28f1c005afb5d05db7a7d02fa54d86c001070a",
-                "reference": "cd28f1c005afb5d05db7a7d02fa54d86c001070a",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/d5a7ba129d1aacbe4460e31e5d2f26bd911f7963",
+                "reference": "d5a7ba129d1aacbe4460e31e5d2f26bd911f7963",
                 "shasum": ""
             },
             "require": {
@@ -111,7 +111,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-01-13 11:57:36"
+            "time": "2016-01-11 13:08:45"
         },
         {
             "name": "commercetools/sunrise-design",
@@ -2628,7 +2628,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/php-sdk": 20,
+        "commercetools/php-sdk": 10,
         "commercetools/commons": 20,
         "jays-de/handlebars-bundle": 20,
         "dcro/secure-client-side-session-handler": 20
