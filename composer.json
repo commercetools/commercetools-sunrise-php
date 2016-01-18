@@ -26,6 +26,11 @@
     "symfony/monolog-bundle": "^2.8"
   },
   "require-dev": {
+    "commercetools/sunrise-scenarios": "dev-behat",
+    "behat/mink": "^1.6@dev",
+    "behat/behat": "^3.0@beta",
+    "behat/mink-extension": "^2.0@dev",
+    "behat/mink-selenium2-driver": "^1.2@dev",
     "heroku/heroku-buildpack-php": "*",
     "phpunit/phpunit": "^4.7"
   },
