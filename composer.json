@@ -40,7 +40,7 @@
   "scripts": {
     "assetInstall": [
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "php app/console.php assets:install web/assets",
+      "php app/console.php assets:install web/assets"
     ],
     "post-update-cmd": "@assetInstall",
     "post-install-cmd": "@assetInstall"
