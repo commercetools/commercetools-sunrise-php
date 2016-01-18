@@ -17,6 +17,7 @@ use Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -38,19 +39,24 @@ class CartController extends SunriseController
         UrlGenerator $generator,
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
-        Config $config,
+        EngineInterface $templateEngine,
+        $config,
         Session $session,
         CategoryRepository $categoryRepository,
         ProductTypeRepository $productTypeRepository,
         CartRepository $cartRepository
     )
     {
+        if (is_array($config)) {
+            $config = new Config($config);
+        }
         parent::__construct(
             $client,
             $locale,
             $generator,
             $cache,
             $translator,
+            $templateEngine,
             $config,
             $session,
             $categoryRepository,
@@ -71,7 +77,7 @@ class CartController extends SunriseController
         $viewData->meta->_links->changeLineItem = new ViewLink($this->generator->generate('lineItemChange'));
         $viewData->meta->_links->checkout = new ViewLink($this->generator->generate('checkout'));
 
-        return ['cart', $viewData];
+        return $this->render('cart.hbs', $viewData->toArray());
     }
 
     public function add(Request $request)
@@ -142,25 +148,25 @@ class CartController extends SunriseController
     public function checkoutSignin(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Signin');
-        return ['checkout-signin', $viewData];
+        return $this->render('checkout-signin.hbs', $viewData->toArray());
     }
 
     public function checkoutShipping(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Shipping');
-        return ['checkout-shipping', $viewData];
+        return $this->render('checkout-shipping.hbs', $viewData->toArray());
     }
 
     public function checkoutPayment(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Payment');
-        return ['checkout-payment', $viewData];
+        return $this->render('checkout-payment.hbs', $viewData->toArray());
     }
 
     public function checkoutConfirmation(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Confirmation');
-        return ['checkout-confirmation', $viewData];
+        return $this->render('checkout-confirmation.hbs', $viewData->toArray());
     }
 
     protected function getItemCount(Cart $cart)

@@ -21,7 +21,7 @@ pdp:
 
 checkout:
   path: /{_locale}/checkout
-  defaults:  { _controller: app.cart.controller:checkoutAction }
+  defaults:  { _controller: app.cart.controller:checkout }
 checkoutSignin:
   path: /{_locale}/checkout/signin
   defaults:  { _controller: app.cart.controller:checkoutSignin }

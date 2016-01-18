@@ -30,7 +30,7 @@ class CartRepository extends Repository
     const NAME = 'cart';
 
     public function __construct(
-        Config $config,
+        $config,
         CacheAdapterInterface $cache,
         Client $client,
         ShippingMethodRepository $shippingMethodRepository,
