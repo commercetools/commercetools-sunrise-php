@@ -7,6 +7,7 @@ cache:
 addons:
   sauce_connect: true
 before_script:
+- composer self-update
 - composer config -g github-oauth.github.com $GITHUB_OAUTH_TOKEN
 - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ `php-config --vernum` -ge 50400 ] && [ `php-config --vernum` -lt 70000 ]; then printf "yes\n" | pecl install -f apcu-4.0.10 ; fi"
 - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ `php-config --vernum` -ge 70000 ] ; then printf "yes\n" | pecl install -f apcu ; echo 'extension="apcu.so"' >> ./tests/apc.ini ; fi"

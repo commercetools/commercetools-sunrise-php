@@ -10,14 +10,14 @@ framework:
     save_path: ~
   translator:
     paths:
-    - '%kernel.root_dir%/../vendor/commercetools/sunrise-design/translations'
+    - %kernel.root_dir%/../vendor/commercetools/sunrise-design/translations
 twig:
   debug:            "%kernel.debug%"
   strict_variables: "%kernel.debug%"
 handlebars:
   cache: %kernel.cache_dir%/handlebars
   paths:
-    - /Users/jensschulze/workspace/commercetools-sunrise-php/vendor/commercetools/sunrise-design/templates
+    - %kernel.root_dir%/../vendor/commercetools/sunrise-design/templates
   helpers:
     i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
     json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
@@ -25,7 +25,7 @@ monolog:
   handlers:
     main:
       type: stream
-      path: "%kernel.logs_dir%/%kernel.environment%.log"
+      path: %kernel.logs_dir%/%kernel.environment%.log
       level: debug
       channels: [!event]
     console:
