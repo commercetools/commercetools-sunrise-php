@@ -10,3 +10,4 @@ node_modules
 app.yaml
 selenium*.jar
 .vagrant
+app/logs

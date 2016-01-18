@@ -1,0 +1,56 @@
+app:
+  sunrise:
+    assetsPath: '/assets/'
+    itemsPerPage:
+    - 12
+    - 24
+    - 48
+    cart:
+      attributes:
+      - color
+      - size
+    products:
+      sort:
+        new:
+          formValue: new
+          searchParam: createdAt desc
+        price-asc:
+          formValue: price-asc
+          searchParam: price asc
+        price-desc:
+          formValue: price-desc
+          searchParam: price desc
+      variantsSelector:
+        main:
+        - color
+        - size
+      details:
+        attributes:
+          main:
+          - designer
+          - gender
+          - style
+  languages:
+  - de
+  - en
+  countries:
+  - DE
+  - UK
+  currencies:
+    DE: EUR
+    UK: GBP
+  fallback_languages:
+    de:
+    - en
+    en:
+    - de
+  cache:
+    categories: true
+    productTypes: true
+    products: true
+#  commercetools:
+#    client_id: <client_id>
+#    client_secret: <client_secret>
+#    project: <project>
+imports:
+  - { resource: 'app.yaml' }
