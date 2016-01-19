@@ -13,6 +13,7 @@ use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
 use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
 use Commercetools\Sunrise\AppBundle\Model\Repository;
+use Commercetools\Sunrise\AppBundle\Profiler\Profile;
 
 class ProductRepository extends Repository
 {
@@ -84,8 +85,9 @@ class ProductRepository extends Repository
                 );
             }
         }
-
+        $this->profiler->enter($profile = new Profile('getProducts'));
         $response = $searchRequest->executeWithClient($this->client);
+        $this->profiler->leave($profile);
         $products = $searchRequest->mapResponse($response);
 
         return [$products, $response->getFacets(), $response->getOffset(), $response->getTotal()];

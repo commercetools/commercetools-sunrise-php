@@ -12,9 +12,9 @@ use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Model\Product\ProductVariant;
 use Commercetools\Core\Model\ProductType\ProductType;
 use Commercetools\Sunrise\AppBundle\Model\Config;
-use Commercetools\Sunrise\AppBundle\Model\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
+use Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
@@ -96,10 +96,10 @@ class ProductModel
             );
         }
 
-        $productModelVariant->variantId = $productVariant->getId();
+        $productModelProduct->variantId = $productVariant->getId();
         $productModelVariant->url = $productUrl;
-        $productModelVariant->productId = $product->getId();
-        $productModelVariant->slug = (string)$product->getSlug();
+        $productModelProduct->productId = $product->getId();
+        $productModelProduct->slug = (string)$product->getSlug();
         $productModelVariant->name = (string)$product->getName();
 
         if (!is_null($price->getDiscounted())) {
@@ -133,7 +133,7 @@ class ProductModel
                 $productModelVariant->sku = $productVariant->getSku();
             }
 
-            $productModelVariant->attributes = $attributes;
+            $productModelProduct->attributes = $attributes;
 
 
             $productModelProduct->details = new ViewData();

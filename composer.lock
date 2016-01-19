@@ -741,12 +741,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/HandlebarsBundle.git",
-                "reference": "c8eed3878b144097374744c2f729af62948f7a3b"
+                "reference": "099ebd3a8552575e3bf1f882a2ee94e76c2ea117"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/c8eed3878b144097374744c2f729af62948f7a3b",
-                "reference": "c8eed3878b144097374744c2f729af62948f7a3b",
+                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/099ebd3a8552575e3bf1f882a2ee94e76c2ea117",
+                "reference": "099ebd3a8552575e3bf1f882a2ee94e76c2ea117",
                 "shasum": ""
             },
             "require": {
@@ -785,7 +785,7 @@
                 "symfony",
                 "templating"
             ],
-            "time": "2016-01-19 10:49:02"
+            "time": "2016-01-19 12:28:22"
         },
         {
             "name": "monolog/monolog",

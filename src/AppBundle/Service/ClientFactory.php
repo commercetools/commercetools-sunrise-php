@@ -28,7 +28,7 @@ class ClientFactory
         LoggerInterface $logger = null
     ) {
         $language = \Locale::getPrimaryLanguage($locale);
-        $languages = $fallbackLanguages[$language];
+        $languages = array_merge([$language], $fallbackLanguages[$language]);
         $context = Context::of()->setLanguages($languages)->setGraceful(true)->setLocale($locale);
         if (getenv('SPHERE_CLIENT_ID')) {
             $config = [

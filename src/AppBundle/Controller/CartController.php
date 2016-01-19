@@ -223,12 +223,14 @@ class CartController extends SunriseController
                 $cartLineItem->variantId = $variant->getId();
                 $cartLineItem->lineItemId = $lineItem->getId();
                 $cartLineItem->quantity = $lineItem->getQuantity();
-                $cartLineItem->url = (string)$this->generator->generate(
+                $lineItemVariant = new ViewData();
+                $lineItemVariant->url = (string)$this->generator->generate(
                     'pdp-master',
                     ['slug' => (string)$lineItem->getProductSlug()]
                 );
-                $cartLineItem->name = (string)$lineItem->getName();
-                $cartLineItem->image = (string)$variant->getImages()->current()->getUrl();
+                $lineItemVariant->name = (string)$lineItem->getName();
+                $lineItemVariant->image = (string)$variant->getImages()->current()->getUrl();
+                $cartLineItem->variant = $lineItemVariant;
                 $cartLineItem->sku = $variant->getSku();
                 $price = $lineItem->getPrice();
                 if (!is_null($price->getDiscounted())) {
@@ -239,6 +241,7 @@ class CartController extends SunriseController
                 }
                 $cartLineItem->totalPrice = $lineItem->getTotalPrice();
                 $cartLineItem->attributes = new ViewDataCollection();
+
                 $cartAttributes = $this->config['sunrise.cart.attributes'];
                 foreach ($cartAttributes as $attributeName) {
                     $attribute = $variant->getAttributes()->getByName($attributeName);

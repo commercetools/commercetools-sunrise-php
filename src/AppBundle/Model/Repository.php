@@ -11,7 +11,8 @@ use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Request\AbstractApiRequest;
 use Commercetools\Core\Request\QueryAllRequestInterface;
-use Commercetools\Sunrise\AppBundle\Model\Config;
+use Commercetools\Sunrise\AppBundle\Profiler\CTPProfilerExtension;
+use Commercetools\Sunrise\AppBundle\Profiler\Profile;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Repository
@@ -33,7 +34,12 @@ class Repository
      */
     protected $client;
 
-    public function __construct($config, CacheAdapterInterface $cache, Client $client)
+    /**
+     * @var CTPProfilerExtension
+     */
+    protected $profiler;
+
+    public function __construct($config, CacheAdapterInterface $cache, Client $client, CTPProfilerExtension $profiler)
     {
         if (is_array($config)) {
             $config = new Config($config);
@@ -41,6 +47,7 @@ class Repository
         $this->cache = $cache;
         $this->config = $config;
         $this->client = $client;
+        $this->profiler = $profiler;
     }
 
     /**
@@ -66,7 +73,9 @@ class Repository
             $result->setContext($this->client->getConfig()->getContext());
         } else {
             $helper = new QueryHelper();
+            $this->profiler->enter($profile = new Profile('retrieveAll' . ucfirst($repository)));
             $result = $helper->getAll($this->client, $request);
+            $this->profiler->leave($profile);
             $this->store($repository, $cacheKey, serialize($result), $ttl);
         }
 
@@ -90,8 +99,9 @@ class Repository
             $result = unserialize($cachedData);
             $result->setContext($this->client->getConfig()->getContext());
         } else {
+            $this->profiler->enter($profile = new Profile('retrieve' . ucfirst($repository)));
             $response = $request->executeWithClient($this->client);
-
+            $this->profiler->leave($profile);
             if ($response->isError() || is_null($response->toObject())) {
                 $this->store($repository, $cacheKey, '', $ttl);
                 throw new NotFoundHttpException("resource not found");

@@ -22,6 +22,7 @@
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
             <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.cart" class="Commercetools\Sunrise\AppBundle\Repository\CartRepository">
             <argument>%app.config%</argument>
@@ -29,21 +30,25 @@
             <argument type="service" id="commercetools.client"/>
             <argument type="service" id="app.repository.shipping_method"/>
             <argument type="service" id="app.locale"/>
+            <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.product" class="Commercetools\Sunrise\AppBundle\Repository\ProductRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
             <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.product_type" class="Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
             <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.shipping_method" class="Commercetools\Sunrise\AppBundle\Repository\ShippingMethodRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
             <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.catalog.controller" class="Commercetools\Sunrise\AppBundle\Controller\CatalogController">
             <argument type="service" id="commercetools.client"/>
@@ -86,6 +91,16 @@
         </service>
         <service id="app.route_generator" class="Symfony\Component\Routing\Generator\UrlGeneratorInterface">
             <factory service="router" method="getGenerator" />
+        </service>
+
+        <service id="app.extension.profiler" class="Commercetools\Sunrise\AppBundle\Profiler\CTPProfilerExtension" public="false">
+            <argument type="service" id="app.commercetools.profile" />
+            <argument type="service" id="debug.stopwatch" on-invalid="null" />
+        </service>
+        <service id="app.commercetools.profile" class="Commercetools\Sunrise\AppBundle\Profiler\Profile" />
+        <service id="data_collector.ctp" class="Commercetools\Sunrise\AppBundle\DataCollector\CTPDataCollector" public="false">
+            <tag name="data_collector" id="ctp"/>
+            <argument type="service" id="app.commercetools.profile" />
         </service>
     </services>
 </container>

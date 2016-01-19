@@ -9,6 +9,7 @@ use Commercetools\Core\Model\ShippingMethod\ShippingMethodCollection;
 use Commercetools\Core\Request\ShippingMethods\ShippingMethodByLocationGetRequest;
 use Commercetools\Core\Request\ShippingMethods\ShippingMethodQueryRequest;
 use Commercetools\Sunrise\AppBundle\Model\Repository;
+use Commercetools\Sunrise\AppBundle\Profiler\Profile;
 
 class ShippingMethodRepository extends Repository
 {
@@ -45,6 +46,13 @@ class ShippingMethodRepository extends Repository
     public function getByCountryAndCurrency($country, $currency)
     {
         $request = ShippingMethodByLocationGetRequest::ofCountry($country)->withCurrency($currency);
-        return $this->client->executeAsync($request);
+        $profiler = $this->profiler;
+        $profiler->enter($profile = new Profile('getShippingMethodByCountryAndCurrency'));
+        return $this->client->executeAsync($request)->then(
+            function($response) use ($profiler, $profile) {
+                $profiler->leave($profile);
+                return $response;
+            }
+        );
     }
 }

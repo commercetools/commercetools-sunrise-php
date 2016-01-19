@@ -20,8 +20,9 @@ use Commercetools\Core\Request\Carts\CartUpdateRequest;
 use Commercetools\Core\Request\Carts\Command\CartAddLineItemAction;
 use Commercetools\Core\Request\Carts\Command\CartChangeLineItemQuantityAction;
 use Commercetools\Core\Request\Carts\Command\CartRemoveLineItemAction;
-use Commercetools\Sunrise\AppBundle\Model\Config;
 use Commercetools\Sunrise\AppBundle\Model\Repository;
+use Commercetools\Sunrise\AppBundle\Profiler\CTPProfilerExtension;
+use Commercetools\Sunrise\AppBundle\Profiler\Profile;
 
 class CartRepository extends Repository
 {
@@ -34,9 +35,10 @@ class CartRepository extends Repository
         CacheAdapterInterface $cache,
         Client $client,
         ShippingMethodRepository $shippingMethodRepository,
-        $locale
+        $locale,
+        CTPProfilerExtension $profiler
     ) {
-        parent::__construct($config, $cache, $client);
+        parent::__construct($config, $cache, $client, $profiler);
         $this->shippingMethodRepository = $shippingMethodRepository;
     }
 
@@ -46,7 +48,9 @@ class CartRepository extends Repository
         $cart = null;
         if ($cartId) {
             $cartRequest = CartByIdGetRequest::ofId($cartId);
+            $this->profiler->enter($profile = new Profile('getCart'));
             $cartResponse = $cartRequest->executeWithClient($this->client);
+            $this->profiler->leave($profile);
             $cart = $cartRequest->mapResponse($cartResponse);
         }
 
@@ -83,7 +87,13 @@ class CartRepository extends Repository
             $cartUpdateRequest->addAction(
                 CartAddLineItemAction::ofProductIdVariantIdAndQuantity($productId, $variantId, $quantity)
             );
+            $this->profiler->enter($profile = new Profile('addLineItem'));
             $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
+            if ($cartResponse->isError()) {
+                var_dump((string)$cartResponse->getBody());
+                exit;
+            }
+            $this->profiler->leave($profile);
             $cart = $cartUpdateRequest->mapResponse($cartResponse);
         }
 
@@ -98,7 +108,9 @@ class CartRepository extends Repository
         $cartUpdateRequest->addAction(
             CartRemoveLineItemAction::ofLineItemId($lineItemId)
         );
+        $this->profiler->enter($profile = new Profile('deleteLineItem'));
         $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
+        $this->profiler->leave($profile);
         $cart = $cartUpdateRequest->mapResponse($cartResponse);
 
         return $cart;
@@ -112,7 +124,9 @@ class CartRepository extends Repository
         $cartUpdateRequest->addAction(
             CartChangeLineItemQuantityAction::ofLineItemIdAndQuantity($lineItemId, $quantity)
         );
+        $this->profiler->enter($profile = new Profile('changeLineItem'));
         $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
+        $this->profiler->leave($profile);
         $cart = $cartUpdateRequest->mapResponse($cartResponse);
 
         return $cart;
@@ -138,7 +152,9 @@ class CartRepository extends Repository
             $cartDraft->setShippingMethod($shippingMethods->current()->getReference());
         }
         $cartCreateRequest = CartCreateRequest::ofDraft($cartDraft);
+        $this->profiler->enter($profile = new Profile('createCart'));
         $cartResponse = $cartCreateRequest->executeWithClient($this->client);
+        $this->profiler->leave($profile);
         $cart = $cartCreateRequest->mapResponse($cartResponse);
 
         return $cart;
