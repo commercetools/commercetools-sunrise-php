@@ -113,12 +113,15 @@ class SunriseController
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         EngineInterface $templateEngine,
-        Config $config,
+        $config,
         Session $session,
         CategoryRepository $categoryRepository,
         ProductTypeRepository $productTypeRepository
     )
     {
+        if (is_array($config)) {
+            $config = new Config($config);
+        }
         $this->session = $session;
         $this->locale = $locale;
         $this->generator = $generator;

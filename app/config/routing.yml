@@ -19,6 +19,11 @@ pdp:
   defaults:  { _controller: app.catalog.controller:detail }
   methods:  [GET, HEAD]
 
+userLogin:
+  path: /{_locale}/user/login
+  defaults:  { _controller: app.user.controller:login }
+  methods:  [GET, HEAD, POST]
+
 checkout:
   path: /{_locale}/checkout
   defaults:  { _controller: app.cart.controller:checkout }

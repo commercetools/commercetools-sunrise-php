@@ -76,6 +76,18 @@
             <argument type="service" id="app.repository.product_type"/>
             <argument type="service" id="app.repository.cart"/>
         </service>
+        <service id="app.user.controller" class="Commercetools\Sunrise\AppBundle\Controller\UserController">
+            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.locale" />
+            <argument type="service" id="app.route_generator" />
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="translator"/>
+            <argument type="service" id="templating"/>
+            <argument>%app.config%</argument>
+            <argument type="service" id="session"/>
+            <argument type="service" id="app.repository.category"/>
+            <argument type="service" id="app.repository.product_type"/>
+        </service>
         <service id="app.locale" class="string">
             <factory service="app.locale.converter" method="convert" />
             <argument type="service" id="app.locale.request" />
