@@ -25,11 +25,14 @@ myAccount:
   methods:  [GET, HEAD]
 
 login_route:
-  path: /user/login
+  path: /{_locale}/user/login
   defaults:  { _controller: app.user.controller:login }
   methods:  [GET, HEAD, POST]
 login_check:
-  path: /login_check
+  path: /{_locale}/login_check
+
+logout:
+  path: /{_locale}/user/logout
 
 checkout:
   path: /{_locale}/checkout

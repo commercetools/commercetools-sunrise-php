@@ -14,8 +14,11 @@ security:
     main:
       anonymous: ~
       form_login:
-        login_path: /user/login
-        check_path: /login_check
+        login_path: login_route
+        check_path: login_check
+      logout:
+        path:   logout
+        target: home
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false

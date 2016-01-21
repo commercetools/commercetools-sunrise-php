@@ -17,7 +17,7 @@
     <div class="login-signup-box-wrapper">
       <div class="row">
         <div class="col-sm-6">
-          <form action="/login_check" method="POST">
+          <form action="{{@root.meta._links.loginCheck.href}}" method="POST">
               {{> catalog/login-box}}
           </form>
         </div>
