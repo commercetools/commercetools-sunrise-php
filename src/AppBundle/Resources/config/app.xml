@@ -118,5 +118,12 @@
             <tag name="data_collector" id="ctp"/>
             <argument type="service" id="app.commercetools.profile" />
         </service>
+
+        <!--<service id="app.ctpuser_user_provider" class="AppBundle\sUser\ctpuserprovider"/>-->
+
+        <service id="app.ctp_user_provider"
+                 class="Commercetools\Sunrise\AppBundle\Security\User\CTPUserProvider"
+        />
+
     </services>
 </container>

@@ -1,15 +1,19 @@
 security:
   providers:
-    in_memory:
-      memory:
-        users:
-          ylambers:
-            password: yaron
-            roles: 'ROLE_USER'
+    ctp:
+      id: app.ctp_user_provider
+#    in_memory:
+#      memory:
+#        users:
+#          ylambers:
+#            password: yaron
+#            roles: 'ROLE_USER'
   access_control:
   - { path: user/secret, roles: ROLE_USER }
   encoders:
     Symfony\Component\Security\Core\User\User: plaintext
+    Commercetools\Sunrise\AppBundle\Security\User\CTPUser: plaintext
+
   firewalls:
     main:
       anonymous: ~
