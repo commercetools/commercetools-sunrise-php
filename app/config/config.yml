@@ -33,4 +33,5 @@ monolog:
       bubble: false
       channels: [!event, !doctrine]
 imports:
+  - { resource: 'security.yml' }
   - { resource: 'app_dist.yaml' }

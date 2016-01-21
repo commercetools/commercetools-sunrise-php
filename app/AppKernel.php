@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -26,6 +27,7 @@ class AppKernel extends Kernel
     {
         $bundles = [
             new FrameworkBundle(),
+            new SecurityBundle(),
             new TwigBundle(),
             new HandlebarsBundle(),
             new SensioFrameworkExtraBundle(),
