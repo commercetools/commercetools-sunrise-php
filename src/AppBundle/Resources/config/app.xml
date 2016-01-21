@@ -57,6 +57,7 @@
             <argument type="service" id="app.cache" />
             <argument type="service" id="translator"/>
             <argument type="service" id="templating"/>
+            <argument type="service" id="security.authorization_checker"/>
             <argument>%app.config%</argument>
             <argument type="service" id="session"/>
             <argument type="service" id="app.repository.category"/>
@@ -70,6 +71,7 @@
             <argument type="service" id="app.cache" />
             <argument type="service" id="translator"/>
             <argument type="service" id="templating"/>
+            <argument type="service" id="security.authorization_checker"/>
             <argument>%app.config%</argument>
             <argument type="service" id="session"/>
             <argument type="service" id="app.repository.category"/>
@@ -83,6 +85,8 @@
             <argument type="service" id="app.cache" />
             <argument type="service" id="translator"/>
             <argument type="service" id="templating"/>
+            <argument type="service" id="security.authorization_checker"/>
+            <argument type="service" id="security.authentication_utils"/>
             <argument>%app.config%</argument>
             <argument type="service" id="session"/>
             <argument type="service" id="app.repository.category"/>

@@ -24,6 +24,8 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class SunriseController
@@ -106,6 +108,11 @@ class SunriseController
      */
     protected $session;
 
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    protected $authChecker;
+
     public function __construct(
         Client $client,
         $locale,
@@ -113,6 +120,7 @@ class SunriseController
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         EngineInterface $templateEngine,
+        AuthorizationCheckerInterface $authChecker,
         $config,
         Session $session,
         CategoryRepository $categoryRepository,
@@ -122,6 +130,7 @@ class SunriseController
         if (is_array($config)) {
             $config = new Config($config);
         }
+        $this->authChecker = $authChecker;
         $this->session = $session;
         $this->locale = $locale;
         $this->generator = $generator;
@@ -466,5 +475,54 @@ class SunriseController
     protected function render($view, array $parameters = array())
     {
         return $this->templating->renderResponse($view, $parameters);
+    }
+
+    /**
+     * Checks if the attributes are granted against the current authentication token and optionally supplied object.
+     *
+     * @param mixed $attributes The attributes
+     * @param mixed $object     The object
+     *
+     * @return bool
+     *
+     * @throws \LogicException
+     */
+    protected function isGranted($attributes, $object = null)
+    {
+        return $this->authChecker->isGranted($attributes, $object);
+    }
+
+    /**
+     * Throws an exception unless the attributes are granted against the current authentication token and optionally
+     * supplied object.
+     *
+     * @param mixed  $attributes The attributes
+     * @param mixed  $object     The object
+     * @param string $message    The message passed to the exception
+     *
+     * @throws AccessDeniedException
+     */
+    protected function denyAccessUnlessGranted($attributes, $object = null, $message = 'Access Denied.')
+    {
+        if (!$this->isGranted($attributes, $object)) {
+            throw $this->createAccessDeniedException($message);
+        }
+    }
+
+    /**
+     * Returns an AccessDeniedException.
+     *
+     * This will result in a 403 response code. Usage example:
+     *
+     *     throw $this->createAccessDeniedException('Unable to access this page!');
+     *
+     * @param string          $message  A message
+     * @param \Exception|null $previous The previous exception
+     *
+     * @return AccessDeniedException
+     */
+    protected function createAccessDeniedException($message = 'Access Denied.', \Exception $previous = null)
+    {
+        return new AccessDeniedException($message, $previous);
     }
 }

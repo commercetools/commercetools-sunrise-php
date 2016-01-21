@@ -7,7 +7,6 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
-use Commercetools\Core\Model\Common\Attribute;
 use Commercetools\Core\Model\Product\Facet;
 use Commercetools\Core\Model\Product\FacetResultCollection;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
@@ -20,13 +19,13 @@ use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\View\ProductModel;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
-use Commercetools\Sunrise\AppBundle\Service\ClientFactory;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CatalogController extends SunriseController
@@ -55,6 +54,7 @@ class CatalogController extends SunriseController
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         EngineInterface $templateEngine,
+        AuthorizationCheckerInterface $authChecker,
         $config,
         Session $session,
         CategoryRepository $categoryRepository,
@@ -72,6 +72,7 @@ class CatalogController extends SunriseController
             $cache,
             $translator,
             $templateEngine,
+            $authChecker,
             $config,
             $session,
             $categoryRepository,

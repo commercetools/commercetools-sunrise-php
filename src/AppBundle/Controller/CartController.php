@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CartController extends SunriseController
@@ -40,6 +41,7 @@ class CartController extends SunriseController
         CacheAdapterInterface $cache,
         TranslatorInterface $translator,
         EngineInterface $templateEngine,
+        AuthorizationCheckerInterface $authChecker,
         $config,
         Session $session,
         CategoryRepository $categoryRepository,
@@ -57,6 +59,7 @@ class CartController extends SunriseController
             $cache,
             $translator,
             $templateEngine,
+            $authChecker,
             $config,
             $session,
             $categoryRepository,

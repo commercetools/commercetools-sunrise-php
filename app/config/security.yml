@@ -1,12 +1,19 @@
 security:
   providers:
     in_memory:
-      memory: ~
+      memory:
         users:
           ylambers:
             password: yaron
             roles: 'ROLE_USER'
+  access_control:
+  - { path: user/secret, roles: ROLE_USER }
   firewalls:
+    main:
+      anonymous: ~
+      form_login:
+        login_path: /user/login
+        check_path: /login_check
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
