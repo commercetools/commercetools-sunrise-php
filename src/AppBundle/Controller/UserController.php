@@ -12,5 +12,8 @@ class UserController extends SunriseController
 {
     public function login(Request $request)
     {
+        $viewData = $this->getViewData('MyAccount - Login');
+
+        return $this->render('my-account-login.hbs', $viewData->toArray());
     }
 }
