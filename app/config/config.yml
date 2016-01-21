@@ -17,6 +17,7 @@ twig:
 handlebars:
   cache: %kernel.cache_dir%/handlebars
   paths:
+    - %kernel.root_dir%/Resources/views
     - %kernel.root_dir%/../vendor/commercetools/sunrise-design/templates
   helpers:
     i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans

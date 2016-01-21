@@ -8,6 +8,8 @@ security:
             roles: 'ROLE_USER'
   access_control:
   - { path: user/secret, roles: ROLE_USER }
+  encoders:
+    Symfony\Component\Security\Core\User\User: plaintext
   firewalls:
     main:
       anonymous: ~

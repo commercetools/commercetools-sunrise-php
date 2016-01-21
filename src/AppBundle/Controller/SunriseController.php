@@ -261,6 +261,7 @@ class SunriseController
         $meta->_links->newProducts = new ViewLink($this->generator->generate('category', ['category' => 'new']));
         $meta->_links->addToCart = new ViewLink($this->generator->generate('cartAdd'));
         $meta->_links->cart = new ViewLink($this->generator->generate('cart'));
+        $meta->_links->signIn = new ViewLink($this->generator->generate('login_route'));
         $meta->csrfToken = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
         $bagItems = new ViewDataCollection();
         for ($i = 1; $i < 10; $i++) {

@@ -11,6 +11,7 @@ use Commercetools\Core\Client;
 use Commercetools\Sunrise\AppBundle\Repository\CategoryRepository;
 use Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -55,7 +56,16 @@ class UserController extends SunriseController
 
     public function login(Request $request)
     {
+        if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return new RedirectResponse($this->generator->generate('myAccount'));
+        }
         $viewData = $this->getViewData('MyAccount - Login');
+
+        // get the login error if there is one
+        $error = $this->authUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $this->authUtils->getLastUsername();
 
         return $this->render('my-account-login.hbs', $viewData->toArray());
     }
