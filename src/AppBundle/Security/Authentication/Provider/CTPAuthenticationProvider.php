@@ -9,6 +9,7 @@ namespace Commercetools\Sunrise\AppBundle\Security\Authentication\Provider;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Customer\CustomerSigninResult;
 use Commercetools\Core\Request\Customers\CustomerLoginRequest;
+use Commercetools\Sunrise\AppBundle\Service\ClientFactory;
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -24,10 +25,10 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
 {
     private $encoderFactory;
     private $userProvider;
-    private $client;
+    private $clientFactory;
 
     public function __construct(
-        Client $client,
+        ClientFactory $clientFactory,
         UserProviderInterface $userProvider,
         UserCheckerInterface $userChecker,
         $providerKey,
@@ -38,7 +39,7 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
         parent::__construct($userChecker, $providerKey, $hideUserNotFoundExceptions);
         $this->encoderFactory = $encoderFactory;
         $this->userProvider = $userProvider;
-        $this->client = $client;
+        $this->clientFactory = $clientFactory;
     }
 
     /**
@@ -57,8 +58,9 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
                 throw new BadCredentialsException('The presented password cannot be empty.');
             }
 
+            $client = $this->clientFactory->build('en');
             $request = CustomerLoginRequest::ofEmailAndPassword($token->getUser(), $presentedPassword);
-            $response = $request->executeWithClient($this->client);
+            $response = $request->executeWithClient($client);
 
             if ($response->isError()) {
                 throw new BadCredentialsException('The presented password is invalid.');

@@ -9,14 +9,15 @@
             <factory service="app.cache.factory" method="get" />
         </service>
         <service id="app.cache.factory" class="Commercetools\Core\Cache\CacheAdapterFactory" />
-        <service id="commercetools.client.factory" class="Commercetools\Sunrise\AppBundle\Service\ClientFactory" />
-        <service id="commercetools.client" class="Commercetools\Core\Client">
-            <factory service="commercetools.client.factory" method="build"/>
-            <argument>de</argument>
+        <service id="commercetools.client.factory" class="Commercetools\Sunrise\AppBundle\Service\ClientFactory">
             <argument>%app.commercetools%</argument>
             <argument>%app.fallback_languages%</argument>
             <argument type="service" id="app.cache" />
             <argument type="service" id="logger" on-invalid="null" />
+        </service>
+        <service id="commercetools.client" class="Commercetools\Core\Client">
+            <factory service="commercetools.client.factory" method="build"/>
+            <argument type="service" id="app.locale" />
         </service>
         <service id="app.repository.category" class="Commercetools\Sunrise\AppBundle\Repository\CategoryRepository">
             <argument>%app.config%</argument>
@@ -51,46 +52,25 @@
             <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.catalog.controller" class="Commercetools\Sunrise\AppBundle\Controller\CatalogController">
-            <argument type="service" id="commercetools.client"/>
             <argument type="service" id="app.locale" />
-            <argument type="service" id="app.route_generator" />
-            <argument type="service" id="app.cache" />
-            <argument type="service" id="translator"/>
-            <argument type="service" id="templating"/>
-            <argument type="service" id="security.authorization_checker"/>
             <argument>%app.config%</argument>
-            <argument type="service" id="session"/>
-            <argument type="service" id="app.repository.category"/>
-            <argument type="service" id="app.repository.product_type"/>
-            <argument type="service" id="app.repository.product"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
         <service id="app.cart.controller" class="Commercetools\Sunrise\AppBundle\Controller\CartController">
-            <argument type="service" id="commercetools.client"/>
             <argument type="service" id="app.locale" />
-            <argument type="service" id="app.route_generator" />
-            <argument type="service" id="app.cache" />
-            <argument type="service" id="translator"/>
-            <argument type="service" id="templating"/>
-            <argument type="service" id="security.authorization_checker"/>
             <argument>%app.config%</argument>
-            <argument type="service" id="session"/>
-            <argument type="service" id="app.repository.category"/>
-            <argument type="service" id="app.repository.product_type"/>
-            <argument type="service" id="app.repository.cart"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
         <service id="app.user.controller" class="Commercetools\Sunrise\AppBundle\Controller\UserController">
-            <argument type="service" id="commercetools.client"/>
             <argument type="service" id="app.locale" />
-            <argument type="service" id="app.route_generator" />
-            <argument type="service" id="app.cache" />
-            <argument type="service" id="translator"/>
-            <argument type="service" id="templating"/>
-            <argument type="service" id="security.authorization_checker"/>
-            <argument type="service" id="security.authentication_utils"/>
             <argument>%app.config%</argument>
-            <argument type="service" id="session"/>
-            <argument type="service" id="app.repository.category"/>
-            <argument type="service" id="app.repository.product_type"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
         <service id="app.locale" class="string">
             <factory service="app.locale.converter" method="convert" />
@@ -129,7 +109,7 @@
                  abstract="true"
                  public="false"
         >
-            <argument type="service" id="commercetools.client" />
+            <argument type="service" id="commercetools.client.factory" />
             <argument /> <!-- User Provider -->
             <argument type="service" id="security.user_checker" />
             <argument /> <!-- Provider-shared Key -->

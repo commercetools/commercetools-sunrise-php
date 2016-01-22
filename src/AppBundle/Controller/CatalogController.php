@@ -11,77 +11,22 @@ use Commercetools\Core\Model\Product\Facet;
 use Commercetools\Core\Model\Product\FacetResultCollection;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
 use Commercetools\Core\Response\PagedSearchResponse;
-use Commercetools\Sunrise\AppBundle\Model\Config;
-use Commercetools\Sunrise\AppBundle\Repository\CategoryRepository;
-use Commercetools\Sunrise\AppBundle\Repository\ProductRepository;
-use Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\View\ProductModel;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class CatalogController extends SunriseController
 {
     const SLUG_SKU_SEPARATOR = '--';
 
     /**
-     * @var ProductRepository
-     */
-    protected $productRepository;
-
-    /**
      * @var FacetResultCollection
      */
     protected $facets;
-
-    /**
-     * @var ProductModel
-     */
-    protected $productModel;
-
-    public function __construct(
-        Client $client,
-        $locale,
-        UrlGenerator $generator,
-        CacheAdapterInterface $cache,
-        TranslatorInterface $translator,
-        EngineInterface $templateEngine,
-        AuthorizationCheckerInterface $authChecker,
-        $config,
-        Session $session,
-        CategoryRepository $categoryRepository,
-        ProductTypeRepository $productTypeRepository,
-        ProductRepository $productRepository
-    )
-    {
-        if (is_array($config)) {
-            $config = new Config($config);
-        }
-        parent::__construct(
-            $client,
-            $locale,
-            $generator,
-            $cache,
-            $translator,
-            $templateEngine,
-            $authChecker,
-            $config,
-            $session,
-            $categoryRepository,
-            $productTypeRepository
-        );
-        $this->productRepository = $productRepository;
-        $this->productModel = new ProductModel($cache, $config, $productTypeRepository, $generator);
-    }
-
 
     public function home(Request $request)
     {
@@ -89,24 +34,24 @@ class CatalogController extends SunriseController
         $viewData->content->banners = new ViewData();
         $viewData->content->banners->bannerOne = new ViewData();
         $viewData->content->banners->bannerOne->first = new ViewLink(
-            $this->generator->generate('category', ['category' => 'accessories'])
+            $this->generateUrl('category', ['category' => 'accessories'])
         );
         $viewData->content->banners->bannerOne->second = new ViewLink(
-            $this->generator->generate('category', ['category' => 'women'])
+            $this->generateUrl('category', ['category' => 'women'])
         );
         $viewData->content->banners->bannerTwo = new ViewData();
         $viewData->content->banners->bannerTwo->first = new ViewLink(
-            $this->generator->generate('category', ['category' => 'men'])
+            $this->generateUrl('category', ['category' => 'men'])
         );
         $viewData->content->banners->bannerThree = new ViewData();
         $viewData->content->banners->bannerThree->first = new ViewLink(
-            $this->generator->generate('category', ['category' => 'shoes'])
+            $this->generateUrl('category', ['category' => 'shoes'])
         );
         $viewData->content->banners->bannerThree->third = new ViewLink(
-            $this->generator->generate('category', ['category' => 'accessories-women-sunglasses'])
+            $this->generateUrl('category', ['category' => 'accessories-women-sunglasses'])
         );
         $viewData->content->banners->bannerThree->fourth = new ViewLink(
-            $this->generator->generate('category', ['category' => 'accessories-women-sunglasses'])
+            $this->generateUrl('category', ['category' => 'accessories-women-sunglasses'])
         );
 
         return $this->render('home.hbs', $viewData->toArray());
@@ -133,7 +78,7 @@ class CatalogController extends SunriseController
         $viewData->content->sortSelector = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
-                $this->productModel->getProductOverviewData($product, $product->getMasterVariant(), $this->locale)
+                $this->getProductModel()->getProductOverviewData($product, $product->getMasterVariant(), $this->locale)
             );
         }
         $viewData->content->pagination = $this->pagination;
@@ -150,8 +95,8 @@ class CatalogController extends SunriseController
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page');
 
-        $product = $this->productRepository->getProductBySlug($slug, $this->locale);
-        $productData = $this->productModel->getProductDetailData($product, $sku, $this->locale);
+        $product = $this->get('app.repository.product')->getProductBySlug($slug, $this->locale);
+        $productData = $this->getProductModel()->getProductDetailData($product, $sku, $this->locale);
         $viewData->content->product = $productData;
 
         return $this->render('pdp.hbs', $viewData->toArray());
@@ -189,12 +134,13 @@ class CatalogController extends SunriseController
 
     protected function getCategoriesFacet()
     {
+        $cache = $this->get('app.cache');
         $maxDepth = 1;
         $categoryFacet = $this->facets->getByName('categories');
-        $categoryData = $this->categoryRepository->getCategories();
+        $categoryData = $this->get('app.repository.category')->getCategories();
 
         $cacheKey = 'category-facet-tree-' . $this->locale;
-        if (!$this->cache->has($cacheKey)) {
+        if (!$cache->has($cacheKey)) {
             $categoryTree = [];
             foreach ($categoryData as $category) {
                 $categoryEntry = new ViewData();
@@ -209,9 +155,9 @@ class CatalogController extends SunriseController
                 }
                 $categoryTree[$category->getId()] = $categoryEntry;
             }
-            $this->cache->store($cacheKey, serialize($categoryTree));
+            $cache->store($cacheKey, serialize($categoryTree));
         } else {
-            $categoryTree = unserialize($this->cache->fetch($cacheKey));
+            $categoryTree = unserialize($cache->fetch($cacheKey));
         }
 
         $limitedOptions = new ViewDataCollection();
@@ -288,8 +234,8 @@ class CatalogController extends SunriseController
          * @var ProductProjectionCollection $products
          * @var PagedSearchResponse $response
          */
-        list($products, $facets, $offset, $total) = $this->productRepository->getProducts(
-            $this->categoryRepository->getCategories(),
+        list($products, $facets, $offset, $total) = $this->get('app.repository.product')->getProducts(
+            $this->get('app.repository.category')->getCategories(),
             $this->locale,
             $itemsPerPage,
             $currentPage,
@@ -306,5 +252,21 @@ class CatalogController extends SunriseController
         $this->facets = $facets;
 
         return $products;
+    }
+
+    protected function getProductModel()
+    {
+        /**
+         * @var CacheAdapterInterface $cache
+         */
+        $cache = $this->get('app.cache');
+        $model = new ProductModel(
+            $cache,
+            $this->config,
+            $this->get('app.repository.productType'),
+            $this->get('router')->getGenerator()
+        );
+
+        return $model;
     }
 }

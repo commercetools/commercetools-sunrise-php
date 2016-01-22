@@ -6,12 +6,9 @@
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
 
-use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Sunrise\AppBundle\Model\Config;
-use Commercetools\Sunrise\AppBundle\Repository\CategoryRepository;
-use Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Model\View\Header;
@@ -20,15 +17,10 @@ use Commercetools\Sunrise\AppBundle\Model\View\Url;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
 
-class SunriseController
+class SunriseController extends Controller
 {
     const ITEMS_PER_PAGE = 12;
     const PAGE_SELECTOR_RANGE = 2;
@@ -42,34 +34,9 @@ class SunriseController
     const CACHE_TTL = 3600;
 
     /**
-     * @var EngineInterface
-     */
-    protected $templating;
-
-    /**
-     * @var UrlGenerator
-     */
-    protected $generator;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
      * @var Config
      */
     protected $config;
-
-    /**
-     * @var CacheAdapterInterface
-     */
-    protected $cache;
-
-    /**
-     * @var Client
-     */
-    protected $client;
 
     /**
      * @var string
@@ -77,16 +44,6 @@ class SunriseController
     protected $locale;
 
     protected $pagination;
-
-    /**
-     * @var CategoryRepository
-     */
-    protected $categoryRepository;
-
-    /**
-     * @var ProductTypeRepository
-     */
-    protected $productTypeRepository;
 
     /**
      * @var string
@@ -103,44 +60,15 @@ class SunriseController
      */
     private $defaultNamespace;
 
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authChecker;
-
     public function __construct(
-        Client $client,
         $locale,
-        UrlGenerator $generator,
-        CacheAdapterInterface $cache,
-        TranslatorInterface $translator,
-        EngineInterface $templateEngine,
-        AuthorizationCheckerInterface $authChecker,
-        $config,
-        Session $session,
-        CategoryRepository $categoryRepository,
-        ProductTypeRepository $productTypeRepository
+        $config
     )
     {
         if (is_array($config)) {
             $config = new Config($config);
         }
-        $this->authChecker = $authChecker;
-        $this->session = $session;
-        $this->locale = $locale;
-        $this->generator = $generator;
-        $this->templating = $templateEngine;
-        $this->translator = $translator;
         $this->config = $config;
-        $this->cache = $cache;
-        $this->client = $client;
-        $this->categoryRepository = $categoryRepository;
-        $this->productTypeRepository = $productTypeRepository;
 
         $this->defaultNamespace = $this->config['i18n.namespace.defaultNs'];
         $this->interpolationPrefix = $this->config['i18n.interpolationPrefix'];
@@ -160,6 +88,8 @@ class SunriseController
 
     protected function getHeaderViewData($title)
     {
+        $session = $this->get('session');
+
         $header = new Header($title);
         $header->stores = new Url($this->trans('header.stores'), '');
         $header->help = new Url($this->trans('header.help'), '');
@@ -190,7 +120,7 @@ class SunriseController
         $header->user->isLoggedIn = false;
         $header->user->signIn = new Url('Login', '');
         $header->miniCart = new ViewData();
-        $header->miniCart->totalItems = $this->session->get('cartNumItems', 0);
+        $header->miniCart->totalItems = $session->get('cartNumItems', 0);
         $header->navMenu = $this->getNavMenu();
 
         return $header;
@@ -201,10 +131,11 @@ class SunriseController
         $navMenu = new ViewData();
 
         $cacheKey = 'category-menu-' . $this->locale;
-        if ($this->cache->has($cacheKey)) {
-            $categoryMenu = unserialize($this->cache->fetch($cacheKey));
+        $cache = $this->get('app.cache');
+        if ($cache->has($cacheKey)) {
+            $categoryMenu = unserialize($cache->fetch($cacheKey));
         } else {
-            $categories = $this->categoryRepository->getCategories();
+            $categories = $this->get('app.repository.category')->getCategories();
             $categoryMenu = new ViewDataCollection();
             $roots = $this->sortCategoriesByOrderHint($categories->getRoots());
 
@@ -213,7 +144,7 @@ class SunriseController
                  * @var Category $root
                  */
                 $menuEntry = new Tree(
-                    (string)$root->getName(), $this->getLinkFor('category', ['category' => $root->getSlug()])
+                    (string)$root->getName(), $this->generateUrl('category', ['category' => $root->getSlug()])
                 );
                 if ($root->getSlug() == $this->config['sunrise.sale.slug']) {
                     $menuEntry->sale = true;
@@ -226,7 +157,7 @@ class SunriseController
                      */
                     $childrenEntry = new Tree(
                         (string)$children->getName(),
-                        $this->getLinkFor('category', ['category' => $children->getSlug()])
+                        $this->generateUrl('category', ['category' => $children->getSlug()])
                     );
 
                     $subChildCategories = $this->sortCategoriesByOrderHint($categories->getByParent($children->getId()));
@@ -236,7 +167,7 @@ class SunriseController
                          */
                         $childrenSubEntry = new Url(
                             (string)$subChild->getName(),
-                            $this->getLinkFor('category', ['category' => $subChild->getSlug()])
+                            $this->generateUrl('category', ['category' => $subChild->getSlug()])
                         );
                         $childrenEntry->addNode($childrenSubEntry);
                     }
@@ -245,7 +176,7 @@ class SunriseController
                 $categoryMenu->add($menuEntry);
             }
             $categoryMenu = $categoryMenu->toArray();
-            $this->cache->store($cacheKey, serialize($categoryMenu), static::CACHE_TTL);
+            $cache->store($cacheKey, serialize($categoryMenu), static::CACHE_TTL);
         }
         $navMenu->categories = $categoryMenu;
 
@@ -257,12 +188,12 @@ class SunriseController
         $meta = new ViewData();
         $meta->assetsPath = $this->config['sunrise.assetsPath'];
         $meta->_links = new ViewData();
-        $meta->_links->home = new ViewLink($this->generator->generate('home'));
-        $meta->_links->newProducts = new ViewLink($this->generator->generate('category', ['category' => 'new']));
-        $meta->_links->addToCart = new ViewLink($this->generator->generate('cartAdd'));
-        $meta->_links->cart = new ViewLink($this->generator->generate('cart'));
-        $meta->_links->signIn = new ViewLink($this->generator->generate('login_route'));
-        $meta->_links->loginCheck = new ViewLink($this->generator->generate('login_check'));
+        $meta->_links->home = new ViewLink($this->generateUrl('home'));
+        $meta->_links->newProducts = new ViewLink($this->generateUrl('category', ['category' => 'new']));
+        $meta->_links->addToCart = new ViewLink($this->generateUrl('cartAdd'));
+        $meta->_links->cart = new ViewLink($this->generateUrl('cart'));
+        $meta->_links->signIn = new ViewLink($this->generateUrl('login_route'));
+        $meta->_links->loginCheck = new ViewLink($this->generateUrl('login_check'));
         $meta->csrfToken = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
         $bagItems = new ViewDataCollection();
         for ($i = 1; $i < 10; $i++) {
@@ -276,8 +207,9 @@ class SunriseController
 
     protected function validateCsrfToken($formName, $token)
     {
-        $storedToken = $this->session->get($formName);
-        $this->session->remove($formName);
+        $session = $this->get('session');
+        $storedToken = $this->get('session')->get($formName);
+        $session->remove($formName);
         if ($storedToken == $token) {
             return true;
         }
@@ -287,8 +219,9 @@ class SunriseController
 
     protected function getCsrfToken($formName)
     {
+        $session = $this->get('session');
         $token=hash("sha512",mt_rand(0,mt_getrandmax()));
-        $this->session->set($formName, $token);
+        $session->set($formName, $token);
 
         return $token;
     }
@@ -355,7 +288,7 @@ class SunriseController
         if (is_null($domain)) {
             $domain = $this->defaultNamespace;
         }
-        return $this->translator->trans($id, $this->mapInterpolation($parameters), $domain, $locale);
+        return $this->get('translator')->trans($id, $this->mapInterpolation($parameters), $domain, $locale);
     }
 
     protected function mapInterpolation($parameters)
@@ -370,7 +303,7 @@ class SunriseController
 
     protected function getLinkFor($site, $params)
     {
-        return $this->generator->generate($site, $params);
+        return $this->generateUrl($site, $params);
     }
 
     protected function applyPagination(UriInterface $uri, $offset, $total, $itemsPerPage)
@@ -472,59 +405,5 @@ class SunriseController
         });
 
         return $categories;
-    }
-
-    protected function render($view, array $parameters = array())
-    {
-        return $this->templating->renderResponse($view, $parameters);
-    }
-
-    /**
-     * Checks if the attributes are granted against the current authentication token and optionally supplied object.
-     *
-     * @param mixed $attributes The attributes
-     * @param mixed $object     The object
-     *
-     * @return bool
-     *
-     * @throws \LogicException
-     */
-    protected function isGranted($attributes, $object = null)
-    {
-        return $this->authChecker->isGranted($attributes, $object);
-    }
-
-    /**
-     * Throws an exception unless the attributes are granted against the current authentication token and optionally
-     * supplied object.
-     *
-     * @param mixed  $attributes The attributes
-     * @param mixed  $object     The object
-     * @param string $message    The message passed to the exception
-     *
-     * @throws AccessDeniedException
-     */
-    protected function denyAccessUnlessGranted($attributes, $object = null, $message = 'Access Denied.')
-    {
-        if (!$this->isGranted($attributes, $object)) {
-            throw $this->createAccessDeniedException($message);
-        }
-    }
-
-    /**
-     * Returns an AccessDeniedException.
-     *
-     * This will result in a 403 response code. Usage example:
-     *
-     *     throw $this->createAccessDeniedException('Unable to access this page!');
-     *
-     * @param string          $message  A message
-     * @param \Exception|null $previous The previous exception
-     *
-     * @return AccessDeniedException
-     */
-    protected function createAccessDeniedException($message = 'Access Denied.', \Exception $previous = null)
-    {
-        return new AccessDeniedException($message, $previous);
     }
 }

@@ -6,85 +6,38 @@
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
 
-use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Cart\Cart;
 use Commercetools\Core\Model\Common\Money;
-use Commercetools\Sunrise\AppBundle\Model\Config;
-use Commercetools\Sunrise\AppBundle\Repository\CartRepository;
-use Commercetools\Sunrise\AppBundle\Repository\CategoryRepository;
-use Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class CartController extends SunriseController
 {
     const CSRF_TOKEN_NAME = 'csrfToken';
 
-    /**
-     * @var CartRepository
-     */
-    protected $cartRepository;
-
-    public function __construct(
-        Client $client,
-        $locale,
-        UrlGenerator $generator,
-        CacheAdapterInterface $cache,
-        TranslatorInterface $translator,
-        EngineInterface $templateEngine,
-        AuthorizationCheckerInterface $authChecker,
-        $config,
-        Session $session,
-        CategoryRepository $categoryRepository,
-        ProductTypeRepository $productTypeRepository,
-        CartRepository $cartRepository
-    )
-    {
-        if (is_array($config)) {
-            $config = new Config($config);
-        }
-        parent::__construct(
-            $client,
-            $locale,
-            $generator,
-            $cache,
-            $translator,
-            $templateEngine,
-            $authChecker,
-            $config,
-            $session,
-            $categoryRepository,
-            $productTypeRepository
-        );
-        $this->cartRepository = $cartRepository;
-    }
-
     public function index()
     {
+        $session = $this->get('session');
         $viewData = $this->getViewData('Sunrise - Cart');
-        $cartId = $this->session->get('cartId');
-        $cart = $this->cartRepository->getCart($cartId);
+        $cartId = $session->get('cartId');
+        $cart = $this->get('app.repository.cart')->getCart($cartId);
         $viewData->content = new ViewData();
         $viewData->content->cart = $this->getCart($cart);
-        $viewData->meta->_links->continueShopping = new ViewLink($this->generator->generate('home'));
-        $viewData->meta->_links->deleteLineItem = new ViewLink($this->generator->generate('lineItemDelete'));
-        $viewData->meta->_links->changeLineItem = new ViewLink($this->generator->generate('lineItemChange'));
-        $viewData->meta->_links->checkout = new ViewLink($this->generator->generate('checkout'));
+        $viewData->meta->_links->continueShopping = new ViewLink($this->generateUrl('home'));
+        $viewData->meta->_links->deleteLineItem = new ViewLink($this->generateUrl('lineItemDelete'));
+        $viewData->meta->_links->changeLineItem = new ViewLink($this->generateUrl('lineItemChange'));
+        $viewData->meta->_links->checkout = new ViewLink($this->generateUrl('checkout'));
 
         return $this->render('cart.hbs', $viewData->toArray());
     }
 
     public function add(Request $request)
     {
+        $session = $this->get('session');
         // TODO: enable if product add form has a csrf token
 //        if (!$this->validateCsrfToken(static::CSRF_TOKEN_FORM, $request->get(static::CSRF_TOKEN_NAME))) {
 //            throw new \InvalidArgumentException('CSRF Token invalid');
@@ -94,18 +47,19 @@ class CartController extends SunriseController
         $quantity = (int)$request->get('quantity');
         $sku = $request->get('productSku');
         $slug = $request->get('productSlug');
-        $cartId = $this->session->get('cartId');
+        $cartId = $session->get('cartId');
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('currencies.'. $country);
-        $cart = $this->cartRepository->addLineItem($cartId, $productId, $variantId, $quantity, $currency, $country);
-        $this->session->set('cartId', $cart->getId());
-        $this->session->set('cartNumItems', $this->getItemCount($cart));
-        $this->session->save();
+        $cart = $this->get('app.repository.cart')
+            ->addLineItem($cartId, $productId, $variantId, $quantity, $currency, $country);
+        $session->set('cartId', $cart->getId());
+        $session->set('cartNumItems', $this->getItemCount($cart));
+        $session->save();
 
         if (empty($sku)) {
-            $redirectUrl = $this->generator->generate('pdp-master', ['slug' => $slug]);
+            $redirectUrl = $this->generateUrl('pdp-master', ['slug' => $slug]);
         } else {
-            $redirectUrl = $this->generator->generate('pdp', ['slug' => $slug, 'sku' => $sku]);
+            $redirectUrl = $this->generateUrl('pdp', ['slug' => $slug, 'sku' => $sku]);
         }
         return new RedirectResponse($redirectUrl);
     }
@@ -115,32 +69,36 @@ class CartController extends SunriseController
         if (!$this->validateCsrfToken(static::CSRF_TOKEN_FORM, $request->get(static::CSRF_TOKEN_NAME))) {
             throw new \InvalidArgumentException('CSRF Token invalid');
         }
+        $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
         $lineItemCount = (int)$request->get('quantity');
-        $cartId = $this->session->get('cartId');
-        $cart = $this->cartRepository->changeLineItemQuantity($cartId, $lineItemId, $lineItemCount);
+        $cartId = $session->get('cartId');
+        $cart = $this->get('app.repository.cart')
+            ->changeLineItemQuantity($cartId, $lineItemId, $lineItemCount);
 
-        $this->session->set('cartNumItems', $this->getItemCount($cart));
-        $this->session->save();
+        $session->set('cartNumItems', $this->getItemCount($cart));
+        $session->save();
 
-        return new RedirectResponse($this->generator->generate('cart'));
+        return new RedirectResponse($this->generateUrl('cart'));
     }
 
     public function deleteLineItem(Request $request)
     {
+        $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
-        $cartId = $this->session->get('cartId');
-        $cart = $this->cartRepository->deleteLineItem($cartId, $lineItemId);
+        $cartId = $session->get('cartId');
+        $cart = $this->get('app.repository.cart')->deleteLineItem($cartId, $lineItemId);
 
-        $this->session->set('cartNumItems', $this->getItemCount($cart));
-        $this->session->save();
+        $session->set('cartNumItems', $this->getItemCount($cart));
+        $session->save();
 
-        return new RedirectResponse($this->generator->generate('cart'));
+        return new RedirectResponse($this->generateUrl('cart'));
     }
 
     public function checkout(Request $request)
     {
-        $userId = $this->session->get('userId');
+        $session = $this->get('session');
+        $userId = $session->get('userId');
         if (is_null($userId)) {
             return $this->checkoutSignin($request);
         }
@@ -227,7 +185,7 @@ class CartController extends SunriseController
                 $cartLineItem->lineItemId = $lineItem->getId();
                 $cartLineItem->quantity = $lineItem->getQuantity();
                 $lineItemVariant = new ViewData();
-                $lineItemVariant->url = (string)$this->generator->generate(
+                $lineItemVariant->url = (string)$this->generateUrl(
                     'pdp-master',
                     ['slug' => (string)$lineItem->getProductSlug()]
                 );
