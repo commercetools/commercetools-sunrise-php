@@ -33,4 +33,12 @@ class UserController extends SunriseController
     {
         return new Response('Top secret');
     }
+
+    public function details(Request $request)
+    {
+
+        $viewData = $this->getViewData('MyAccount - Details');
+
+        return $this->render('my-account-personal-details.hbs', $viewData->toArray());
+    }
 }

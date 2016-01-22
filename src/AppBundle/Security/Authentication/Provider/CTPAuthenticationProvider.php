@@ -10,6 +10,7 @@ use Commercetools\Core\Client;
 use Commercetools\Core\Model\Customer\CustomerSigninResult;
 use Commercetools\Core\Request\Customers\CustomerLoginRequest;
 use Commercetools\Sunrise\AppBundle\Service\ClientFactory;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -21,13 +22,16 @@ use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+
 class CTPAuthenticationProvider extends UserAuthenticationProvider
 {
     private $encoderFactory;
     private $userProvider;
     private $clientFactory;
+    private $session;
 
     public function __construct(
+        Session $session,
         ClientFactory $clientFactory,
         UserProviderInterface $userProvider,
         UserCheckerInterface $userChecker,
@@ -40,7 +44,9 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
         $this->encoderFactory = $encoderFactory;
         $this->userProvider = $userProvider;
         $this->clientFactory = $clientFactory;
+        $this->session = $session;
     }
+
 
     /**
      * {@inheritdoc}
@@ -48,6 +54,8 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
     protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
     {
         $currentUser = $token->getUser();
+
+
 
         if ($currentUser instanceof UserInterface) {
             if ($currentUser->getPassword() !== $user->getPassword()) {
@@ -70,6 +78,8 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
             if ($currentUser !== $customer->getEmail()) {
                 throw new BadCredentialsException('The presented password is invalid.');
             }
+            $this->session->set('customer.id', $customer->getId());
+
         }
     }
 
@@ -82,6 +92,8 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
         if ($user instanceof UserInterface) {
             return $user;
         }
+
+
 
         try {
             $user = $this->userProvider->loadUserByUsername($username);

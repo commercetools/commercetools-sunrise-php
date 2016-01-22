@@ -14,12 +14,14 @@ class CTPUser implements UserInterface, EquatableInterface
     private $username;
     private $password;
     private $roles;
+    private $id;
 
-    public function __construct($username, $password, array $roles)
+    public function __construct($username, $password, array $roles, $id)
     {
         $this->username = $username;
         $this->password = $password;
         $this->roles = $roles;
+        $this->id= $id;
     }
 
     public function getRoles()
@@ -41,6 +43,23 @@ class CTPUser implements UserInterface, EquatableInterface
     {
         return $this->username;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 
     public function eraseCredentials()
     {

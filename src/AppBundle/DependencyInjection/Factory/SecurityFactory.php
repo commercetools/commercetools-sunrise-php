@@ -28,8 +28,8 @@ class SecurityFactory extends FormLoginFactory
         $provider = 'security.authentication_provider.ctp.'.$id;
         $container
             ->setDefinition($provider, new DefinitionDecorator('security.authentication_provider.ctp'))
-            ->replaceArgument(1, new Reference($userProviderId))
-            ->replaceArgument(3, $id);
+            ->replaceArgument(2, new Reference($userProviderId))
+            ->replaceArgument(4, $id);
 
         return $provider;
     }

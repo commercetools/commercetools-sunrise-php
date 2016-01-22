@@ -23,6 +23,11 @@ myAccount:
   path: /{_locale}/user/secret
   defaults:  { _controller: app.user.controller:secret }
   methods:  [GET, HEAD]
+myDetails:
+  path: /{_locale}/user/details
+  defaults:  { _controller: app.user.controller:details }
+  methods:  [GET, HEAD]
+
 
 login_route:
   path: /{_locale}/user/login
