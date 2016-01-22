@@ -12,7 +12,7 @@
         <service id="commercetools.client.factory" class="Commercetools\Sunrise\AppBundle\Service\ClientFactory" />
         <service id="commercetools.client" class="Commercetools\Core\Client">
             <factory service="commercetools.client.factory" method="build"/>
-            <argument type="service" id="app.locale" />
+            <argument>de</argument>
             <argument>%app.commercetools%</argument>
             <argument>%app.fallback_languages%</argument>
             <argument type="service" id="app.cache" />
@@ -122,8 +122,19 @@
         <!--<service id="app.ctpuser_user_provider" class="AppBundle\sUser\ctpuserprovider"/>-->
 
         <service id="app.ctp_user_provider"
-                 class="Commercetools\Sunrise\AppBundle\Security\User\CTPUserProvider"
-        />
-
+                 class="Commercetools\Sunrise\AppBundle\Security\User\CTPUserProvider">
+        </service>
+        <service id="security.authentication_provider.ctp"
+                 class="Commercetools\Sunrise\AppBundle\Security\Authentication\Provider\CTPAuthenticationProvider"
+                 abstract="true"
+                 public="false"
+        >
+            <argument type="service" id="commercetools.client" />
+            <argument /> <!-- User Provider -->
+            <argument type="service" id="security.user_checker" />
+            <argument /> <!-- Provider-shared Key -->
+            <argument type="service" id="security.encoder_factory" />
+            <argument>%security.authentication.hide_user_not_found%</argument>
+        </service>
     </services>
 </container>

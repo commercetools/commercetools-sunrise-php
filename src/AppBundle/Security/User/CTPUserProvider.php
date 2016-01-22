@@ -6,30 +6,17 @@
 
 namespace Commercetools\Sunrise\AppBundle\Security\User;
 
+use Commercetools\Core\Client;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 class CTPUserProvider implements UserProviderInterface
 {
+
     public function loadUserByUsername($username)
     {
-
-        $userData = true;
-
-        if ($userData) {
-
-            $username = 'ylambers';
-            $password = 'yaron';
-            $roles = ['ROLE_USER'];
-
-            return new CTPUser($username, $password, $roles);
-        }
-
-        throw new UsernameNotFoundException(
-            sprintf('Username "%s" does not exist.', $username)
-        );
+        return new CTPUser($username, '', ['ROLE_USER']);
     }
 
     public function refreshUser(UserInterface $user)
@@ -40,7 +27,7 @@ class CTPUserProvider implements UserProviderInterface
             );
         }
 
-        return $this->loadUserByUsername($user->getUsername());
+        return $user;
     }
 
     public function supportsClass($class)
