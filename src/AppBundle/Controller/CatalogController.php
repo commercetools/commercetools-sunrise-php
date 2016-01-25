@@ -18,6 +18,7 @@ use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CatalogController extends SunriseController
 {
@@ -54,7 +55,10 @@ class CatalogController extends SunriseController
             $this->generateUrl('category', ['category' => 'accessories-women-sunglasses'])
         );
 
-        return $this->render('home.hbs', $viewData->toArray());
+        $response = new Response();
+        $response->setMaxAge(60);
+        $response->setPublic();
+        return $this->render('home.hbs', $viewData->toArray(), $response);
     }
 
     public function search(Request $request)
@@ -82,10 +86,16 @@ class CatalogController extends SunriseController
             );
         }
         $viewData->content->pagination = $this->pagination;
+
+        foreach ($this->facets as $facetName => $facet) {
+            var_dump($facetName);
+//            var_dump($facetName, $facet);
+        }
         /**
          * @var callable $renderer
          */
-        return $this->render('pop.hbs', $viewData->toArray());
+        $response = $this->render('pop.hbs', $viewData->toArray());
+        return $response;
     }
 
     public function detail(Request $request)
@@ -228,7 +238,10 @@ class CatalogController extends SunriseController
         $category = $request->get('category');
 
         $facetDefinitions = [
-            Facet::of()->setName('categories.id')->setAlias('categories')
+            Facet::of()->setName('categories.id')->setAlias('categories'),
+            Facet::of()->setName('color.key')->setAlias('colors'),
+            Facet::of()->setName('size')->setAlias('sizes'),
+            Facet::of()->setName('designer.key')->setAlias('brands')
         ];
         /**
          * @var ProductProjectionCollection $products

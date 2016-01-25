@@ -69,7 +69,7 @@ class SunriseController extends Controller
             $config = new Config($config);
         }
         $this->config = $config;
-
+        $this->locale = $locale;
         $this->defaultNamespace = $this->config['i18n.namespace.defaultNs'];
         $this->interpolationPrefix = $this->config['i18n.interpolationPrefix'];
         $this->interpolationSuffix = $this->config['i18n.interpolationSuffix'];
@@ -191,6 +191,7 @@ class SunriseController extends Controller
         $meta->_links->home = new ViewLink($this->generateUrl('home'));
         $meta->_links->newProducts = new ViewLink($this->generateUrl('category', ['category' => 'new']));
         $meta->_links->addToCart = new ViewLink($this->generateUrl('cartAdd'));
+        $meta->_links->miniCart = new ViewLink($this->generateUrl('miniCart'));
         $meta->_links->cart = new ViewLink($this->generateUrl('cart'));
         $meta->_links->signIn = new ViewLink($this->generateUrl('login_route'));
         $meta->_links->loginCheck = new ViewLink($this->generateUrl('login_check'));

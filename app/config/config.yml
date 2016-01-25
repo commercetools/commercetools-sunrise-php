@@ -6,6 +6,8 @@ framework:
   assets:
     base_path: /assets/
   default_locale: en
+  esi: { enabled: true }
+  fragments: ~
   session:
     save_path: ~
   translator:
@@ -20,6 +22,7 @@ handlebars:
     - %kernel.root_dir%/Resources/views
     - %kernel.root_dir%/../vendor/commercetools/sunrise-design/templates
   helpers:
+    esi: JaySDe\HandlebarsBundle\HandlebarsHelper::esi
     i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
     json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
 monolog:

@@ -14,6 +14,7 @@ use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends SunriseController
 {
@@ -62,6 +63,16 @@ class CartController extends SunriseController
             $redirectUrl = $this->generateUrl('pdp', ['slug' => $slug, 'sku' => $sku]);
         }
         return new RedirectResponse($redirectUrl);
+    }
+
+    public function miniCart()
+    {
+        $response = new Response();
+        $response->headers->addCacheControlDirective('no-cache');
+        $response->headers->addCacheControlDirective('no-store');
+        $response = $this->render('common/mini-cart.hbs', $this->getHeaderViewData('MiniCart')->toArray(), $response);
+
+        return $response;
     }
 
     public function changeLineItem(Request $request)

@@ -71,6 +71,10 @@ cart:
   path: /{_locale}/cart
   defaults:  { _controller: app.cart.controller:index }
   methods:  [GET, HEAD]
+miniCart:
+  path: /{_locale}/cart/mini
+  defaults:  { _controller: app.cart.controller:miniCart }
+  methods:  [GET, HEAD]
 
 category:
   path: /{_locale}/{category}/

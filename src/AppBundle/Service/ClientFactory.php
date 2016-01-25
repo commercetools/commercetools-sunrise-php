@@ -42,9 +42,7 @@ class ClientFactory
      * @param $locale
      * @param $clientCredentials
      * @param $fallbackLanguages
-     * @param LoggerInterface $logger
-     * @param $cache
-     * @return Client
+     * @return static
      */
     public function build(
         $locale,

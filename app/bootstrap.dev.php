@@ -34,9 +34,9 @@ define('PROJECT_DIR', dirname(__DIR__));
 
 require __DIR__.'/autoload.php';
 
-$kernel = new AppKernel('prod', true);
+$kernel = new AppKernel('dev', true);
 $kernel->loadClassCache();
-$kernel = new AppCache($kernel);
+//$kernel = new AppCache($kernel);
 
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
