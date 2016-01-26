@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a9dbe14691be375c500155b33fbc2947",
-    "content-hash": "a15295d5aed461cc401fad62aa6adddb",
+    "hash": "b50ef18fae43183ccc8200a5b04b02e5",
+    "content-hash": "f722cd09701f764116962d41fbeb2981",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -1571,16 +1571,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.23.3",
+            "version": "v1.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ae53fc2c312fdee63773b75cb570304f85388b08"
+                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ae53fc2c312fdee63773b75cb570304f85388b08",
-                "reference": "ae53fc2c312fdee63773b75cb570304f85388b08",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
+                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
                 "shasum": ""
             },
             "require": {
@@ -1593,7 +1593,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.23-dev"
+                    "dev-master": "1.24-dev"
                 }
             },
             "autoload": {
@@ -1628,7 +1628,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-01-11 14:02:19"
+            "time": "2016-01-25 21:22:18"
         },
         {
             "name": "zordius/lightncandy",
@@ -2079,7 +2079,7 @@
                 "email": "support@sphere.io",
                 "forum": "http://support.sphere.io",
                 "issues": "https://github.com/sphereio/sphere-sunrise-scenarios/issues",
-                "source": "https://github.com/sphereio/sphere-sunrise-scenarios/tree/behat"
+                "source": "https://github.com/sphereio/commercetools-sunrise-scenarios/tree/behat"
             },
             "time": "2015-09-21 16:31:20"
         },
@@ -3104,7 +3104,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5",
+        "php": ">=5.6",
         "ext-apcu": "*",
         "ext-mbstring": "*"
     },
