@@ -7,9 +7,13 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
+use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Product\Facet;
 use Commercetools\Core\Model\Product\FacetResultCollection;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
+use Commercetools\Core\Model\ProductType\AttributeDefinition;
+use Commercetools\Core\Model\ProductType\LocalizedEnumType;
+use Commercetools\Core\Model\ProductType\ProductTypeCollection;
 use Commercetools\Core\Response\PagedSearchResponse;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\View\ProductModel;
@@ -56,7 +60,6 @@ class CatalogController extends SunriseController
         );
 
         $response = new Response();
-        $response->setMaxAge(60);
         $response->setPublic();
         return $this->render('home.hbs', $viewData->toArray(), $response);
     }
@@ -78,7 +81,7 @@ class CatalogController extends SunriseController
         $viewData->content->products = new ViewData();
         $viewData->content->products->list = new ViewDataCollection();
         $viewData->content->displaySelector = $this->getDisplayContent($this->getItemsPerPage($request));
-//        $viewData->content->facets = $this->getFiltersData($uri);
+        $viewData->content->facets = $this->getFiltersData($uri);
         $viewData->content->sortSelector = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
@@ -87,10 +90,6 @@ class CatalogController extends SunriseController
         }
         $viewData->content->pagination = $this->pagination;
 
-        foreach ($this->facets as $facetName => $facet) {
-            var_dump($facetName);
-//            var_dump($facetName, $facet);
-        }
         /**
          * @var callable $renderer
          */
@@ -118,6 +117,10 @@ class CatalogController extends SunriseController
         $filter->url = $uri->getPath();
         $filter->list = new ViewDataCollection();
         $filter->list->add($this->getCategoriesFacet());
+        $facetConfigs = $this->config->get('sunrise.products.facets');
+        foreach ($facetConfigs as $facetName => $facetConfig) {
+            $filter->list->add($this->getFacet($facetName, $facetConfig));
+        }
 
         return $filter;
     }
@@ -142,6 +145,98 @@ class CatalogController extends SunriseController
         }
     }
 
+    protected function getFacet($facetName, $facetConfig)
+    {
+        $method = 'get' . ucfirst($facetConfig['type']) . 'Facet';
+        return $this->$method($facetName, $facetConfig);
+    }
+
+    protected function getTextFacet($facetName, $facetConfig)
+    {
+        $facetData = new ViewData();
+        $facetData->selectFacet = true;
+        $facetData->facet = new ViewData();
+        $facetData->facet->available = true;
+        $facetData->facet->label = $this->trans('search.filters.' . $facetName);
+        $facetData->facet->key = $facetName;
+
+        $limitedOptions = new ViewDataCollection();
+
+        foreach ($this->facets->getByName($facetName)->getTerms() as $term) {
+            $facetEntry = new ViewData();
+            $facetEntry->value = $term->getTerm();
+            $facetEntry->label = $term->getTerm();
+            $facetEntry->count = $term->getCount();
+            $limitedOptions->add($facetEntry);
+        }
+
+        $facetData->facet->limitedOptions = $limitedOptions;
+
+        return $facetData;
+    }
+
+    protected function getEnumFacet($facetName, $facetConfig)
+    {
+        $attributeName = $facetConfig['attribute'];
+        $cache = $this->get('app.cache');
+        $cacheKey = $facetName .'-facet-' . $this->locale;
+        $typeData = $this->get('app.repository.productType')->getTypes();
+        if (!$cache->has($cacheKey)) {
+            $facetValues = [];
+            /**
+             * @var ProductTypeCollection $typeData
+             */
+            foreach ($typeData as $productType) {
+                /**
+                 * @var AttributeDefinition $attribute
+                 */
+                $attribute = $productType->getAttributes()->getByName($attributeName);
+                if (is_null($attribute)) {
+                    continue;
+                }
+                /**
+                 * @var LocalizedEnumType $attributeType
+                 */
+                $attributeType = $attribute->getType();
+                $values = $attributeType->getValues();
+
+                foreach ($values as $value) {
+                    if (isset($facetValues[$value->getKey()])) {
+                        continue;
+                    }
+                    $facetEntry = new ViewData();
+                    $facetEntry->value = $value->getKey();
+                    $facetEntry->label = (string)$value->getLabel();
+                    $facetValues[$value->getKey()] = $facetEntry;
+                }
+            }
+            $cache->store($cacheKey, serialize($facetValues));
+        } else {
+            $facetValues = unserialize($cache->fetch($cacheKey));
+        }
+
+        $facetData = new ViewData();
+        $facetData->displayList = ($facetConfig['display'] == 'list');
+        $facetData->selectFacet = true;
+        $facetData->facet = new ViewData();
+        $facetData->facet->multiSelect = $facetConfig['multi'];
+        $facetData->facet->available = true;
+        $facetData->facet->label = $this->trans('search.filters.' . $facetName);
+        $facetData->facet->key = $facetName;
+
+        $limitedOptions = new ViewDataCollection();
+
+        foreach ($this->facets->getByName($facetName)->getTerms() as $term) {
+            $facetEntry = $facetValues[$term->getTerm()];
+            $facetEntry->count = $term->getCount();
+            $limitedOptions->add($facetEntry);
+        }
+
+        $facetData->facet->limitedOptions = $limitedOptions;
+
+        return $facetData;
+    }
+
     protected function getCategoriesFacet()
     {
         $cache = $this->get('app.cache');
@@ -152,9 +247,13 @@ class CatalogController extends SunriseController
         $cacheKey = 'category-facet-tree-' . $this->locale;
         if (!$cache->has($cacheKey)) {
             $categoryTree = [];
+            /**
+             * @var Category $category
+             */
             foreach ($categoryData as $category) {
                 $categoryEntry = new ViewData();
-                $categoryEntry->value = $category->getId();
+//                $categoryEntry->uri = $category->getId();
+                $categoryEntry->value = $this->generateUrl('category', ['category' => (string)$category->getSlug()]);
                 $categoryEntry->label = (string)$category->getName();
                 $ancestors = $category->getAncestors();
                 $categoryEntry->ancestors = [];
@@ -198,7 +297,7 @@ class CatalogController extends SunriseController
         $sortData = new ViewData();
         $sortData->list = new ViewDataCollection();
 
-        foreach ($this->config['sunrise.products.sort'] as $sort) {
+        foreach ($this->config->get('sunrise.products.sort') as $sort) {
             $entry = new ViewData();
             $entry->value = $sort['formValue'];
             $entry->label = $this->trans('search.sort.' . $sort['formValue']);
@@ -237,12 +336,22 @@ class CatalogController extends SunriseController
         $sort = $this->getSort($request, 'sunrise.products.sort')['searchParam'];
         $category = $request->get('category');
 
-        $facetDefinitions = [
-            Facet::of()->setName('categories.id')->setAlias('categories'),
-            Facet::of()->setName('color.key')->setAlias('colors'),
-            Facet::of()->setName('size')->setAlias('sizes'),
-            Facet::of()->setName('designer.key')->setAlias('brands')
-        ];
+        $facetDefinitions = [Facet::of()->setName('categories.id')->setAlias('categories')];
+
+        foreach ($this->config->get('sunrise.products.facets') as $facetName => $facetConfig) {
+            switch ($facetConfig['type']) {
+                case 'text':
+                    $facet = Facet::of()->setName('variants.attributes.' . $facetConfig['attribute'])->setAlias($facetName);
+                    break;
+                case 'enum':
+                    $facet = Facet::of()->setName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setAlias($facetName);
+                    break;
+                default:
+                    throw new \InvalidArgumentException('Facet type not implemented');
+            }
+            $facetDefinitions[] = $facet;
+        }
+
         /**
          * @var ProductProjectionCollection $products
          * @var PagedSearchResponse $response
