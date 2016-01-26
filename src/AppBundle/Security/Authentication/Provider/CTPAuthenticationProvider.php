@@ -78,6 +78,7 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
             if ($currentUser !== $customer->getEmail()) {
                 throw new BadCredentialsException('The presented password is invalid.');
             }
+            $user->setId($customer->getId());
             $this->session->set('customer.id', $customer->getId());
 
         }
