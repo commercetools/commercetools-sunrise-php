@@ -7,7 +7,11 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 
 
 use Commercetools\Core\Client;
+use Commercetools\Core\Model\Common\Address;
+use Commercetools\Core\Request\Customers\Command\CustomerChangeAddressAction;
 use Commercetools\Core\Request\Customers\CustomerByIdGetRequest;
+use Commercetools\Core\Request\Customers\CustomerUpdateRequest;
+use Commercetools\Sunrise\AppBundle\Entity\UserAddress;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Security\User\CTPUser;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,14 +22,31 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserController extends SunriseController
 {
     public function editAddress(Request $request)
     {
         $customer = $this->getCustomer($this->getUser());
+        $address = $customer->getDefaultShippingAddress();
 
-        $form = $this->createFormBuilder()
+        $userAddress = new UserAddress();
+        $userAddress->setFirstName($address->getFirstName());
+        $userAddress->setLastName($address->getLastName());
+        $userAddress->setCompany($address->getCompany());
+        $userAddress->setEmail($customer->getEmail());
+        $userAddress->setTitle($customer->getTitle());
+
+        $userAddress->setStreetName($address->getStreetName());
+        $userAddress->setStreetNumber($address->getStreetNumber());
+        $userAddress->setPostalCode($address->getPostalCode());
+        $userAddress->setCity($address->getCity());
+        $userAddress->setRegion($address->getRegion());
+        $userAddress->setCountry($address->getCountry());
+        $userAddress->setPhone($address->getPhone());
+
+        $form = $this->createFormBuilder($userAddress)
             ->add('firstName', TextType::class)
             ->add('lastName', TextType::class)
             ->add('streetName', TextType::class)
@@ -36,11 +57,43 @@ class UserController extends SunriseController
             ->add('Country', TextType::class)
             ->add('Company', TextType::class)
             ->add('Phone', TextType::class)
-
-            ->add('save', SubmitType::class, array('label' => 'Save'))
+            ->add('Email', TextType::class)
+            ->add('title', TextType::class)
+            ->add('save', SubmitType::class, array('label' => 'Save user'))
             ->getForm();
 
+        $form->handleRequest($request);
+
         if ($form->isValid()) {
+            /**
+             * @var UserAddress $formAddress
+             */
+            $formAddress = $form->getData();
+            $newAddress = Address::of();
+            $newAddress->setFirstName($formAddress->getFirstName());
+            $newAddress->setLastName($formAddress->getLastName());
+            $newAddress->setCompany($formAddress->getCompany());
+            $newAddress->setEmail($formAddress->getEmail());
+            $newAddress->setTitle($formAddress->getTitle());
+            $newAddress->setStreetName($formAddress->getStreetName());
+            $newAddress->setStreetNumber($formAddress->getStreetNumber());
+            $newAddress->setPostalCode($formAddress->getPostalCode());
+            $newAddress->setCity($formAddress->getCity());
+            $newAddress->setRegion($formAddress->getRegion());
+            $newAddress->setCountry($formAddress->getCountry());
+            $newAddress->setPhone($formAddress->getPhone());
+
+            $request = CustomerUpdateRequest::ofIdAndVersion($customer->getId(), $customer->getVersion());
+            $request->addAction(CustomerChangeAddressAction::ofAddressIdAndAddress($address->getId(), $newAddress));
+
+            /**
+             * @var Client $client
+             */
+            $client = $this->get('commercetools.client');
+            $response = $request->executeWithClient($client);
+
+            $newCustomer = $request->mapResponse($response);
+
             return new response('User has bin updated!');
         }
 
