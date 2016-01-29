@@ -8,12 +8,13 @@ addons:
   sauce_connect: true
 before_script:
 - composer self-update
+- composer global require hirak/prestissimo
 - composer config -g github-oauth.github.com $GITHUB_OAUTH_TOKEN
 - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ `php-config --vernum` -ge 50400 ] && [ `php-config --vernum` -lt 70000 ]; then printf "yes\n" | pecl install -f apcu-4.0.10 ; fi"
 - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ `php-config --vernum` -ge 70000 ] ; then printf "yes\n" | pecl install -f apcu ; echo 'extension="apcu.so"' >> ./tests/apc.ini ; fi"
 - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ $TRAVIS_PHP_VERSION != 'nightly' ] ; then phpenv config-add ./tests/apc.ini; fi"
 - php -S 127.0.0.1:8001 -t web/ web/index.php > access.log 2>&1 &
-- composer install -o --ignore-platform-reqs
+- composer install -o --ignore-platform-reqs --prefer-dist
 script:
 - vendor/bin/behat -p $BEHAT_PROFILE
 after_script:
