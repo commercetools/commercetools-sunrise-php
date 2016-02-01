@@ -46,23 +46,22 @@ class ProductRepository extends Repository
     }
 
     /**
-     * @param CategoryCollection $categories
-     * @param $locale
      * @param $itemsPerPage
      * @param $currentPage
      * @param $sort
-     * @param null $category
+     * @param $currency
+     * @param $country
+     * @param array $filters
+     * @param array $facets
      * @return array
      */
     public function getProducts(
-        CategoryCollection $categories,
-        $locale,
         $itemsPerPage,
         $currentPage,
         $sort,
         $currency,
         $country,
-        $category = null,
+        $filters = null,
         $facets = null
     ){
         $searchRequest = ProductProjectionSearchRequest::of()
@@ -77,19 +76,16 @@ class ProductRepository extends Repository
                 $searchRequest->addFacet($facet);
             }
         }
-        if ($category) {
-            $category = $categories->getBySlug($category, $locale);
-            if ($category instanceof Category) {
-                $searchRequest->addFilter(
-                    Filter::of()->setName('categories.id')->setValue($category->getId())
-                );
+        if (!is_null($filters)) {
+            foreach ($filters as $filter) {
+                $searchRequest->addFilter($filter);
+                $searchRequest->addFilterFacets($filter);
             }
         }
         $this->profiler->enter($profile = new Profile('getProducts'));
         $response = $searchRequest->executeWithClient($this->client);
         $this->profiler->leave($profile);
         $products = $searchRequest->mapResponse($response);
-
         return [$products, $response->getFacets(), $response->getOffset(), $response->getTotal()];
     }
 }

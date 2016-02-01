@@ -3,12 +3,12 @@
  * @author @ct-jensschulze <jens.schulze@commercetools.de>
  */
 
-namespace Commercetools\Sunrise\Model\View;
+namespace Commercetools\Sunrise\AppBundle\Model\View;
 
 use Commercetools\Core\Cache\NullCacheAdapter;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Model\ProductType\ProductType;
-use Commercetools\Sunrise\Model\Config;
+use Commercetools\Sunrise\AppBundle\Model\Config;
 
 class ProductModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -140,12 +140,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'color',
                             'list' => [
                                 'Black' => [
-                                    'text' => 'Black',
+                                    'label' => 'Black',
                                     'value' => 'Black',
                                     'selected' => false,
                                 ],
                                 'White' => [
-                                    'text' => 'White',
+                                    'label' => 'White',
                                     'value' => 'White',
                                     'selected' => true,
                                 ],
@@ -170,12 +170,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'size',
                             'list' => [
                                 36 => [
-                                    'text' => '36',
+                                    'label' => '36',
                                     'value' => '36',
                                     'selected' => false,
                                 ],
                                 38 => [
-                                    'text' => '38',
+                                    'label' => '38',
                                     'value' => '38',
                                     'selected' => true,
                                 ],
@@ -294,12 +294,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'color',
                             'list' => [
                                 'Black' => [
-                                    'text' => 'Black',
+                                    'label' => 'Black',
                                     'value' => 'Black',
                                     'selected' => false,
                                 ],
                                 'White' => [
-                                    'text' => 'White',
+                                    'label' => 'White',
                                     'value' => 'White',
                                     'selected' => true,
                                 ],
@@ -324,12 +324,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'size',
                             'list' => [
                                 36 => [
-                                    'text' => '36',
+                                    'label' => '36',
                                     'value' => '36',
                                     'selected' => false,
                                 ],
                                 38 => [
-                                    'text' => '38',
+                                    'label' => '38',
                                     'value' => '38',
                                     'selected' => true,
                                 ],
@@ -448,12 +448,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'color',
                             'list' => [
                                 'Black' => [
-                                    'text' => 'Black',
+                                    'label' => 'Black',
                                     'value' => 'Black',
                                     'selected' => true,
                                 ],
                                 'White' => [
-                                    'text' => 'White',
+                                    'label' => 'White',
                                     'value' => 'White',
                                     'selected' => false,
                                 ],
@@ -478,12 +478,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'size',
                             'list' => [
                                 36 => [
-                                    'text' => '36',
+                                    'label' => '36',
                                     'value' => '36',
                                     'selected' => true,
                                 ],
                                 38 => [
-                                    'text' => '38',
+                                    'label' => '38',
                                     'value' => '38',
                                     'selected' => false,
                                 ],
@@ -594,12 +594,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'color',
                             'list' => [
                                 'Black' => [
-                                    'text' => 'Black',
+                                    'label' => 'Black',
                                     'value' => 'Black',
                                     'selected' => false,
                                 ],
                                 'White' => [
-                                    'text' => 'White',
+                                    'label' => 'White',
                                     'value' => 'White',
                                     'selected' => true,
                                 ],
@@ -623,12 +623,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'size',
                             'list' => [
                                 36 => [
-                                    'text' => '36',
+                                    'label' => '36',
                                     'value' => '36',
                                     'selected' => false,
                                 ],
                                 38 => [
-                                    'text' => '38',
+                                    'label' => '38',
                                     'value' => '38',
                                     'selected' => true,
                                 ],
@@ -741,12 +741,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'color',
                             'list' => [
                                 'Black' => [
-                                    'text' => 'Black',
+                                    'label' => 'Black',
                                     'value' => 'Black',
                                     'selected' => false,
                                 ],
                                 'White' => [
-                                    'text' => 'White',
+                                    'label' => 'White',
                                     'value' => 'White',
                                     'selected' => true,
                                 ],
@@ -770,12 +770,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'size',
                             'list' => [
                                 36 => [
-                                    'text' => '36',
+                                    'label' => '36',
                                     'value' => '36',
                                     'selected' => false,
                                 ],
                                 38 => [
-                                    'text' => '38',
+                                    'label' => '38',
                                     'value' => '38',
                                     'selected' => true,
                                 ],
@@ -842,12 +842,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'size',
                             'list' => [
                                 36 => [
-                                    'text' => '36',
+                                    'label' => '36',
                                     'value' => '36',
                                     'selected' => false,
                                 ],
                                 38 => [
-                                    'text' => '38',
+                                    'label' => '38',
                                     'value' => '38',
                                     'selected' => true,
                                 ],
@@ -907,12 +907,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'color',
                             'list' => [
                                 'Black' => [
-                                    'text' => 'Black',
+                                    'label' => 'Black',
                                     'value' => 'Black',
                                     'selected' => false,
                                 ],
                                 'White' => [
-                                    'text' => 'White',
+                                    'label' => 'White',
                                     'value' => 'White',
                                     'selected' => true,
                                 ],
@@ -1057,12 +1057,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'color',
                             'list' => [
                                 'Black' => [
-                                    'text' => 'Black',
+                                    'label' => 'Black',
                                     'value' => 'Black',
                                     'selected' => false,
                                 ],
                                 'White' => [
-                                    'text' => 'White',
+                                    'label' => 'White',
                                     'value' => 'White',
                                     'selected' => true,
                                 ],
@@ -1087,12 +1087,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                             'name' => 'size',
                             'list' => [
                                 36 => [
-                                    'text' => '36',
+                                    'label' => '36',
                                     'value' => '36',
                                     'selected' => false,
                                 ],
                                 38 => [
-                                    'text' => '38',
+                                    'label' => '38',
                                     'value' => '38',
                                     'selected' => true,
                                 ],
@@ -1319,12 +1319,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                     'name' => 'color',
                     'list' => [
                         'Black' => [
-                            'text' => 'Black',
+                            'label' => 'Black',
                             'value' => 'Black',
                             'selected' => false,
                         ],
                         'White' => [
-                            'text' => 'White',
+                            'label' => 'White',
                             'value' => 'White',
                             'selected' => true,
                         ],
@@ -1349,12 +1349,12 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
                     'name' => 'size',
                     'list' => [
                         36 => [
-                            'text' => '36',
+                            'label' => '36',
                             'value' => '36',
                             'selected' => false,
                         ],
                         38 => [
-                            'text' => '38',
+                            'label' => '38',
                             'value' => '38',
                             'selected' => true,
                         ],

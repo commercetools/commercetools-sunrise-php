@@ -8,8 +8,10 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
+use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Model\Product\Facet;
 use Commercetools\Core\Model\Product\FacetResultCollection;
+use Commercetools\Core\Model\Product\Filter;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
 use Commercetools\Core\Model\ProductType\AttributeDefinition;
 use Commercetools\Core\Model\ProductType\LocalizedEnumType;
@@ -66,11 +68,11 @@ class CatalogController extends SunriseController
 
     public function search(Request $request)
     {
-        $uri = new Uri($request->getRequestUri());
         $products = $this->getProducts($request);
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Overview Page');
 
+        $viewData->content->filterProductsUrl = $this->generateUrl('pop');
         $viewData->content->text = "Women";
         $viewData->content->banner = new ViewData();
         $viewData->content->banner->text = "Women";
@@ -81,7 +83,7 @@ class CatalogController extends SunriseController
         $viewData->content->products = new ViewData();
         $viewData->content->products->list = new ViewDataCollection();
         $viewData->content->displaySelector = $this->getDisplayContent($this->getItemsPerPage($request));
-        $viewData->content->facets = $this->getFiltersData($uri);
+        $viewData->content->facets = $this->getFiltersData(new Uri($request->getRequestUri()));
         $viewData->content->sortSelector = $this->getSortData($this->getSort($request, 'sunrise.products.sort'));
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
@@ -111,20 +113,6 @@ class CatalogController extends SunriseController
         return $this->render('pdp.hbs', $viewData->toArray());
     }
 
-    protected function getFiltersData(UriInterface $uri)
-    {
-        $filter = new ViewData();
-        $filter->url = $uri->getPath();
-        $filter->list = new ViewDataCollection();
-        $filter->list->add($this->getCategoriesFacet());
-        $facetConfigs = $this->config->get('sunrise.products.facets');
-        foreach ($facetConfigs as $facetName => $facetConfig) {
-            $filter->list->add($this->getFacet($facetName, $facetConfig));
-        }
-
-        return $filter;
-    }
-
     protected function addToCollection($categoryTree, ViewDataCollection $collection, $ancestors, $categoryId, ViewData $entry)
     {
         if (!empty($ancestors)) {
@@ -145,13 +133,84 @@ class CatalogController extends SunriseController
         }
     }
 
-    protected function getFacet($facetName, $facetConfig)
+    protected function getSortData($currentSort)
     {
-        $method = 'get' . ucfirst($facetConfig['type']) . 'Facet';
-        return $this->$method($facetName, $facetConfig);
+        $sortData = new ViewData();
+        $sortData->list = new ViewDataCollection();
+
+        foreach ($this->config->get('sunrise.products.sort') as $sort) {
+            $entry = new ViewData();
+            $entry->value = $sort['formValue'];
+            $entry->label = $this->trans('search.sort.' . $sort['formValue']);
+            if ($currentSort == $sort) {
+                $entry->selected = true;
+            }
+            $sortData->list->add($entry);
+        }
+        return $sortData;
     }
 
-    protected function getTextFacet($facetName, $facetConfig)
+    protected function getDisplayContent($currentCount)
+    {
+        $display = new ViewData();
+        $display->list = new ViewDataCollection();
+
+        foreach ($this->config->get('sunrise.itemsPerPage') as $count) {
+            $entry = new ViewData();
+            $entry->value = $count;
+            $entry->label = $count;
+            if ($currentCount == $count) {
+                $entry->selected = true;
+            }
+            $display->list->add($entry);
+        }
+
+        return $display;
+    }
+
+    protected function getFacetDefinitions($facetDefinitions = [])
+    {
+        $facetDefinitions[] = Facet::of()->setName('categories.id')->setAlias('categories');
+        foreach ($this->config->get('sunrise.products.facets') as $facetName => $facetConfig) {
+            switch ($facetConfig['type']) {
+                case 'text':
+                    $facet = Facet::of()->setName('variants.attributes.' . $facetConfig['attribute'])->setAlias($facetName);
+                    break;
+                case 'enum':
+                    $facet = Facet::of()->setName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setAlias($facetName);
+                    break;
+                default:
+                    throw new \InvalidArgumentException('Facet type not implemented');
+            }
+            $facetDefinitions[] = $facet;
+        }
+
+        return $facetDefinitions;
+    }
+
+    protected function getFiltersData(UriInterface $searchUri)
+    {
+        $filter = new ViewData();
+        $filter->url = $searchUri->getPath();
+        $filter->list = new ViewDataCollection();
+        $filter->list->add($this->getCategoriesFacet());
+        $facetConfigs = $this->config->get('sunrise.products.facets');
+
+        $queryParams = \GuzzleHttp\Psr7\parse_query($searchUri->getQuery());
+        foreach ($facetConfigs as $facetName => $facetConfig) {
+            $filter->list->add($this->getFacet($facetName, $facetConfig, $searchUri, $queryParams));
+        }
+
+        return $filter;
+    }
+
+    protected function getFacet($facetName, $facetConfig, UriInterface $searchUri, $queryParams)
+    {
+        $method = 'get' . ucfirst($facetConfig['type']) . 'Facet';
+        return $this->$method($facetName, $facetConfig, $searchUri, $queryParams);
+    }
+
+    protected function getTextFacet($facetName, $facetConfig, UriInterface $searchUri, $queryParams)
     {
         $facetData = new ViewData();
         $facetData->selectFacet = true;
@@ -175,7 +234,7 @@ class CatalogController extends SunriseController
         return $facetData;
     }
 
-    protected function getEnumFacet($facetName, $facetConfig)
+    protected function getEnumFacet($facetName, $facetConfig, UriInterface $searchUri, $queryParams)
     {
         $attributeName = $facetConfig['attribute'];
         $cache = $this->get('app.cache');
@@ -219,19 +278,39 @@ class CatalogController extends SunriseController
         $facetData->displayList = ($facetConfig['display'] == 'list');
         $facetData->selectFacet = true;
         $facetData->facet = new ViewData();
-        $facetData->facet->multiSelect = $facetConfig['multi'];
+        if ($facetConfig['multi'] == true) {
+            $facetData->facet->multiSelect = $facetConfig['multi'];
+        }
         $facetData->facet->available = true;
         $facetData->facet->label = $this->trans('search.filters.' . $facetName);
         $facetData->facet->key = $facetName;
 
         $limitedOptions = new ViewDataCollection();
 
+        $selectedValues = array_diff_key($queryParams, [$facetName => true]);
+
+        $facetData->facet->clearUri = $searchUri->withQuery(\GuzzleHttp\Psr7\build_query($selectedValues));
         foreach ($this->facets->getByName($facetName)->getTerms() as $term) {
+            $key = $term->getTerm();
             $facetEntry = $facetValues[$term->getTerm()];
+
+            $facetSelection = isset($queryParams[$facetName]) ? $queryParams[$facetName] : [];
+            if (!is_array($facetSelection)) {
+                $facetSelection = [$facetSelection];
+            }
+
+            if (in_array($key, $facetSelection)) {
+                $facetEntry->selected = true;
+                $uriValues = array_merge($selectedValues, [$facetName => array_diff($facetSelection, [$key])]);
+            } else {
+                $uriValues = array_merge($selectedValues, [$facetName => array_merge($facetSelection, [$key])]);
+            }
+
+            $uri = $searchUri->withQuery(\GuzzleHttp\Psr7\build_query($uriValues));
+            $facetEntry->uri = $uri;
             $facetEntry->count = $term->getCount();
             $limitedOptions->add($facetEntry);
         }
-
         $facetData->facet->limitedOptions = $limitedOptions;
 
         return $facetData;
@@ -292,39 +371,51 @@ class CatalogController extends SunriseController
         return $categories;
     }
 
-    protected function getSortData($currentSort)
+    protected function getFilters(Request $request)
     {
-        $sortData = new ViewData();
-        $sortData->list = new ViewDataCollection();
+        $filters = [];
 
-        foreach ($this->config->get('sunrise.products.sort') as $sort) {
-            $entry = new ViewData();
-            $entry->value = $sort['formValue'];
-            $entry->label = $this->trans('search.sort.' . $sort['formValue']);
-            if ($currentSort == $sort) {
-                $entry->selected = true;
+        $facetConfigs = $this->config->get('sunrise.products.facets');
+        $uri = new Uri($request->getRequestUri());
+        $queryParams = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
+
+        $category = $request->get('category');
+
+        if ($category) {
+            /**
+             * @var CategoryCollection $categories
+             */
+            $categories = $this->get('app.repository.category')->getCategories();
+            $category = $categories->getBySlug($category, $this->locale);
+            if ($category instanceof Category) {
+                $filters[] = Filter::of()->setName('categories.id')->setValue($category->getId());
             }
-            $sortData->list->add($entry);
         }
-        return $sortData;
-    }
-
-    protected function getDisplayContent($currentCount)
-    {
-        $display = new ViewData();
-        $display->list = new ViewDataCollection();
-
-        foreach ($this->config->get('sunrise.itemsPerPage') as $count) {
-            $entry = new ViewData();
-            $entry->value = $count;
-            $entry->label = $count;
-            if ($currentCount == $count) {
-                $entry->selected = true;
+        foreach ($queryParams as $filterName => $params) {
+            if (!isset($facetConfigs[$filterName])) {
+                continue;
             }
-            $display->list->add($entry);
+            $facetConfig = $facetConfigs[$filterName];
+            if ($facetConfig['multi']) {
+                if (!is_array($params)) {
+                    $params = [$params];
+                }
+                $filter = Filter::ofType('array');
+            } else {
+                $filter = Filter::of();
+            }
+            switch ($facetConfig['type']) {
+                case 'text':
+                    $filters[] = $filter->setName('variants.attributes.' . $facetConfig['attribute'])->setValue($params);
+                    break;
+                case 'enum':
+                    $filters[] = $filter->setName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setValue($params);
+                    break;
+                default:
+                    throw new \InvalidArgumentException('Facet type not implemented');
+            }
         }
-
-        return $display;
+        return $filters;
     }
 
     protected function getProducts(Request $request)
@@ -334,38 +425,19 @@ class CatalogController extends SunriseController
         $itemsPerPage = $this->getItemsPerPage($request);
         $currentPage = $this->getCurrentPage($request);
         $sort = $this->getSort($request, 'sunrise.products.sort')['searchParam'];
-        $category = $request->get('category');
-
-        $facetDefinitions = [Facet::of()->setName('categories.id')->setAlias('categories')];
-
-        foreach ($this->config->get('sunrise.products.facets') as $facetName => $facetConfig) {
-            switch ($facetConfig['type']) {
-                case 'text':
-                    $facet = Facet::of()->setName('variants.attributes.' . $facetConfig['attribute'])->setAlias($facetName);
-                    break;
-                case 'enum':
-                    $facet = Facet::of()->setName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setAlias($facetName);
-                    break;
-                default:
-                    throw new \InvalidArgumentException('Facet type not implemented');
-            }
-            $facetDefinitions[] = $facet;
-        }
 
         /**
          * @var ProductProjectionCollection $products
          * @var PagedSearchResponse $response
          */
         list($products, $facets, $offset, $total) = $this->get('app.repository.product')->getProducts(
-            $this->get('app.repository.category')->getCategories(),
-            $this->locale,
             $itemsPerPage,
             $currentPage,
             $sort,
             $currency,
             $country,
-            $category,
-            $facetDefinitions
+            $this->getFilters($request),
+            $this->getFacetDefinitions()
         );
 
         $this->applyPagination(new Uri($request->getRequestUri()), $offset, $total, $itemsPerPage);
