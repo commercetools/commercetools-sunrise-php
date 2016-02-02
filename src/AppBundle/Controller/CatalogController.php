@@ -141,7 +141,7 @@ class CatalogController extends SunriseController
         foreach ($this->config->get('sunrise.products.sort') as $sort) {
             $entry = new ViewData();
             $entry->value = $sort['formValue'];
-            $entry->label = $this->trans('search.sort.' . $sort['formValue']);
+            $entry->label = $this->trans('sortSelector.' . $sort['formValue'], [], 'catalog');
             if ($currentSort == $sort) {
                 $entry->selected = true;
             }
@@ -216,7 +216,7 @@ class CatalogController extends SunriseController
         $facetData->selectFacet = true;
         $facetData->facet = new ViewData();
         $facetData->facet->available = true;
-        $facetData->facet->label = $this->trans('search.filters.' . $facetName);
+        $facetData->facet->label = $this->trans('filters.' . $facetName, [], 'catalog');
         $facetData->facet->key = $facetName;
 
         $limitedOptions = new ViewDataCollection();
@@ -282,7 +282,7 @@ class CatalogController extends SunriseController
             $facetData->facet->multiSelect = $facetConfig['multi'];
         }
         $facetData->facet->available = true;
-        $facetData->facet->label = $this->trans('search.filters.' . $facetName);
+        $facetData->facet->label = $this->trans('filters.' . $facetName, [], 'catalog');
         $facetData->facet->key = $facetName;
 
         $limitedOptions = new ViewDataCollection();
@@ -364,7 +364,7 @@ class CatalogController extends SunriseController
         $categories->hierarchicalSelectFacet = true;
         $categories->facet = new ViewData();
         $categories->facet->available = true;
-        $categories->facet->label = $this->trans('search.filters.productType');
+        $categories->facet->label = $this->trans('filters.productType', [], 'catalog');
         $categories->facet->key = 'product-type';
         $categories->facet->limitedOptions = $limitedOptions;
 
