@@ -65,12 +65,16 @@ class CartController extends SunriseController
         return new RedirectResponse($redirectUrl);
     }
 
-    public function miniCart()
+    public function miniCart(Request $request)
     {
+        $viewData = $this->getHeaderViewData('MiniCart');
+        $viewData->meta = $this->getMetaData();
+
         $response = new Response();
         $response->headers->addCacheControlDirective('no-cache');
         $response->headers->addCacheControlDirective('no-store');
-        $response = $this->render('common/mini-cart.hbs', $this->getHeaderViewData('MiniCart')->toArray(), $response);
+
+        $response = $this->render('common/mini-cart.hbs', $viewData->toArray(), $response);
 
         return $response;
     }
