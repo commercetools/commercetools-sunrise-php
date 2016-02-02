@@ -37,6 +37,7 @@ class CatalogController extends SunriseController
 
     public function home(Request $request)
     {
+        var_dump($this->getParameter('kernel.secret'));
         $viewData = $this->getViewData('Sunrise - Home');
         $viewData->content->banners = new ViewData();
         $viewData->content->banners->bannerOne = new ViewData();
