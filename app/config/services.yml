@@ -1,2 +1,5 @@
-parameter:
+#parameter:
 services:
+#  handlebars.helper:
+#      class: JaySDe\HandlebarsBundle\HandlebarsHelper
+#      arguments: ['@fragment.handler', '@translator']

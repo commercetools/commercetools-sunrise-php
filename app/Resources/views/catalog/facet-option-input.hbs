@@ -1,9 +1,13 @@
+<!-- start catalog/facet-option-input.hbs -->
 <label for="filter-{{facet.key}}-{{option.value}}">
-  <input id="filter-{{facet.key}}-{{option.value}}"
-         type="{{#if facet.multiSelect}}checkbox{{else}}radio{{/if}}"
-         name="{{facet.key}}"
-         value="{{option.value}}"
-         onclick="window.location.href='{{option.uri}}'"
-         {{#if selected}}checked{{/if}} />
-  <a href="{{option.uri}}">{{option.label}} {{#unless facet.countHidden}}<span class="facet-count">({{option.count}})</span>{{/unless}}</a>
+    <input id="filter-{{facet.key}}-{{option.value}}"
+           type="{{#if facet.multiSelect}}checkbox{{else}}radio{{/if}}"
+           name="{{facet.key}}"
+           value="{{option.value}}"
+           onclick="window.location.href='{{option.uri}}'"
+           {{#if selected}}checked{{/if}} />
+    <a href="{{option.uri}}">
+        {{option.label}} {{#unless facet.countHidden}}<span class="facet-count">({{option.count}})</span>{{/unless}}
+    </a>
 </label>
+<!-- end catalog/facet-option-input.hbs -->
