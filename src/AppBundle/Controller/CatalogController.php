@@ -139,13 +139,15 @@ class CatalogController extends SunriseController
     protected function getSortData(UriInterface $uri, $query, $currentSort)
     {
         $sortData = new ViewData();
+        $sortData->key = static::SORT_ELEMENT;
         $sortData->list = new ViewDataCollection();
 
         foreach ($this->config->get('sunrise.products.sort') as $sortKey => $sort) {
             $entry = new ViewData();
             $query[static::SORT_ELEMENT] = $sortKey;
             $uri = $uri->withQuery(\GuzzleHttp\Psr7\build_query($query));
-            $entry->value = (string)$uri;
+            $entry->uri = (string)$uri;
+            $entry->value = $sortKey;
             $entry->label = $this->trans('sortSelector.' . $sort['formValue'], [], 'catalog');
             if ($currentSort == $sort) {
                 $entry->selected = true;
@@ -158,13 +160,15 @@ class CatalogController extends SunriseController
     protected function getDisplayContent(UriInterface $uri, $query, $currentCount)
     {
         $display = new ViewData();
+        $display->key = static::ITEM_COUNT_ELEMENT;
         $display->list = new ViewDataCollection();
 
         foreach ($this->config->get('sunrise.itemsPerPage') as $count) {
             $entry = new ViewData();
             $query[static::ITEM_COUNT_ELEMENT] = $count;
             $uri = $uri->withQuery(\GuzzleHttp\Psr7\build_query($query));
-            $entry->value = (string)$uri;
+            $entry->uri = (string)$uri;
+            $entry->value = $count;
             $entry->label = $count;
             if ($currentCount == $count) {
                 $entry->selected = true;

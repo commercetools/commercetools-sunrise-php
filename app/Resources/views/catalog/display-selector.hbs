@@ -3,7 +3,7 @@
 <div class="custom-select-wrapper">
 	<select name="{{displaySelector.key}}" class="select-product-detail" required onchange="window.location = this.options[this.selectedIndex].value;">
 	  {{#each displaySelector.list}}
-	    <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+	    <option value="{{uri}}" {{#if selected}}selected{{/if}}>{{label}}</option>
 	  {{/each}}
 	</select>
 </div>
