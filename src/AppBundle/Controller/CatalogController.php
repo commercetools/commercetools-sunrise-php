@@ -374,6 +374,7 @@ class CatalogController extends SunriseController
         $categories = new ViewData();
         $categories->hierarchicalSelectFacet = true;
         $categories->facet = new ViewData();
+        $categories->facet->clearUri = $this->generateUrl('pop');
         $categories->facet->available = true;
         $categories->facet->label = $this->trans('filters.productType', [], 'catalog');
         $categories->facet->key = 'product-type';

@@ -167,20 +167,17 @@ class CartController extends SunriseController
                     $cart->getTaxedPrice()->getTotalNet()->getCentAmount(),
                 $cart->getContext()
             );
-            $cartModel->salesTax = $salexTax;
-            $cartModel->subtotalPrice = $cart->getTaxedPrice()->getTotalNet();
-            $cartModel->totalPrice = $cart->getTotalPrice();
+            $cartModel->salesTax = (string)$salexTax;
+            $cartModel->subtotalPrice = (string)$cart->getTaxedPrice()->getTotalNet();
+            $cartModel->totalPrice = (string)$cart->getTotalPrice();
         }
         if ($cart->getShippingInfo()) {
             $shippingInfo = $cart->getShippingInfo();
             $cartModel->shippingMethod = new ViewData();
-            $cartModel->shippingMethod->value = $shippingInfo->getShippingMethodName();
-            $cartModel->shippingMethod->label = $shippingInfo->getShippingMethodName();
             $cartModel->shippingMethod->price = (string)$shippingInfo->getPrice();
         }
 
         $cartModel->lineItems = $this->getCartLineItems($cart);
-
         return $cartModel;
     }
 
@@ -206,15 +203,15 @@ class CartController extends SunriseController
                 );
                 $lineItemVariant->name = (string)$lineItem->getName();
                 $lineItemVariant->image = (string)$variant->getImages()->current()->getUrl();
-                $cartLineItem->variant = $lineItemVariant;
-                $cartLineItem->sku = $variant->getSku();
                 $price = $lineItem->getPrice();
                 if (!is_null($price->getDiscounted())) {
-                    $cartLineItem->price = (string)$price->getDiscounted()->getValue();
-                    $cartLineItem->priceOld = (string)$price->getValue();
+                    $lineItemVariant->price = (string)$price->getDiscounted()->getValue();
+                    $lineItemVariant->priceOld = (string)$price->getValue();
                 } else {
-                    $cartLineItem->price = (string)$price->getValue();
+                    $lineItemVariant->price = (string)$price->getValue();
                 }
+                $cartLineItem->variant = $lineItemVariant;
+                $cartLineItem->sku = $variant->getSku();
                 $cartLineItem->totalPrice = $lineItem->getTotalPrice();
                 $cartLineItem->attributes = new ViewDataCollection();
 
