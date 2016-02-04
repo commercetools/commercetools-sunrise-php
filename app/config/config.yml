@@ -39,4 +39,4 @@ monolog:
 imports:
   - { resource: 'security.yml' }
   - { resource: 'services.yml' }
-  - { resource: 'app_dist.yaml' }
+  - { resource: 'app_dist.yml' }

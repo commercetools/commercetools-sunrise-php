@@ -63,4 +63,4 @@ app:
 #    client_secret: <client_secret>
 #    project: <project>
 imports:
-  - { resource: 'app.yaml', ignore_errors: true}
+  - { resource: 'app.yml', ignore_errors: true}

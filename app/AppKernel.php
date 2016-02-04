@@ -34,9 +34,9 @@ class AppKernel extends Kernel
             new MonologBundle(),
             new AppBundle(),
         ];
-//        if ($this->getEnvironment() == 'dev') {
+        if ($this->getEnvironment() == 'dev') {
             $bundles[] = new WebProfilerBundle();
-//        }
+        }
         return $bundles;
     }
 
