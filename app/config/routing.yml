@@ -35,6 +35,16 @@ editAddress:
   path: /{_locale}/user/address/edit
   defaults:  { _controller: app.user.controller:editAddress }
   methods:  [GET, HEAD, POST]
+myOrders:
+  path: /{_locale}/user/orders
+  defaults: { _controller: app.user.controller:orders }
+  methods:  [GET, HEAD]
+
+myOrderDetails:
+  path: /{_locale}/user/orders/{orderId}
+  defaults: { _controller: app.user.controller:orderDetail }
+  methods:  [GET, HEAD]
+
 
 login_route:
   path: /{_locale}/login
