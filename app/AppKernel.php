@@ -34,9 +34,9 @@ class AppKernel extends Kernel
             new MonologBundle(),
             new AppBundle(),
         ];
-//        if ($this->getEnvironment() == 'dev') {
+        if ($this->getEnvironment() == 'dev') {
             $bundles[] = new WebProfilerBundle();
-//        }
+        }
         return $bundles;
     }
 
@@ -53,7 +53,9 @@ class AppKernel extends Kernel
     public function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/config/config.yml');
-
+        if (!empty(getenv('SECRET_TOKEN'))) {
+            $c->setParameter('kernel.secret', getenv('SECRET_TOKEN'));
+        }
         // configure WebProfilerBundle only if the bundle is enabled
         if (isset($this->bundles['WebProfilerBundle'])) {
             $c->loadFromExtension('web_profiler', array(

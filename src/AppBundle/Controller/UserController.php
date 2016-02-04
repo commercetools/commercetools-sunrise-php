@@ -18,7 +18,7 @@ class UserController extends SunriseController
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             return new RedirectResponse($this->generateUrl('myAccount'));
         }
-        $viewData = $this->getViewData('MyAccount - Login');
+        $viewData = $this->getViewData('MyAccount - Login', $request);
         $authUtils = $this->get('security.authentication_utils');
         // get the login error if there is one
         $error = $authUtils->getLastAuthenticationError();
@@ -37,7 +37,7 @@ class UserController extends SunriseController
     public function details(Request $request)
     {
 
-        $viewData = $this->getViewData('MyAccount - Details');
+        $viewData = $this->getViewData('MyAccount - Details', $request);
 
         return $this->render('my-account-personal-details.hbs', $viewData->toArray());
     }

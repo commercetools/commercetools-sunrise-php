@@ -20,10 +20,10 @@ class CartController extends SunriseController
 {
     const CSRF_TOKEN_NAME = 'csrfToken';
 
-    public function index()
+    public function index(Request $request)
     {
         $session = $this->get('session');
-        $viewData = $this->getViewData('Sunrise - Cart');
+        $viewData = $this->getViewData('Sunrise - Cart', $request);
         $cartId = $session->get('cartId');
         $cart = $this->get('app.repository.cart')->getCart($cartId);
         $viewData->content = new ViewData();
@@ -67,7 +67,7 @@ class CartController extends SunriseController
 
     public function miniCart(Request $request)
     {
-        $viewData = $this->getHeaderViewData('MiniCart');
+        $viewData = $this->getHeaderViewData('MiniCart', $request);
         $viewData->meta = $this->getMetaData();
 
         $response = new Response();
@@ -123,25 +123,25 @@ class CartController extends SunriseController
 
     public function checkoutSignin(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Checkout - Signin');
+        $viewData = $this->getViewData('Sunrise - Checkout - Signin', $request);
         return $this->render('checkout-signin.hbs', $viewData->toArray());
     }
 
     public function checkoutShipping(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Checkout - Shipping');
+        $viewData = $this->getViewData('Sunrise - Checkout - Shipping', $request);
         return $this->render('checkout-shipping.hbs', $viewData->toArray());
     }
 
     public function checkoutPayment(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Checkout - Payment');
+        $viewData = $this->getViewData('Sunrise - Checkout - Payment', $request);
         return $this->render('checkout-payment.hbs', $viewData->toArray());
     }
 
     public function checkoutConfirmation(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Checkout - Confirmation');
+        $viewData = $this->getViewData('Sunrise - Checkout - Confirmation', $request);
         return $this->render('checkout-confirmation.hbs', $viewData->toArray());
     }
 
@@ -167,20 +167,17 @@ class CartController extends SunriseController
                     $cart->getTaxedPrice()->getTotalNet()->getCentAmount(),
                 $cart->getContext()
             );
-            $cartModel->salesTax = $salexTax;
-            $cartModel->subtotalPrice = $cart->getTaxedPrice()->getTotalNet();
-            $cartModel->totalPrice = $cart->getTotalPrice();
+            $cartModel->salesTax = (string)$salexTax;
+            $cartModel->subtotalPrice = (string)$cart->getTaxedPrice()->getTotalNet();
+            $cartModel->totalPrice = (string)$cart->getTotalPrice();
         }
         if ($cart->getShippingInfo()) {
             $shippingInfo = $cart->getShippingInfo();
             $cartModel->shippingMethod = new ViewData();
-            $cartModel->shippingMethod->value = $shippingInfo->getShippingMethodName();
-            $cartModel->shippingMethod->label = $shippingInfo->getShippingMethodName();
             $cartModel->shippingMethod->price = (string)$shippingInfo->getPrice();
         }
 
         $cartModel->lineItems = $this->getCartLineItems($cart);
-
         return $cartModel;
     }
 
@@ -206,15 +203,15 @@ class CartController extends SunriseController
                 );
                 $lineItemVariant->name = (string)$lineItem->getName();
                 $lineItemVariant->image = (string)$variant->getImages()->current()->getUrl();
-                $cartLineItem->variant = $lineItemVariant;
-                $cartLineItem->sku = $variant->getSku();
                 $price = $lineItem->getPrice();
                 if (!is_null($price->getDiscounted())) {
-                    $cartLineItem->price = (string)$price->getDiscounted()->getValue();
-                    $cartLineItem->priceOld = (string)$price->getValue();
+                    $lineItemVariant->price = (string)$price->getDiscounted()->getValue();
+                    $lineItemVariant->priceOld = (string)$price->getValue();
                 } else {
-                    $cartLineItem->price = (string)$price->getValue();
+                    $lineItemVariant->price = (string)$price->getValue();
                 }
+                $cartLineItem->variant = $lineItemVariant;
+                $cartLineItem->sku = $variant->getSku();
                 $cartLineItem->totalPrice = $lineItem->getTotalPrice();
                 $cartLineItem->attributes = new ViewDataCollection();
 

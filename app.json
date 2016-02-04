@@ -5,6 +5,10 @@
   "logo": "http://www.commercetools.com/assets/img/ct_logo_farbe.gif",
   "keywords": ["commercetools", "sphere", "ecommerce", "shopping"],
   "env": {
+    "SECRET_TOKEN": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "generator": "secret"
+    },
     "SPHERE_CLIENT_ID": {
       "description": "The project key for your commercetools platform project.",
       "required": true
