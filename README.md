@@ -49,8 +49,15 @@ IMPORTANT: The composer configuration clones the PHP commons library and the sun
 
 ## Using the command line
 
+### Available console commands
 ```
-php app/console.php help
+php app/console.php list
+```
+
+### Cache warm up
+
+```
+php app/console.php cache:warmup
 ```
 
 ## Deployment
