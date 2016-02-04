@@ -20,10 +20,10 @@ class CartController extends SunriseController
 {
     const CSRF_TOKEN_NAME = 'csrfToken';
 
-    public function index()
+    public function index(Request $request)
     {
         $session = $this->get('session');
-        $viewData = $this->getViewData('Sunrise - Cart');
+        $viewData = $this->getViewData('Sunrise - Cart', $request);
         $cartId = $session->get('cartId');
         $cart = $this->get('app.repository.cart')->getCart($cartId);
         $viewData->content = new ViewData();
@@ -67,7 +67,7 @@ class CartController extends SunriseController
 
     public function miniCart(Request $request)
     {
-        $viewData = $this->getHeaderViewData('MiniCart');
+        $viewData = $this->getHeaderViewData('MiniCart', $request);
         $viewData->meta = $this->getMetaData();
 
         $response = new Response();
@@ -123,25 +123,25 @@ class CartController extends SunriseController
 
     public function checkoutSignin(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Checkout - Signin');
+        $viewData = $this->getViewData('Sunrise - Checkout - Signin', $request);
         return $this->render('checkout-signin.hbs', $viewData->toArray());
     }
 
     public function checkoutShipping(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Checkout - Shipping');
+        $viewData = $this->getViewData('Sunrise - Checkout - Shipping', $request);
         return $this->render('checkout-shipping.hbs', $viewData->toArray());
     }
 
     public function checkoutPayment(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Checkout - Payment');
+        $viewData = $this->getViewData('Sunrise - Checkout - Payment', $request);
         return $this->render('checkout-payment.hbs', $viewData->toArray());
     }
 
     public function checkoutConfirmation(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Checkout - Confirmation');
+        $viewData = $this->getViewData('Sunrise - Checkout - Confirmation', $request);
         return $this->render('checkout-confirmation.hbs', $viewData->toArray());
     }
 

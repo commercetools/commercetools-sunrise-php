@@ -37,7 +37,7 @@ class CatalogController extends SunriseController
 
     public function home(Request $request)
     {
-        $viewData = $this->getViewData('Sunrise - Home');
+        $viewData = $this->getViewData('Sunrise - Home', $request);
         $viewData->content->banners = new ViewData();
         $viewData->content->banners->bannerOne = new ViewData();
         $viewData->content->banners->bannerOne->first = new ViewLink(
@@ -71,7 +71,7 @@ class CatalogController extends SunriseController
         $uri = new Uri($request->getRequestUri());
         $products = $this->getProducts($request);
 
-        $viewData = $this->getViewData('Sunrise - ProductRepository Overview Page');
+        $viewData = $this->getViewData('Sunrise - ProductRepository Overview Page', $request);
 
         $viewData->content->filterProductsUrl = $this->generateUrl('pop');
         $viewData->content->text = "Women";
@@ -107,7 +107,7 @@ class CatalogController extends SunriseController
         $slug = $request->get('slug');
         $sku = $request->get('sku');
 
-        $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page');
+        $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page', $request);
 
         $product = $this->get('app.repository.product')->getProductBySlug($slug, $this->locale);
         $productData = $this->getProductModel()->getProductDetailData($product, $sku, $this->locale);

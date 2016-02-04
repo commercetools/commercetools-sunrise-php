@@ -75,10 +75,10 @@ class SunriseController extends Controller
         $this->interpolationSuffix = $this->config['i18n.interpolationSuffix'];
     }
 
-    protected function getViewData($title)
+    protected function getViewData($title, Request $request = null)
     {
         $viewData = new ViewData();
-        $viewData->header = $this->getHeaderViewData($title);
+        $viewData->header = $this->getHeaderViewData($title, $request);
         $viewData->meta = $this->getMetaData();
         $viewData->footer = $this->getFooterData();
         $viewData->seo = $this->getSeoData();
@@ -86,10 +86,10 @@ class SunriseController extends Controller
         return $viewData;
     }
 
-    protected function getHeaderViewData($title)
+    protected function getHeaderViewData($title, Request $request = null)
     {
-        $session = $this->get('session');
 
+        $session = $this->get('session');
         $header = new Header($title);
         $header->stores = new Url($this->trans('header.stores'), '');
         $header->help = new Url($this->trans('header.help'), '');
@@ -99,23 +99,34 @@ class SunriseController extends Controller
         );
         $header->location = new ViewData();
         $languages = new ViewDataCollection();
+
+        $routeParams = $request->get('_route_params');
+        $queryParams = \GuzzleHttp\Psr7\parse_query($request->getQueryString());
         foreach ($this->config['languages'] as $language) {
             $languageEntry = new ViewData();
-            $languageEntry->text = $this->trans('header.languages.' . $language);
-            $languageEntry->value = $language;
+            if ($language == \Locale::getPrimaryLanguage($this->locale)) {
+                $languageEntry->selected = true;
+            }
+            $languageEntry->label = $this->trans('header.languages.' . $language);
+            $routeParams['_locale'] = $language;
+            $languageUri = $this->generateUrl($request->get('_route'), $routeParams);
+
+            $uri = new Uri($languageUri);
+            $languageEntry->value = (string)$uri->withQuery(\GuzzleHttp\Psr7\build_query($queryParams));
+
             $languages->add($languageEntry);
         }
         $header->location->language = $languages;
 
-        $countries = new ViewDataCollection();
-        foreach ($this->config['countries'] as $country) {
-            $countryEntry = new ViewData();
-            $countryEntry->text = $this->trans('header.countries.' . $country);
-            $countryEntry->value = $country;
-            $countries->add($countryEntry);
-        }
-
-        $header->location->country = $countries;
+//        $countries = new ViewDataCollection();
+//        foreach ($this->config['countries'] as $country) {
+//            $countryEntry = new ViewData();
+//            $countryEntry->label = $this->trans('header.countries.' . $country);
+//            $countryEntry->value = $country;
+//            $countries->add($countryEntry);
+//        }
+//
+//        $header->location->country = $countries;
         $header->user = new ViewData();
         $header->user->isLoggedIn = false;
         $header->user->signIn = new Url('Login', '');
