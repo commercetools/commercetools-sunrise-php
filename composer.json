@@ -55,11 +55,16 @@
       "type": "package",
       "package": {
         "name": "commercetools/sunrise-design",
-        "version": "0.16.0",
+        "version": "0.51.0",
+        "dist": {
+          "url": "https://github.com/sphereio/commercetools-sunrise-design/archive/de639179c73e5b123786efdae3dc6eb2460e2205.zip",
+          "type": "zip",
+          "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
+        },
         "source": {
-          "url": "https://github.com/sphereio/sphere-sunrise-design",
+          "url": "https://github.com/sphereio/commercetools-sunrise-design/archive/de639179c73e5b123786efdae3dc6eb2460e2205.zip",
           "type": "git",
-          "reference": "gh-pages"
+          "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
         }
       }
     },
