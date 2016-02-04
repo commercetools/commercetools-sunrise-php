@@ -39,6 +39,12 @@
             <argument type="service" id="commercetools.client"/>
             <argument type="service" id="app.extension.profiler" />
         </service>
+        <service id="app.repository.order" class="Commercetools\Sunrise\AppBundle\Repository\OrderRepository">
+            <argument>%app.config%</argument>
+            <argument type="service" id="app.cache" />
+            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.extension.profiler" />
+        </service>
         <service id="app.repository.product_type" class="Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />

@@ -190,7 +190,7 @@ class UserController extends SunriseController
     public function orders(Request $request)
     {
         $viewData = $this->getViewData('MyAccount - Orders');
-        $orders = $this->getOrders($this->getUser()->getId());
+        $orders = $this->get('app.repository.order')->getOrders($this->getUser()->getId());
 
 
         $viewData->content->orderNumberTitle = $this->trans('my-account:orderNumber');
@@ -222,7 +222,10 @@ class UserController extends SunriseController
         // @todo change every title, now it is hardcoded
 
         $viewData = $this->getViewData('MyAccount - Orders');
-        $order = $this->getOrder($orderId);
+        /**
+         * @var Order $order
+         */
+        $order = $this->get('app.repository.order')->getOrder($orderId);
 
 
         if ($order->getCustomerId() !== $this->getUser()->getId()) {
@@ -349,36 +352,5 @@ class UserController extends SunriseController
         $customer = $request->mapResponse($response);
 
         return $customer;
-    }
-
-    protected function getOrders($customerId)
-    {
-        /**
-         * @var Client $client
-         */
-        $client = $this->get('commercetools.client');
-        // @todo enable limit to customer
-        $request = OrderQueryRequest::of()->where('customerId = "' . $customerId . '"');
-        $response = $request->executeWithClient($client);
-        $orders = $request->mapResponse($response);
-
-        return $orders;
-    }
-
-    /**
-     * @param Request $request
-     * @param $orderId
-     * @return Order
-     */
-    protected function getOrder($orderId)
-    {
-        /**
-         * @var Client $client
-         */
-        $client = $this->get('commercetools.client');
-        $request = OrderByIdGetRequest::ofId($orderId);
-        $response = $request->executeWithClient($client);
-        $order = $request->mapResponse($response);
-        return $order;
     }
 }
