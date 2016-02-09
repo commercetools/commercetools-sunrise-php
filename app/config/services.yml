@@ -1,4 +1,3 @@
-#parameter:
 services:
 #  handlebars.helper:
 #      class: JaySDe\HandlebarsBundle\HandlebarsHelper

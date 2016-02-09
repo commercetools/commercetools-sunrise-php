@@ -23,8 +23,6 @@ To run, you need a project on the commercetools platform that contains some mini
  2. create a file `app/config/app.yml` with the following format:
 
 ```yml
-framework:
-  secret: <secret>
 app:
   commercetools:
     client_id: <client_id>

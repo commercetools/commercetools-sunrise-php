@@ -1,4 +1,11 @@
+imports:
+  - { resource: 'security.yml' }
+  - { resource: 'services.yml' }
+  - { resource: 'parameters.yml' }
+  - { resource: 'app_dist.yml' }
+
 framework:
+  secret: "%secret%"
   profiler: { only_exceptions: false }
   templating:
     engines: ['twig', 'handlebars']
@@ -35,7 +42,3 @@ monolog:
       type:   console
       bubble: false
       channels: [!event, !doctrine]
-imports:
-  - { resource: 'security.yml' }
-  - { resource: 'services.yml' }
-  - { resource: 'app_dist.yml' }
