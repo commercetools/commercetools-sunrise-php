@@ -29,5 +29,8 @@
       "description": "The encryption key salt for the client side session cookie",
       "required": false
     }
+  },
+  "scripts": {
+    "postdeploy": "php app/console.php cache:warmup --env prod"
   }
 }

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ebab0750c1769e60209315e23433b010",
-    "content-hash": "152650493817223c4e0efe0d09a3d400",
+    "hash": "779a99d49cb1a1a775670d50f29ad698",
+    "content-hash": "7a98e2907bfa2b0e6ba2bba2bad6ad2b",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -118,7 +118,7 @@
             "version": "0.51.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sphereio/commercetools-sunrise-design/archive/de639179c73e5b123786efdae3dc6eb2460e2205.zip",
+                "url": "https://github.com/sphereio/commercetools-sunrise-design",
                 "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
             },
             "dist": {
@@ -872,16 +872,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "1.1.6",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "e6f80ab77885151908d0ec743689ca700886e8b0"
+                "reference": "b0e69d10852716b2ccbdff69c75c477637220790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/e6f80ab77885151908d0ec743689ca700886e8b0",
-                "reference": "e6f80ab77885151908d0ec743689ca700886e8b0",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b0e69d10852716b2ccbdff69c75c477637220790",
+                "reference": "b0e69d10852716b2ccbdff69c75c477637220790",
                 "shasum": ""
             },
             "require": {
@@ -916,7 +916,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-01-29 16:19:52"
+            "time": "2016-02-06 03:52:05"
         },
         {
             "name": "pimple/pimple",
@@ -2145,16 +2145,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v91",
+            "version": "v92",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "381d12e06534b7d059d42407c96588826d5e4ab4"
+                "reference": "5d0f849ad6f76d7d62fb82036ebf6c4793b1707e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/381d12e06534b7d059d42407c96588826d5e4ab4",
-                "reference": "381d12e06534b7d059d42407c96588826d5e4ab4",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/5d0f849ad6f76d7d62fb82036ebf6c4793b1707e",
+                "reference": "5d0f849ad6f76d7d62fb82036ebf6c4793b1707e",
                 "shasum": ""
             },
             "bin": [
@@ -2185,7 +2185,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2016-01-08 00:59:08"
+            "time": "2016-02-08 23:53:13"
         },
         {
             "name": "instaclick/php-webdriver",
