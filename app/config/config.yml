@@ -1,5 +1,4 @@
 framework:
-  secret: micr0
   profiler: { only_exceptions: false }
   templating:
     engines: ['twig', 'handlebars']

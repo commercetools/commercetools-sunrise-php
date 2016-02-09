@@ -1,12 +1,11 @@
 <?php
 /**
- * @author @ct-jensschulze <jens.schulze@commercetools.de>
+ * @author jayS-de <jens.schulze@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
 use Commercetools\Core\Cache\CacheAdapterInterface;
-use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Model\Product\Facet;
@@ -269,7 +268,7 @@ class CatalogController extends SunriseController
         $facetData->displayList = ($facetConfig['display'] == 'list');
         $facetData->selectFacet = true;
         $facetData->facet = new ViewData();
-        if ($facetConfig['multi'] == true) {
+        if ($facetConfig['multi'] === true) {
             $facetData->facet->multiSelect = $facetConfig['multi'];
         }
         $facetData->facet->available = true;

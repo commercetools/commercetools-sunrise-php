@@ -1,12 +1,11 @@
 <?php
 /**
- * @author: @Ylambers <yaron.lambers@commercetools.de>
+ * @author: Ylambers <yaron.lambers@commercetools.de>
  */
 
 
 namespace Commercetools\Sunrise\AppBundle\Security\User;
 
-use Commercetools\Core\Client;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;

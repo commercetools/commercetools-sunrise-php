@@ -1,6 +1,6 @@
 <?php
 /**
- * @author @Ylambers <yaron.lambers@commercetools.de>
+ * @author Ylambers <yaron.lambers@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Controller;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author @ct-jensschulze <jens.schulze@commercetools.de>
+ * @author jayS-de <jens.schulze@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Service;
@@ -42,7 +42,7 @@ class ClientFactory
      * @param $locale
      * @param $clientCredentials
      * @param $fallbackLanguages
-     * @return static
+     * @return Client
      */
     public function build(
         $locale,

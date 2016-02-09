@@ -1,5 +1,6 @@
 {
   "name": "commercetools/sunrise",
+  "description": "Commercetools Sunrise PHP template shop",
   "type": "project",
   "license": "MIT",
   "homepage": "https://github.com/sphereio/commercetools-sunrise-php",
