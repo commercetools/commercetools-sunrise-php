@@ -1,3 +1,10 @@
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/sphereio/commercetools-sunrise-php/compare/v0.1.0...v0.1.1) (2016-02-09)
+
+* **Facet** refactor category facet
+* **Template** pin to specific template version
+
+
 <a name="0.1.0"></a>
 
 ### Features
