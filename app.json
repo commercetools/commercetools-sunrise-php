@@ -20,14 +20,6 @@
     "SPHERE_PROJECT": {
       "description": "The client secret of your commercetools platform project.",
       "required": true
-    },
-    "SESSION_ENCRYPTION_KEY": {
-      "description": "The encryption key for the client side session cookie",
-      "required": false
-    },
-    "SESSION_ENCRYPTION_KEY_SALT": {
-      "description": "The encryption key salt for the client side session cookie",
-      "required": false
     }
   },
   "scripts": {

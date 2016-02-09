@@ -1,8 +1,8 @@
 imports:
+  - { resource: 'parameters.yml' }
   - { resource: 'security.yml' }
   - { resource: 'services.yml' }
-  - { resource: 'parameters.yml' }
-  - { resource: 'app_dist.yml' }
+  - { resource: 'app.yml' }
 
 framework:
   secret: "%secret%"

@@ -24,7 +24,8 @@
     "monolog/monolog": "^1.7",
     "dcro/secure-client-side-session-handler": "dev-master",
     "sensio/framework-extra-bundle": "^3.0",
-    "symfony/monolog-bundle": "^2.8"
+    "symfony/monolog-bundle": "^2.8",
+    "incenteev/composer-parameter-handler": "^2.0"
   },
   "require-dev": {
     "commercetools/sunrise-scenarios": "dev-behat",
@@ -45,11 +46,25 @@
   },
   "scripts": {
     "assetInstall": [
+      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
       "php app/console.php assets:install web/assets"
     ],
     "post-update-cmd": "@assetInstall",
     "post-install-cmd": "@assetInstall"
+  },
+  "extra": {
+    "incenteev-parameters": [
+      {
+        "file": "app/config/parameters.yml",
+        "env-map": {
+          "secret": "SECRET_TOKEN",
+          "commercetools.client_id": "SPHERE_CLIENT_ID",
+          "commercetools.client_secret": "SPHERE_CLIENT_SECRET",
+          "commercetools.project": "SPHERE_PROJECT"
+        }
+      }
+    ]
   },
   "repositories": [
     {
