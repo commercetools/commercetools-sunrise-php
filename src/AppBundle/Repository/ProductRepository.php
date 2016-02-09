@@ -5,10 +5,6 @@
 
 namespace Commercetools\Sunrise\AppBundle\Repository;
 
-
-use Commercetools\Core\Model\Category\Category;
-use Commercetools\Core\Model\Category\CategoryCollection;
-use Commercetools\Core\Model\Product\Filter;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
 use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;

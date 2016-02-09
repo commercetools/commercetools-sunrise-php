@@ -5,8 +5,6 @@
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
-
-use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Sunrise\AppBundle\Model\Config;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;

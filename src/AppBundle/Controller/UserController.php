@@ -5,8 +5,6 @@
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
-
-use Commercetools\Core\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

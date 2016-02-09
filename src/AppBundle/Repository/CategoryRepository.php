@@ -5,7 +5,6 @@
 
 namespace Commercetools\Sunrise\AppBundle\Repository;
 
-use Commercetools\Core\Client;
 use Commercetools\Core\Request\Categories\CategoryQueryRequest;
 use Commercetools\Sunrise\AppBundle\Model\Repository;
 

@@ -324,7 +324,6 @@ class CatalogController extends SunriseController
              */
             foreach ($categoryData as $category) {
                 $categoryEntry = new ViewData();
-//                $categoryEntry->uri = $category->getId();
                 $categoryEntry->value = $this->generateUrl('category', ['category' => (string)$category->getSlug()]);
                 $categoryEntry->id = (string)$category->getId();
                 $categoryEntry->label = (string)$category->getName();

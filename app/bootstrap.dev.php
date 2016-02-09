@@ -13,7 +13,6 @@ require __DIR__.'/autoload.php';
 
 $kernel = new AppKernel('dev', true);
 $kernel->loadClassCache();
-//$kernel = new AppCache($kernel);
 
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
