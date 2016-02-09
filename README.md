@@ -8,6 +8,8 @@ SUNRISE PHP is a template shopfront implementation that implements a complete on
 
 It aims to focus on being slim, easy to understand and fast, delegating reusabilty into the commons and symfony-components libraries.
 
+Please read the [Changelog](CHANGELOG.md) before updating in any case.
+
 # Prerequisites
 
  * PHP (see the SDK for detailed requirements)
