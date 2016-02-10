@@ -1,7 +1,5 @@
 <?php
 
-namespace Commercetools\Sunrise;
-
 use Commercetools\Sunrise\AppBundle\AppBundle;
 use JaySDe\HandlebarsBundle\HandlebarsBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;

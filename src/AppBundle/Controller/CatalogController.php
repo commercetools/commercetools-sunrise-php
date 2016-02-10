@@ -34,7 +34,7 @@ class CatalogController extends SunriseController
      */
     protected $facets;
 
-    public function home(Request $request)
+    public function homeAction(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Home', $request);
         $viewData->content->banners = new ViewData();
@@ -65,7 +65,7 @@ class CatalogController extends SunriseController
         return $this->render('home.hbs', $viewData->toArray(), $response);
     }
 
-    public function search(Request $request)
+    public function searchAction(Request $request)
     {
         $uri = new Uri($request->getRequestUri());
         $products = $this->getProducts($request);
@@ -101,7 +101,7 @@ class CatalogController extends SunriseController
         return $response;
     }
 
-    public function detail(Request $request)
+    public function detailAction(Request $request)
     {
         $slug = $request->get('slug');
         $sku = $request->get('sku');

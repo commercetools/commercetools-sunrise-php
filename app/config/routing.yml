@@ -1,37 +1,37 @@
 _home:
   path:      /
-  defaults:  { _controller: app.catalog.controller:home }
+  defaults:  { _controller: app.catalog.controller:homeAction }
   methods:  [GET, HEAD]
 home:
   path: /{_locale}/
-  defaults:  { _controller: app.catalog.controller:home }
+  defaults:  { _controller: app.catalog.controller:homeAction }
   methods:  [GET, HEAD]
 pop:
   path: /{_locale}/search/
-  defaults:  { _controller: app.catalog.controller:search }
+  defaults:  { _controller: app.catalog.controller:searchAction }
   methods:  [GET, HEAD]
 pdp-master:
   path: /{_locale}/{slug}.html
-  defaults:  { _controller: app.catalog.controller:detail }
+  defaults:  { _controller: app.catalog.controller:detailAction }
   methods:  [GET, HEAD]
 pdp:
   path: /{_locale}/{slug}/{sku}.html
-  defaults:  { _controller: app.catalog.controller:detail }
+  defaults:  { _controller: app.catalog.controller:detailAction }
   methods:  [GET, HEAD]
 
 myAccount:
   path: /{_locale}/user/secret
-  defaults:  { _controller: app.user.controller:secret }
+  defaults:  { _controller: app.user.controller:secretAction }
   methods:  [GET, HEAD]
 myDetails:
   path: /{_locale}/user/details
-  defaults:  { _controller: app.user.controller:details }
+  defaults:  { _controller: app.user.controller:detailsAction }
   methods:  [GET, HEAD]
 
 
 login_route:
   path: /{_locale}/user/login
-  defaults:  { _controller: app.user.controller:login }
+  defaults:  { _controller: app.user.controller:loginAction }
   methods:  [GET, HEAD, POST]
 login_check:
   path: /{_locale}/login_check
@@ -41,47 +41,42 @@ logout:
 
 checkout:
   path: /{_locale}/checkout
-  defaults:  { _controller: app.cart.controller:checkout }
+  defaults:  { _controller: app.cart.controller:checkoutAction }
 checkoutSignin:
   path: /{_locale}/checkout/signin
-  defaults:  { _controller: app.cart.controller:checkoutSignin }
+  defaults:  { _controller: app.cart.controller:checkoutSigninAction }
 checkoutShipping:
   path: /{_locale}/checkout/shipping
-  defaults:  { _controller: app.cart.controller:checkoutShipping }
+  defaults:  { _controller: app.cart.controller:checkoutShippingAction }
 checkoutPayment:
   path: /{_locale}/checkout/payment
-  defaults:  { _controller: app.cart.controller:checkoutPayment }
+  defaults:  { _controller: app.cart.controller:checkoutPaymentAction }
 checkoutConfirmation:
   path: /{_locale}/checkout/confirmation
-  defaults:  { _controller: app.cart.controller:checkoutConfirmation }
+  defaults:  { _controller: app.cart.controller:checkoutConfirmationAction }
 
 cartAdd:
   path: /{_locale}/cart/add
-  defaults:  { _controller: app.cart.controller:add }
+  defaults:  { _controller: app.cart.controller:addAction }
   methods:  [POST]
 lineItemDelete:
   path: /{_locale}/cart/delete
-  defaults:  { _controller: app.cart.controller:deleteLineItem }
+  defaults:  { _controller: app.cart.controller:deleteLineItemAction }
   methods:  [POST]
 lineItemChange:
   path: /{_locale}/cart/change
-  defaults:  { _controller: app.cart.controller:changeLineItem }
+  defaults:  { _controller: app.cart.controller:changeLineItemAction }
   methods:  [POST]
 cart:
   path: /{_locale}/cart
-  defaults:  { _controller: app.cart.controller:index }
+  defaults:  { _controller: app.cart.controller:indexAction }
   methods:  [GET, HEAD]
 miniCart:
   path: /{_locale}/cart/mini
-  defaults:  { _controller: app.cart.controller:miniCart }
+  defaults:  { _controller: app.cart.controller:miniCartAction }
   methods:  [GET, HEAD]
 
 category:
   path: /{_locale}/{category}/
-  defaults:  { _controller: app.catalog.controller:search }
-  methods:  [GET, HEAD]
-
-random:
-  path: /random/{limit}
-  defaults: { _controller: AppBundle:Micro:random }
+  defaults:  { _controller: app.catalog.controller:searchAction }
   methods:  [GET, HEAD]

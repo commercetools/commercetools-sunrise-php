@@ -18,7 +18,7 @@ class CartController extends SunriseController
 {
     const CSRF_TOKEN_NAME = 'csrfToken';
 
-    public function index(Request $request)
+    public function indexAction(Request $request)
     {
         $session = $this->get('session');
         $viewData = $this->getViewData('Sunrise - Cart', $request);
@@ -34,7 +34,7 @@ class CartController extends SunriseController
         return $this->render('cart.hbs', $viewData->toArray());
     }
 
-    public function add(Request $request)
+    public function addAction(Request $request)
     {
         $session = $this->get('session');
         // TODO: enable if product add form has a csrf token
@@ -63,7 +63,7 @@ class CartController extends SunriseController
         return new RedirectResponse($redirectUrl);
     }
 
-    public function miniCart(Request $request)
+    public function miniCartAction(Request $request)
     {
         $viewData = $this->getHeaderViewData('MiniCart', $request);
         $viewData->meta = $this->getMetaData();
@@ -77,7 +77,7 @@ class CartController extends SunriseController
         return $response;
     }
 
-    public function changeLineItem(Request $request)
+    public function changeLineItemAction(Request $request)
     {
         if (!$this->validateCsrfToken(static::CSRF_TOKEN_FORM, $request->get(static::CSRF_TOKEN_NAME))) {
             throw new \InvalidArgumentException('CSRF Token invalid');
@@ -95,7 +95,7 @@ class CartController extends SunriseController
         return new RedirectResponse($this->generateUrl('cart'));
     }
 
-    public function deleteLineItem(Request $request)
+    public function deleteLineItemAction(Request $request)
     {
         $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
@@ -108,7 +108,7 @@ class CartController extends SunriseController
         return new RedirectResponse($this->generateUrl('cart'));
     }
 
-    public function checkout(Request $request)
+    public function checkoutAction(Request $request)
     {
         $session = $this->get('session');
         $userId = $session->get('userId');
@@ -119,25 +119,25 @@ class CartController extends SunriseController
         return $this->checkoutShipping($request);
     }
 
-    public function checkoutSignin(Request $request)
+    public function checkoutSigninAction(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Signin', $request);
         return $this->render('checkout-signin.hbs', $viewData->toArray());
     }
 
-    public function checkoutShipping(Request $request)
+    public function checkoutShippingAction(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Shipping', $request);
         return $this->render('checkout-shipping.hbs', $viewData->toArray());
     }
 
-    public function checkoutPayment(Request $request)
+    public function checkoutPaymentAction(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Payment', $request);
         return $this->render('checkout-payment.hbs', $viewData->toArray());
     }
 
-    public function checkoutConfirmation(Request $request)
+    public function checkoutConfirmationAction(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Confirmation', $request);
         return $this->render('checkout-confirmation.hbs', $viewData->toArray());

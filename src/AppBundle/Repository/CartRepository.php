@@ -90,8 +90,7 @@ class CartRepository extends Repository
             $this->profiler->enter($profile = new Profile('addLineItem'));
             $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
             if ($cartResponse->isError()) {
-                var_dump((string)$cartResponse->getBody());
-                exit;
+                throw new \InvalidArgumentException();
             }
             $this->profiler->leave($profile);
             $cart = $cartUpdateRequest->mapResponse($cartResponse);

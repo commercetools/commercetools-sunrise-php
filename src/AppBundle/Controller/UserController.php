@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends SunriseController
 {
-    public function login(Request $request)
+    public function loginAction(Request $request)
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             return new RedirectResponse($this->generateUrl('myAccount'));
@@ -27,12 +27,12 @@ class UserController extends SunriseController
         return $this->render('my-account-login.hbs', $viewData->toArray());
     }
 
-    public function secret(Request $request)
+    public function secretAction(Request $request)
     {
         return new Response('Top secret');
     }
 
-    public function details(Request $request)
+    public function detailsAction(Request $request)
     {
 
         $viewData = $this->getViewData('MyAccount - Details', $request);

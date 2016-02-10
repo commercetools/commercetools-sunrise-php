@@ -11,7 +11,7 @@ define('PROJECT_DIR', dirname(__DIR__));
 
 require __DIR__.'/autoload.php';
 
-$kernel = new AppKernel('dev', true);
+$kernel = new \AppKernel('dev', true);
 $kernel->loadClassCache();
 
 $request = Request::createFromGlobals();
