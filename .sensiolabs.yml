@@ -1,6 +1,6 @@
 exclude_patterns:
-  - web/app_*.php
-  - app/bootstrap_*.php
+  - web/app*.php
+  - app/bootstrap*.php
 
 rules:
   git.user_specific_ignored_file:
