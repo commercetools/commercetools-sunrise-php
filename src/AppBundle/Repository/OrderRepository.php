@@ -1,12 +1,10 @@
 <?php
 /**
- * @author: @Ylambers <yaron.lambers@commercetools.de>
+ * @author: Ylambers <yaron.lambers@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Repository;
 
-
-use Commercetools\Core\Client;
 use Commercetools\Core\Model\Order\Order;
 use Commercetools\Core\Model\Order\OrderCollection;
 use Commercetools\Core\Request\Orders\OrderByIdGetRequest;

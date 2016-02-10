@@ -31,20 +31,7 @@ class UserController extends SunriseController
         $customer = $this->getCustomer($this->getUser());
         $address = $customer->getDefaultShippingAddress();
 
-        $userAddress = new UserAddress();
-        $userAddress->setFirstName($address->getFirstName());
-        $userAddress->setLastName($address->getLastName());
-        $userAddress->setCompany($address->getCompany());
-        $userAddress->setEmail($customer->getEmail());
-        $userAddress->setTitle($customer->getTitle());
-
-        $userAddress->setStreetName($address->getStreetName());
-        $userAddress->setStreetNumber($address->getStreetNumber());
-        $userAddress->setPostalCode($address->getPostalCode());
-        $userAddress->setCity($address->getCity());
-        $userAddress->setRegion($address->getRegion());
-        $userAddress->setCountry($address->getCountry());
-        $userAddress->setPhone($address->getPhone());
+        $userAddress = UserAddress::ofAddress($address);
 
         $form = $this->createFormBuilder($userAddress)
             ->add('firstName', TextType::class)
@@ -69,19 +56,7 @@ class UserController extends SunriseController
              * @var UserAddress $formAddress
              */
             $formAddress = $form->getData();
-            $newAddress = Address::of();
-            $newAddress->setFirstName($formAddress->getFirstName());
-            $newAddress->setLastName($formAddress->getLastName());
-            $newAddress->setCompany($formAddress->getCompany());
-            $newAddress->setEmail($formAddress->getEmail());
-            $newAddress->setTitle($formAddress->getTitle());
-            $newAddress->setStreetName($formAddress->getStreetName());
-            $newAddress->setStreetNumber($formAddress->getStreetNumber());
-            $newAddress->setPostalCode($formAddress->getPostalCode());
-            $newAddress->setCity($formAddress->getCity());
-            $newAddress->setRegion($formAddress->getRegion());
-            $newAddress->setCountry($formAddress->getCountry());
-            $newAddress->setPhone($formAddress->getPhone());
+            $newAddress = $formAddress->toCTPAddress();
 
             $request = CustomerUpdateRequest::ofIdAndVersion($customer->getId(), $customer->getVersion());
             $request->addAction(CustomerChangeAddressAction::ofAddressIdAndAddress($address->getId(), $newAddress));
@@ -129,6 +104,7 @@ class UserController extends SunriseController
         $viewData = $this->getViewData('MyAccount - Details', $request);
 
         $customer = $this->getCustomer($this->getUser());
+        $address = $customer->getDefaultShippingAddress();
 
         $viewData->content->personalDetails = new ViewData();
         $viewData->content->personalDetails->name = $customer->getFirstName() . ' ' . $customer->getLastName();
