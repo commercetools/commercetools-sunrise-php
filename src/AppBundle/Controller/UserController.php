@@ -120,41 +120,27 @@ class UserController extends SunriseController
 
         $customer = $this->getCustomer($this->getUser());
 
-        $shippingAddressData = $customer->getDefaultShippingAddress();
-        $billingAddressData = $customer->getDefaultBillingAddress();
-
-
-        $shippingAddress = new ViewData();
-        $billingAddress = new ViewData();
-
-        $billingAddress->name = $billingAddressData->getFirstName() . ' ' . $billingAddressData->getLastName();
-        //adress query
-        $billingAddress->address = $billingAddressData->getCity() . ' ' . $billingAddressData->getPostalCode();
-        $billingAddress->address = $billingAddressData->getStreetName() . ' ' .
-            $billingAddressData->getStreetNumber() . ' ';
-        $billingAddress->postalCode = $billingAddressData->getPostalCode() . ' ' . $billingAddressData->getCity();
-        $billingAddress->country = $billingAddressData->getCountry();
-        $billingAddress->compay = $billingAddressData->getCompany();
-
-
-        $shippingAddress->title = $shippingAddressData->getTitle();
-        $shippingAddress->name = $shippingAddressData->getFirstName() . ' ' . $shippingAddressData->getLastName();
-
-        //adress query
-        $shippingAddress->address = $shippingAddressData->getCity() . ' ' . $shippingAddressData->getPostalCode();
-        $shippingAddress->address = $shippingAddressData->getStreetName() . ' ' .
-            $shippingAddressData->getStreetNumber() . ' ';
-        $shippingAddress->postalCode = $shippingAddressData->getPostalCode() . ' ' . $shippingAddressData->getCity();
-        $shippingAddress->country = $shippingAddressData->getCountry();
-
-        $viewData->content->shippingAddress = $shippingAddress;
-        $viewData->content->billingAddress = $billingAddress;
+        $viewData->content->shippingAddress = $this->getViewAddress($customer->getDefaultShippingAddress());
+        $viewData->content->billingAddress = $this->getViewAddress($customer->getDefaultBillingAddress());;
 
         return $this->render('my-account-address-book.hbs', $viewData->toArray());
 
     }
 
+    protected function getViewAddress(Address $address)
+    {
+        $viewAddress = new ViewData();
 
+        $viewAddress->name = $address->getFirstName() . ' ' . $address->getLastName();
+        $viewAddress->address = $address->getCity() . ' ' . $address->getPostalCode();
+        $viewAddress->address = $address->getStreetName() . ' ' . $address->getStreetNumber() . ' ';
+        $viewAddress->postalCode = $address->getPostalCode() . ' ' . $address->getCity();
+        $viewAddress->country = $address->getCountry();
+        $viewAddress->compay = $address->getCompany();
+
+        return $viewAddress;
+    }
+    
     public function ordersAction(Request $request)
     {
         $viewData = $this->getViewData('MyAccount - Orders');
@@ -200,12 +186,19 @@ class UserController extends SunriseController
             throw new AccessDeniedException();
         }
 
-        $viewData->content->yourOrderTitle = $this->trans('Your Order Details');
-        $viewData->content->orderNumberTitle = $this->trans('Order number');
-        $viewData->content->orderNumber = $order->getOrderNumber();
-        $viewData->content->orderDateTitle = $this->trans('Order date');
-        $viewData->content->orderDate = $order->getCreatedAt()->format('d.m.Y');
-        $viewData->content->printReceiptBtn = $this->trans('print receipt');
+        $this->addOrderDetails($viewData->content, $order);
+
+        return $this->render('my-account-my-orders-order.hbs', $viewData->toArray());
+    }
+
+    protected function addOrderDetails($content, Order $order)
+    {
+        $content->yourOrderTitle = $this->trans('Your Order Details');
+        $content->orderNumberTitle = $this->trans('Order number');
+        $content->orderNumber = $order->getOrderNumber();
+        $content->orderDateTitle = $this->trans('Order date');
+        $content->orderDate = $order->getCreatedAt()->format('d.m.Y');
+        $content->printReceiptBtn = $this->trans('print receipt');
 
         $shippingAddress = $order->getShippingAddress();
         $shippingAddressData = new ViewData();
@@ -220,7 +213,7 @@ class UserController extends SunriseController
         $shippingAddressData->number = $shippingAddress->getPhone();
         $shippingAddressData->email = $shippingAddress->getEmail();
 
-        $viewData->content->shippingAddress = $shippingAddressData;
+        $content->shippingAddress = $shippingAddressData;
 
 
         $billingAddress = $order->getBillingAddress();
@@ -237,14 +230,14 @@ class UserController extends SunriseController
         $billingAddressData->number = $billingAddress->getPhone();
         $billingAddressData->email = $billingAddress->getEmail();
 
-        $viewData->content->billingAddress = $billingAddressData;
+        $content->billingAddress = $billingAddressData;
 
         $shippingMethod = $order->getShippingInfo();
         $shippingMethodData = new ViewData();
         $shippingMethodData->title = $this->trans('Shipping Method');
         if (!is_null($shippingMethod)) {
             $shippingMethodData->text = $this->trans($shippingMethod->getShippingMethodName(), [], 'orders');
-            $viewData->content->shippingMethod = $shippingMethodData;
+            $content->shippingMethod = $shippingMethodData;
         }
 
         //@todo activate PAYMENT DETAILS, NOTE: not working properly
@@ -255,25 +248,25 @@ class UserController extends SunriseController
 //        $viewData->content->paymentDetails = $paymentDetails;
 
         //@todo check if the prices are right!!
-        $viewData->content->Code = $order->getDiscountCodes()->toArray();
-        $viewData->content->subtotal = $order->getTaxedPrice()->getTotalNet();
+        $content->Code = $order->getDiscountCodes()->toArray();
+        $content->subtotal = $order->getTaxedPrice()->getTotalNet();
 
-        $viewData->content->orderDiscountTitle = $this->trans('Order discount');
-        $viewData->content->standartDeliveryTitle = $this->trans('Standard Delivery');
+        $content->orderDiscountTitle = $this->trans('Order discount');
+        $content->standartDeliveryTitle = $this->trans('Standard Delivery');
 
         //@todo prices of orderdiscount and standartdelivery are not right yet
 
-        $viewData->promoCode = $order->getDiscountCodes();
+        $content->promoCode = $order->getDiscountCodes();
 
 //        $viewData->content->orderDiscount = $order->getTotalPrice();
 
-        $viewData->content->salesTaxTitle = $this->trans('Sales Tax');
-        $viewData->content->orderTotalTitle = $this->trans('Order Total');
+        $content->salesTaxTitle = $this->trans('Sales Tax');
+        $content->orderTotalTitle = $this->trans('Order Total');
         if ($order->getShippingInfo()) {
-            $viewData->content->standartDelivery = $order->getShippingInfo()->getPrice();
+            $content->standartDelivery = $order->getShippingInfo()->getPrice();
         }
-        $viewData->content->orderTotal = $order->getTotalPrice();
-        $viewData->content->salesTax = Money::ofCurrencyAndAmount(
+        $content->orderTotal = $order->getTotalPrice();
+        $content->salesTax = Money::ofCurrencyAndAmount(
             $order->getTaxedPrice()->getTotalGross()->getCurrencyCode(),
             $order->getTaxedPrice()->getTotalGross()->getCentAmount()
             - $order->getTaxedPrice()->getTotalNet()->getCentAmount()
@@ -281,7 +274,7 @@ class UserController extends SunriseController
 
         $lineItems = $order->getLineItems();
 
-        $viewData->content->order = new ViewDataCollection();
+        $content->order = new ViewDataCollection();
         foreach ($lineItems as $lineItem) {
             $variant = $lineItem->getVariant();
 
@@ -297,10 +290,9 @@ class UserController extends SunriseController
             $lineItemsData->price = (string)$price->getValue();
             $lineItemsData->productTitleOne = $lineItem->getName();
             $lineItemsData->sku = $lineItem->getVariant()->getSku();
-            $viewData->content->order->add($lineItemsData);
+            $content->order->add($lineItemsData);
         }
-            $viewData->content->productDescriptionTitle = $this->trans('Product Description');
-        return $this->render('my-account-my-orders-order.hbs', $viewData->toArray());
+        $content->productDescriptionTitle = $this->trans('Product Description');
     }
 
     protected function getCustomer(CTPUser $user)

@@ -73,20 +73,20 @@ class CatalogController extends SunriseController
         $viewData = $this->getViewData('Sunrise - ProductRepository Overview Page', $request);
 
         $viewData->content->filterProductsUrl = $this->generateUrl('pop');
-        $viewData->content->text = "Women";
-        $viewData->content->banner = new ViewData();
-        $viewData->content->banner->text = "Women";
-        $viewData->content->banner->description = "Lorem dolor deserunt debitis voluptatibus odio id animi voluptates alias eum adipisci laudantium iusto totam quibusdam modi quo! Consectetur.";
-        $viewData->content->banner->imageMobile = "/assets/img/banner_mobile.jpg";
-        $viewData->content->banner->imageDesktop = "/assets/img/banner_desktop.jpg";
-        $viewData->jumboTron = new ViewData();
-        $viewData->content->products = new ViewData();
-        $viewData->content->products->list = new ViewDataCollection();
-        $viewData->content->facets = $this->getFiltersData($uri, $request);
+
+        $category = $this->getCategory($request);
+        if ($category) {
+            $viewData->content->text = (string)$category->getName();
+            $viewData->content->banner = $this->getBannerContent();
+        }
 
         $query = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
         $viewData->content->displaySelector = $this->getDisplayContent($uri, $query, $this->getItemsPerPage($request));
         $viewData->content->sortSelector = $this->getSortData($uri, $query, $this->getSort($request, 'sunrise.products.sort'));
+        $viewData->content->facets = $this->getFiltersData($uri, $category);
+
+        $viewData->content->products = new ViewData();
+        $viewData->content->products->list = new ViewDataCollection();
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
                 $this->getProductModel()->getProductOverviewData($product, $product->getMasterVariant(), $this->locale)
@@ -113,6 +113,16 @@ class CatalogController extends SunriseController
         $viewData->content->product = $productData;
 
         return $this->render('pdp.hbs', $viewData->toArray());
+    }
+
+    protected function getBannerContent()
+    {
+        $banner = new ViewData();
+        $banner->description = "Lorem dolor deserunt debitis voluptatibus odio id animi voluptates alias eum adipisci laudantium iusto totam quibusdam modi quo! Consectetur.";
+        $banner->imageMobile = "/assets/img/banner_mobile.jpg";
+        $banner->imageDesktop = "/assets/img/banner_desktop.jpg";
+
+        return $banner;
     }
 
     protected function getSortData(UriInterface $uri, $query, $currentSort)
@@ -178,12 +188,12 @@ class CatalogController extends SunriseController
         return $facetDefinitions;
     }
 
-    protected function getFiltersData(UriInterface $searchUri, Request $request)
+    protected function getFiltersData(UriInterface $searchUri, Category $category = null)
     {
         $filter = new ViewData();
         $filter->url = $searchUri->getPath();
         $filter->list = new ViewDataCollection();
-        $filter->list->add($this->getCategoriesFacet($this->getCategory($request), new Uri($request->getRequestUri())));
+        $filter->list->add($this->getCategoriesFacet($category, $searchUri));
         $facetConfigs = $this->config->get('sunrise.products.facets');
 
         $queryParams = \GuzzleHttp\Psr7\parse_query($searchUri->getQuery());
@@ -419,15 +429,13 @@ class CatalogController extends SunriseController
     }
 
 
-    protected function getFilters(Request $request)
+    protected function getFilters(UriInterface $uri, Category $category = null)
     {
         $filters = [];
 
         $facetConfigs = $this->config->get('sunrise.products.facets');
-        $uri = new Uri($request->getRequestUri());
         $queryParams = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
 
-        $category = $this->getCategory($request);
         if ($category instanceof Category) {
             $filters['filter'][] = Filter::of()->setName('categories.id')->setValue($category->getId());
         }
@@ -460,8 +468,9 @@ class CatalogController extends SunriseController
         return $filters;
     }
 
-    protected function getProducts(Request $request)
+    protected function getProducts(Request $request, Category $category = null)
     {
+        $uri = new Uri($request->getRequestUri());
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('currencies.'. $country);
         $itemsPerPage = $this->getItemsPerPage($request);
@@ -478,11 +487,11 @@ class CatalogController extends SunriseController
             $sort,
             $currency,
             $country,
-            $this->getFilters($request),
+            $this->getFilters($uri, $category),
             $this->getFacetDefinitions()
         );
 
-        $this->applyPagination(new Uri($request->getRequestUri()), $offset, $total, $itemsPerPage);
+        $this->applyPagination($uri, $offset, $total, $itemsPerPage);
         $this->pagination->currentPage = $products->count(); // @todo this is actually the count of products
         $this->pagination->totalPages = $total; // @todo this is actually the total count of products
         $this->facets = $facets;
