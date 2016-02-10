@@ -9,8 +9,10 @@ security:
 #            password: yaron
 #            roles: 'ROLE_USER'
   access_control:
-  - { path: user/secret, roles: ROLE_USER }
-  - { path: user/details, roles: ROLE_USER }
+  - { path: user/, roles: ROLE_USER }
+#  - { path: ^/{_locale}/user/details, roles: ROLE_USER }
+#  - { path: user/addresses, roles: ROLE_USER }
+#  - { path: user/address/edit, roles: ROLE_USER }
   encoders:
     Symfony\Component\Security\Core\User\User: plaintext
     Commercetools\Sunrise\AppBundle\Security\User\CTPUser: plaintext
