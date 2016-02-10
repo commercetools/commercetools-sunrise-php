@@ -40,7 +40,11 @@ class AppKernel extends Kernel
 
     public function configureRoutes(RouteCollectionBuilder $routes)
     {
-        $routes->import(__DIR__ . '/config/routing.yml');
+        $file = 'routing.yml';
+        if ($this->getEnvironment() === 'dev') {
+            $file = 'routing_dev.yml';
+        }
+        $routes->import(__DIR__ . '/config/' . $file);
         // import the WebProfilerRoutes, only if the bundle is enabled
         if (isset($this->bundles['WebProfilerBundle'])) {
             $routes->mount('/_wdt', $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml'));

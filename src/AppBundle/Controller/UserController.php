@@ -68,8 +68,8 @@ class UserController extends SunriseController
             $response = $request->executeWithClient($client);
 
             $newCustomer = $request->mapResponse($response);
-
-            return new response('User has bin updated!');
+            $this->addFlash('notice', $this->trans('User has been updated!'));
+            return $this->redirect($this->generateUrl('myAdressBook'));
         }
 
         return $this->render('editAddress.html.twig', array(
@@ -116,7 +116,7 @@ class UserController extends SunriseController
 
     public function addressesAction(Request $request)
     {
-        $viewData = $this->getViewData('MyAccount - Details');
+        $viewData = $this->getViewData('MyAccount - Details', $request);
 
         $customer = $this->getCustomer($this->getUser());
 
@@ -140,10 +140,10 @@ class UserController extends SunriseController
 
         return $viewAddress;
     }
-    
+
     public function ordersAction(Request $request)
     {
-        $viewData = $this->getViewData('MyAccount - Orders');
+        $viewData = $this->getViewData('MyAccount - Orders', $request);
         $orders = $this->get('app.repository.order')->getOrders($this->getUser()->getId());
 
 
@@ -175,7 +175,7 @@ class UserController extends SunriseController
     {
         // @todo change every title, now it is hardcoded
 
-        $viewData = $this->getViewData('MyAccount - Orders');
+        $viewData = $this->getViewData('MyAccount - Orders', $request);
         /**
          * @var Order $order
          */

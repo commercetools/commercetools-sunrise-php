@@ -7,7 +7,6 @@ namespace Commercetools\Sunrise\AppBundle\Entity;
 
 
 use Commercetools\Core\Model\Common\Address;
-use Commercetools\Core\Model\Customer\Customer;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
