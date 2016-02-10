@@ -42,18 +42,23 @@ logout:
 checkout:
   path: /{_locale}/checkout
   defaults:  { _controller: app.cart.controller:checkoutAction }
+  methods:  [GET, HEAD, POST]
 checkoutSignin:
   path: /{_locale}/checkout/signin
   defaults:  { _controller: app.cart.controller:checkoutSigninAction }
+  methods:  [GET, HEAD, POST]
 checkoutShipping:
   path: /{_locale}/checkout/shipping
   defaults:  { _controller: app.cart.controller:checkoutShippingAction }
+  methods:  [GET, HEAD, POST]
 checkoutPayment:
   path: /{_locale}/checkout/payment
   defaults:  { _controller: app.cart.controller:checkoutPaymentAction }
+  methods:  [GET, HEAD, POST]
 checkoutConfirmation:
   path: /{_locale}/checkout/confirmation
   defaults:  { _controller: app.cart.controller:checkoutConfirmationAction }
+  methods:  [GET, HEAD, POST]
 
 cartAdd:
   path: /{_locale}/cart/add

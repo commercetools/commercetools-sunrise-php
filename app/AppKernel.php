@@ -50,7 +50,8 @@ class AppKernel extends Kernel
 
     public function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config.yml');
+
+        $loader->load(__DIR__.'/config/config_' . $this->getEnvironment() . '.yml');
         if (!empty(getenv('SECRET_TOKEN'))) {
             $c->setParameter('kernel.secret', getenv('SECRET_TOKEN'));
         }

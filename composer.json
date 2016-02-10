@@ -47,6 +47,7 @@
     "assetInstall": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
+      "cp -rf vendor/commercetools/sunrise-design/assets/img/favicon.ico web/favicon.ico",
       "php app/console.php assets:install web/assets"
     ],
     "post-update-cmd": "@assetInstall",
