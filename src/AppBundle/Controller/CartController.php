@@ -37,10 +37,7 @@ class CartController extends SunriseController
     public function addAction(Request $request)
     {
         $session = $this->get('session');
-        // TODO: enable if product add form has a csrf token
-//        if (!$this->validateCsrfToken(static::CSRF_TOKEN_FORM, $request->get(static::CSRF_TOKEN_NAME))) {
-//            throw new \InvalidArgumentException('CSRF Token invalid');
-//        }
+
         $productId = $request->get('productId');
         $variantId = (int)$request->get('variantId');
         $quantity = (int)$request->get('quantity');
@@ -79,9 +76,6 @@ class CartController extends SunriseController
 
     public function changeLineItemAction(Request $request)
     {
-        if (!$this->validateCsrfToken(static::CSRF_TOKEN_FORM, $request->get(static::CSRF_TOKEN_NAME))) {
-            throw new \InvalidArgumentException('CSRF Token invalid');
-        }
         $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
         $lineItemCount = (int)$request->get('quantity');
@@ -113,10 +107,10 @@ class CartController extends SunriseController
         $session = $this->get('session');
         $userId = $session->get('userId');
         if (is_null($userId)) {
-            return $this->checkoutSignin($request);
+            return $this->checkoutSigninAction($request);
         }
 
-        return $this->checkoutShipping($request);
+        return $this->checkoutShippingAction($request);
     }
 
     public function checkoutSigninAction(Request $request)

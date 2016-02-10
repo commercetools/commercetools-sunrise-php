@@ -60,9 +60,7 @@ class CatalogController extends SunriseController
             $this->generateUrl('category', ['category' => 'accessories-women-sunglasses'])
         );
 
-        $response = new Response();
-        $response->setPublic();
-        return $this->render('home.hbs', $viewData->toArray(), $response);
+        return $this->render('home.hbs', $viewData->toArray(), $this->getCachableResponse());
     }
 
     public function searchAction(Request $request)
@@ -97,7 +95,7 @@ class CatalogController extends SunriseController
         /**
          * @var callable $renderer
          */
-        $response = $this->render('pop.hbs', $viewData->toArray());
+        $response = $this->render('pop.hbs', $viewData->toArray(), $this->getCachableResponse());
         return $response;
     }
 
@@ -112,7 +110,7 @@ class CatalogController extends SunriseController
         $productData = $this->getProductModel()->getProductDetailData($product, $sku, $this->locale);
         $viewData->content->product = $productData;
 
-        return $this->render('pdp.hbs', $viewData->toArray());
+        return $this->render('pdp.hbs', $viewData->toArray(), $this->getCachableResponse());
     }
 
     protected function getBannerContent()
@@ -492,8 +490,6 @@ class CatalogController extends SunriseController
         );
 
         $this->applyPagination($uri, $offset, $total, $itemsPerPage);
-        $this->pagination->currentPage = $products->count(); // @todo this is actually the count of products
-        $this->pagination->totalPages = $total; // @todo this is actually the total count of products
         $this->facets = $facets;
 
         return $products;
@@ -531,5 +527,14 @@ class CatalogController extends SunriseController
         );
 
         return $model;
+    }
+
+    protected function getCachableResponse()
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setSharedMaxAge(60);
+
+        return $response;
     }
 }
