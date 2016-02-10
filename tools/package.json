@@ -1,0 +1,12 @@
+{
+  "name": "commercetools-sunrise-php-changelog",
+  "version": "0.1.1",
+  "description": "Commercetools Sunrise PHP changelog generator",
+  "homepage": "https://github.com/sphereio/commercetools-sunrise-php",
+  "bugs": "https://github.com/sphereio/commercetools-sunrise-php/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sphereio/commercetools-sunrise-php.git"
+  }
+}

@@ -1,6 +1,11 @@
+imports:
+  - { resource: 'parameters.yml' }
+  - { resource: 'security.yml' }
+  - { resource: 'services.yml' }
+  - { resource: 'app.yml' }
+
 framework:
-  secret: micr0
-  profiler: { only_exceptions: false }
+  secret: "%secret%"
   templating:
     engines: ['twig', 'handlebars']
   form: ~
@@ -10,6 +15,7 @@ framework:
   esi: { enabled: true }
   fragments: ~
   session:
+    name: sunrise_session
     save_path: ~
   translator:
     paths:
@@ -26,17 +32,3 @@ handlebars:
     esi: JaySDe\HandlebarsBundle\HandlebarsHelper::esi
     i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
     json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
-monolog:
-  handlers:
-    main:
-      type: stream
-      path: %kernel.logs_dir%/%kernel.environment%.log
-      level: debug
-      channels: [!event]
-    console:
-      type:   console
-      bubble: false
-      channels: [!event, !doctrine]
-imports:
-  - { resource: 'security.yml' }
-  - { resource: 'app_dist.yaml' }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author @Ylambers <yaron.lambers@commercetools.de>
+ * @author Ylambers <yaron.lambers@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
@@ -9,32 +9,24 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Common\Address;
 use Commercetools\Core\Model\Common\Money;
-use Commercetools\Core\Model\Customer\Customer;
 use Commercetools\Core\Model\Order\Order;
-use Commercetools\Core\Request\Carts\CartQueryRequest;
 use Commercetools\Core\Request\Customers\Command\CustomerChangeAddressAction;
 use Commercetools\Core\Request\Customers\CustomerByIdGetRequest;
 use Commercetools\Core\Request\Customers\CustomerUpdateRequest;
-use Commercetools\Core\Request\Orders\OrderByIdGetRequest;
-use Commercetools\Core\Request\Orders\OrderQueryRequest;
 use Commercetools\Sunrise\AppBundle\Entity\UserAddress;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Security\User\CTPUser;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserController extends SunriseController
 {
-    public function editAddress(Request $request)
+    public function editAddressAction(Request $request)
     {
         $customer = $this->getCustomer($this->getUser());
         $address = $customer->getDefaultShippingAddress();
@@ -110,12 +102,12 @@ class UserController extends SunriseController
         ));
     }
 
-    public function login(Request $request)
+    public function loginAction(Request $request)
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             return new RedirectResponse($this->generateUrl('myAccount'));
         }
-        $viewData = $this->getViewData('MyAccount - Login');
+        $viewData = $this->getViewData('MyAccount - Login', $request);
         $authUtils = $this->get('security.authentication_utils');
         // get the login error if there is one
         $error = $authUtils->getLastAuthenticationError();
@@ -126,15 +118,15 @@ class UserController extends SunriseController
         return $this->render('my-account-login.hbs', $viewData->toArray());
     }
 
-    public function secret(Request $request)
+    public function secretAction(Request $request)
     {
         return new Response('Top secret');
     }
 
-    public function details(Request $request)
+    public function detailsAction(Request $request)
     {
 
-        $viewData = $this->getViewData('MyAccount - Details');
+        $viewData = $this->getViewData('MyAccount - Details', $request);
 
         $customer = $this->getCustomer($this->getUser());
 
@@ -146,7 +138,7 @@ class UserController extends SunriseController
         return $this->render('my-account-personal-details.hbs', $viewData->toArray());
     }
 
-    public function addresses(Request $request)
+    public function addressesAction(Request $request)
     {
         $viewData = $this->getViewData('MyAccount - Details');
 
@@ -187,7 +179,7 @@ class UserController extends SunriseController
     }
 
 
-    public function orders(Request $request)
+    public function ordersAction(Request $request)
     {
         $viewData = $this->getViewData('MyAccount - Orders');
         $orders = $this->get('app.repository.order')->getOrders($this->getUser()->getId());
@@ -217,7 +209,7 @@ class UserController extends SunriseController
     }
 
 
-    public function orderDetail(Request $request, $orderId)
+    public function orderDetailAction(Request $request, $orderId)
     {
         // @todo change every title, now it is hardcoded
 

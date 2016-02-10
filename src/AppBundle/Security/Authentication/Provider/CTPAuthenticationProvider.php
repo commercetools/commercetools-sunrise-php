@@ -1,20 +1,16 @@
 <?php
 /**
- * @author: @Ylambers <yaron.lambers@commercetools.de>
+ * @author: Ylambers <yaron.lambers@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Security\Authentication\Provider;
 
 
-use Commercetools\Core\Client;
-use Commercetools\Core\Model\Customer\CustomerSigninResult;
 use Commercetools\Core\Request\Customers\CustomerLoginRequest;
 use Commercetools\Sunrise\AppBundle\Service\ClientFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -25,7 +21,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class CTPAuthenticationProvider extends UserAuthenticationProvider
 {
-    private $encoderFactory;
     private $userProvider;
     private $clientFactory;
     private $session;
@@ -36,12 +31,10 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
         UserProviderInterface $userProvider,
         UserCheckerInterface $userChecker,
         $providerKey,
-        EncoderFactoryInterface $encoderFactory,
         $hideUserNotFoundExceptions = true
     )
     {
         parent::__construct($userChecker, $providerKey, $hideUserNotFoundExceptions);
-        $this->encoderFactory = $encoderFactory;
         $this->userProvider = $userProvider;
         $this->clientFactory = $clientFactory;
         $this->session = $session;
@@ -54,8 +47,6 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
     protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
     {
         $currentUser = $token->getUser();
-
-
 
         if ($currentUser instanceof UserInterface) {
             if ($currentUser->getPassword() !== $user->getPassword()) {
@@ -94,8 +85,6 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
             return $user;
         }
 
-
-
         try {
             $user = $this->userProvider->loadUserByUsername($username);
 
@@ -110,5 +99,4 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
             throw new AuthenticationServiceException($repositoryProblem->getMessage(), $token, 0, $repositoryProblem);
         }
     }
-
 }

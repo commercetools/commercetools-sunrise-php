@@ -3,10 +3,6 @@
  * @author @jayS-de <jens.schulze@commercetools.de>
  */
 
-
-namespace Commercetools\Sunrise;
-
-
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 
 class AppCache extends HttpCache

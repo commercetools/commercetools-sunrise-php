@@ -11,3 +11,4 @@ app.yaml
 selenium*.jar
 .vagrant
 app/logs
+parameters.yml
