@@ -4,12 +4,12 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1f8c48224ff4555d1cecea05fe470094",
-    "content-hash": "5716b7abb6067ad5cc0aa67452f12728",
+    "hash": "b32e0f3f0bee77d55c209a0c061b1427",
+    "content-hash": "3e9bdefd0da62db1fc2d3ed2dec7a5d1",
     "packages": [
         {
             "name": "commercetools/commons",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-commons.git",
@@ -128,49 +128,6 @@
                 "shasum": null
             },
             "type": "library"
-        },
-        {
-            "name": "dcro/secure-client-side-session-handler",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dcro/php-secure-client-side-sessions.git",
-                "reference": "1b0e48de06f15fee869870707c39585e3158c2b3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dcro/php-secure-client-side-sessions/zipball/1b0e48de06f15fee869870707c39585e3158c2b3",
-                "reference": "1b0e48de06f15fee869870707c39585e3158c2b3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "SecureClientSideSessionHandler": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Dan Cotora",
-                    "email": "d@bluevision.ro",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Securely store PHP session information on the client side using cookies (session data is encrypted & compressed)",
-            "keywords": [
-                "client",
-                "cookie",
-                "secure",
-                "session"
-            ],
-            "time": "2014-09-17 17:34:53"
         },
         {
             "name": "doctrine/annotations",
@@ -794,7 +751,7 @@
         },
         {
             "name": "jays-de/handlebars-bundle",
-            "version": "dev-develop",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/HandlebarsBundle.git",
@@ -3149,9 +3106,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "commercetools/php-sdk": 20,
-        "commercetools/commons": 20,
-        "jays-de/handlebars-bundle": 20,
-        "dcro/secure-client-side-session-handler": 20,
         "commercetools/sunrise-scenarios": 20,
         "behat/mink": 20,
         "behat/behat": 10,

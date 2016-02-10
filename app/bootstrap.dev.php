@@ -5,12 +5,14 @@
 
 namespace Commercetools\Sunrise;
 
+use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
 define('PROJECT_DIR', dirname(__DIR__));
 
 require __DIR__.'/autoload.php';
 
+Debug::enable();
 $kernel = new \AppKernel('dev', true);
 $kernel->loadClassCache();
 

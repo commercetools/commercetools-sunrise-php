@@ -34,11 +34,11 @@ For local development purposes you can run the application in the php built-in w
 
 Production Site:
 ```php
-php -S localhost:8000 -t web/ web/index.php
+php -S localhost:8000 -t web/ web/app.php
 ```
 Development Site:
 ```php
-php -S localhost:8000 -t web/ web/index.dev.php
+php -S localhost:8000 -t web/ web/app_dev.php
 ```
 
 Open [http://localhost:8000/](http://localhost:8000/)
