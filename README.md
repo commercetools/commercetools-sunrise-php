@@ -20,25 +20,26 @@ Please read the [Changelog](CHANGELOG.md) before updating in any case.
 To run, you need a project on the commercetools platform that contains some minimum necessary content (e.g. the sample data). Then get your project key, client ID and client secret from the merchant center and provide them in one of the following ways:
 
  1. TODO how to get stuff into the $_SERVER vars ? environment variables? CGI?
- 2. create a file `app/config/app.yml` with the following format:
+ 2. create a file `app/config/parameters.yml` with the following format:
 
 ```yml
-app:
-  commercetools:
-    client_id: <client_id>
-    client_secret: <client_secret>
-    project: <project_key>
+parameters:
+    secret: <your application secret>
+    commercetools.client_id: <your client id>
+    commercetools.client_secret: <your client secret>
+    commercetools.project: <your project key>
 ```
 
 For local development purposes you can run the application in the php built-in web server. The `web` folder contains static assets and index.php as the _only_ PHP file.
 
 Production Site:
 ```php
-php -S localhost:8000 -t web/ web/app.php
+php app/console.php server:start --env prod
 ```
+
 Development Site:
 ```php
-php -S localhost:8000 -t web/ web/app_dev.php
+php app/console.php server:start
 ```
 
 Open [http://localhost:8000/](http://localhost:8000/)
