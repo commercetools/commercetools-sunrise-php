@@ -16,6 +16,8 @@ use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 class SunriseController extends Controller
@@ -415,5 +417,18 @@ class SunriseController extends Controller
         });
 
         return $categories;
+    }
+
+    /**
+     * Creates and returns a form builder instance.
+     *
+     * @param mixed $data    The initial data for the form
+     * @param array $options Options for the form
+     *
+     * @return FormBuilder
+     */
+    protected function createNamedFormBuilder($name, $data = null, array $options = array())
+    {
+        return $this->container->get('form.factory')->createNamedBuilder($name, FormType::class, $data, $options);
     }
 }

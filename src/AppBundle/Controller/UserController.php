@@ -11,12 +11,16 @@ use Commercetools\Core\Model\Common\Address;
 use Commercetools\Core\Model\Common\Money;
 use Commercetools\Core\Model\Order\Order;
 use Commercetools\Core\Request\Customers\Command\CustomerChangeAddressAction;
+use Commercetools\Core\Request\Customers\Command\CustomerChangeNameAction;
 use Commercetools\Core\Request\Customers\CustomerByIdGetRequest;
 use Commercetools\Core\Request\Customers\CustomerUpdateRequest;
 use Commercetools\Sunrise\AppBundle\Entity\UserAddress;
+use Commercetools\Sunrise\AppBundle\Entity\UserDetails;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Security\User\CTPUser;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -100,7 +104,6 @@ class UserController extends SunriseController
 
     public function detailsAction(Request $request)
     {
-
         $viewData = $this->getViewData('MyAccount - Details', $request);
 
         $customer = $this->getCustomer($this->getUser());
@@ -108,8 +111,49 @@ class UserController extends SunriseController
 
         $viewData->content->personalDetails = new ViewData();
         $viewData->content->personalDetails->name = $customer->getFirstName() . ' ' . $customer->getLastName();
-        $viewData->content->personalDetails->name = $address->getFirstName() . ' ' . $address->getLastName();
+        $viewData->content->personalDetails->password = $this->trans('Password: ********');
+        $viewData->content->personalDetails->email = $customer->getEmail();
 
+        $editCustomer = new ViewData();
+        $editCustomer->firstName = $customer->getFirstName();
+        $editCustomer->secondName = $customer->getLastName();
+        $editCustomer->email = $customer->getEmail();
+        $viewData->content->editPersonalDetails = $editCustomer->toArray();
+
+        $userDetails = new UserDetails();
+
+        $data = [];
+        $form = $this->createNamedFormBuilder('', $userDetails)
+            ->add('firstName', TextType::class)
+            ->add('lastName', TextType::class)
+            ->add('email', TextType::class)
+            ->add(
+                'password',
+                RepeatedType::class,
+                ['type' => PasswordType::class, 'first_name' => 'main', 'second_name' => 'confirm']
+            )
+            ->add('save', SubmitType::class, array('label' => 'Save user'))
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            /**
+             * @var Client $client
+             */
+
+            $firstName = $customer->getFirstName();
+            $lastName = $customer->getLastName();
+
+            $client = $this->get('commercetools.client');
+            $request = CustomerUpdateRequest::ofIdAndVersion($customer->getId(), $customer->getVersion());
+            $request->addAction(CustomerChangeNameAction::ofFirstNameAndLastName(setFirst));
+            $response = $request->executeWithClient($client);
+
+
+            $customer = $request->mapResponse($response);
+
+            return $customer;
+        }
 
         return $this->render('my-account-personal-details.hbs', $viewData->toArray());
     }

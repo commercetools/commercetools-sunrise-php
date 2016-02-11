@@ -78,6 +78,7 @@
                 <argument type="service" id="service_container"/>
             </call>
         </service>
+
         <service id="app.locale" class="string">
             <factory service="app.locale.converter" method="convert" />
             <argument type="service" id="app.locale.request" />

@@ -26,6 +26,7 @@ class UserAddress
     private $phone;
     private $email;
     private $title;
+    public $password;
 
     /**
      * @return mixed
