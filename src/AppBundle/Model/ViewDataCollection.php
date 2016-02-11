@@ -1,6 +1,6 @@
 <?php
 /**
- * @author @ct-jensschulze <jens.schulze@commercetools.de>
+ * @author jayS-de <jens.schulze@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Model;
@@ -8,7 +8,7 @@ namespace Commercetools\Sunrise\AppBundle\Model;
 
 use Commercetools\Sunrise\AppBundle\Model\View\ArraySerializable;
 
-class ViewDataCollection implements ArraySerializable
+class ViewDataCollection implements ArraySerializable, \IteratorAggregate
 {
     protected $data;
 
@@ -38,5 +38,10 @@ class ViewDataCollection implements ArraySerializable
         } else {
             $this->data[$key] = $value;
         }
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->data);
     }
 }

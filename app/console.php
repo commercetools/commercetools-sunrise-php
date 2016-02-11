@@ -25,6 +25,6 @@ $debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-d
 if ($debug) {
     Debug::enable();
 }
-$kernel = new AppKernel($env, $debug);
+$kernel = new \AppKernel($env, $debug);
 $application = new Application($kernel);
 $application->run($input);

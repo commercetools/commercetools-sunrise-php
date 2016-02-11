@@ -1,12 +1,11 @@
 <?php
 /**
- * @author @ct-jensschulze <jens.schulze@commercetools.de>
+ * @author jayS-de <jens.schulze@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
 use Commercetools\Core\Cache\CacheAdapterInterface;
-use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Category\CategoryCollection;
 use Commercetools\Core\Model\Product\Facet;
@@ -35,7 +34,7 @@ class CatalogController extends SunriseController
      */
     protected $facets;
 
-    public function home(Request $request)
+    public function homeAction(Request $request)
     {
         $viewData = $this->getViewData('Sunrise - Home', $request);
         $viewData->content->banners = new ViewData();
@@ -61,12 +60,10 @@ class CatalogController extends SunriseController
             $this->generateUrl('category', ['category' => 'accessories-women-sunglasses'])
         );
 
-        $response = new Response();
-        $response->setPublic();
-        return $this->render('home.hbs', $viewData->toArray(), $response);
+        return $this->render('home.hbs', $viewData->toArray(), $this->getCachableResponse());
     }
 
-    public function search(Request $request)
+    public function searchAction(Request $request)
     {
         $uri = new Uri($request->getRequestUri());
         $products = $this->getProducts($request);
@@ -74,20 +71,20 @@ class CatalogController extends SunriseController
         $viewData = $this->getViewData('Sunrise - ProductRepository Overview Page', $request);
 
         $viewData->content->filterProductsUrl = $this->generateUrl('pop');
-        $viewData->content->text = "Women";
-        $viewData->content->banner = new ViewData();
-        $viewData->content->banner->text = "Women";
-        $viewData->content->banner->description = "Lorem dolor deserunt debitis voluptatibus odio id animi voluptates alias eum adipisci laudantium iusto totam quibusdam modi quo! Consectetur.";
-        $viewData->content->banner->imageMobile = "/assets/img/banner_mobile.jpg";
-        $viewData->content->banner->imageDesktop = "/assets/img/banner_desktop.jpg";
-        $viewData->jumboTron = new ViewData();
-        $viewData->content->products = new ViewData();
-        $viewData->content->products->list = new ViewDataCollection();
-        $viewData->content->facets = $this->getFiltersData($uri);
+
+        $category = $this->getCategory($request);
+        if ($category) {
+            $viewData->content->text = (string)$category->getName();
+            $viewData->content->banner = $this->getBannerContent();
+        }
 
         $query = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
         $viewData->content->displaySelector = $this->getDisplayContent($uri, $query, $this->getItemsPerPage($request));
         $viewData->content->sortSelector = $this->getSortData($uri, $query, $this->getSort($request, 'sunrise.products.sort'));
+        $viewData->content->facets = $this->getFiltersData($uri, $category);
+
+        $viewData->content->products = new ViewData();
+        $viewData->content->products->list = new ViewDataCollection();
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
                 $this->getProductModel()->getProductOverviewData($product, $product->getMasterVariant(), $this->locale)
@@ -98,11 +95,11 @@ class CatalogController extends SunriseController
         /**
          * @var callable $renderer
          */
-        $response = $this->render('pop.hbs', $viewData->toArray());
+        $response = $this->render('pop.hbs', $viewData->toArray(), $this->getCachableResponse());
         return $response;
     }
 
-    public function detail(Request $request)
+    public function detailAction(Request $request)
     {
         $slug = $request->get('slug');
         $sku = $request->get('sku');
@@ -113,27 +110,17 @@ class CatalogController extends SunriseController
         $productData = $this->getProductModel()->getProductDetailData($product, $sku, $this->locale);
         $viewData->content->product = $productData;
 
-        return $this->render('pdp.hbs', $viewData->toArray());
+        return $this->render('pdp.hbs', $viewData->toArray(), $this->getCachableResponse());
     }
 
-    protected function addToCollection($categoryTree, ViewDataCollection $collection, $ancestors, $categoryId, ViewData $entry)
+    protected function getBannerContent()
     {
-        if (!empty($ancestors)) {
-            $firstAncestor = array_shift($ancestors);
-            $firstAncestorEntry = $categoryTree[$firstAncestor];
+        $banner = new ViewData();
+        $banner->description = "Lorem dolor deserunt debitis voluptatibus odio id animi voluptates alias eum adipisci laudantium iusto totam quibusdam modi quo! Consectetur.";
+        $banner->imageMobile = "/assets/img/banner_mobile.jpg";
+        $banner->imageDesktop = "/assets/img/banner_desktop.jpg";
 
-            $ancestor = $collection->getAt($firstAncestor);
-            if (is_null($ancestor)) {
-                $firstAncestorEntry->children = new ViewDataCollection();
-                $collection->add($firstAncestorEntry, $firstAncestor);
-            }
-            if (!isset($ancestor->children)) {
-                $firstAncestorEntry->children = new ViewDataCollection();
-            }
-            $this->addToCollection($categoryTree, $firstAncestorEntry->children, $ancestors, $categoryId, $entry);
-        } else {
-            $collection->add($entry, $categoryId);
-        }
+        return $banner;
     }
 
     protected function getSortData(UriInterface $uri, $query, $currentSort)
@@ -181,7 +168,7 @@ class CatalogController extends SunriseController
 
     protected function getFacetDefinitions($facetDefinitions = [])
     {
-        $facetDefinitions[] = Facet::of()->setName('categories.id')->setAlias('categories');
+        $facetDefinitions[] = Facet::of()->setName('variants.categories.id')->setAlias('categories');
         foreach ($this->config->get('sunrise.products.facets') as $facetName => $facetConfig) {
             switch ($facetConfig['type']) {
                 case 'text':
@@ -199,12 +186,12 @@ class CatalogController extends SunriseController
         return $facetDefinitions;
     }
 
-    protected function getFiltersData(UriInterface $searchUri)
+    protected function getFiltersData(UriInterface $searchUri, Category $category = null)
     {
         $filter = new ViewData();
         $filter->url = $searchUri->getPath();
         $filter->list = new ViewDataCollection();
-        $filter->list->add($this->getCategoriesFacet());
+        $filter->list->add($this->getCategoriesFacet($category, $searchUri));
         $facetConfigs = $this->config->get('sunrise.products.facets');
 
         $queryParams = \GuzzleHttp\Psr7\parse_query($searchUri->getQuery());
@@ -289,7 +276,7 @@ class CatalogController extends SunriseController
         $facetData->displayList = ($facetConfig['display'] == 'list');
         $facetData->selectFacet = true;
         $facetData->facet = new ViewData();
-        if ($facetConfig['multi'] == true) {
+        if ($facetConfig['multi'] === true) {
             $facetData->facet->multiSelect = $facetConfig['multi'];
         }
         $facetData->facet->available = true;
@@ -327,11 +314,14 @@ class CatalogController extends SunriseController
         return $facetData;
     }
 
-    protected function getCategoriesFacet()
+    protected function getCategoriesFacet(Category $selectedCategory = null, UriInterface $uri)
     {
         $cache = $this->get('app.cache');
-        $maxDepth = 1;
         $categoryFacet = $this->facets->getByName('categories');
+
+        /**
+         * @var CategoryCollection $categoryData
+         */
         $categoryData = $this->get('app.repository.category')->getCategories();
 
         $cacheKey = 'category-facet-tree-' . $this->locale;
@@ -342,9 +332,10 @@ class CatalogController extends SunriseController
              */
             foreach ($categoryData as $category) {
                 $categoryEntry = new ViewData();
-//                $categoryEntry->uri = $category->getId();
                 $categoryEntry->value = $this->generateUrl('category', ['category' => (string)$category->getSlug()]);
+                $categoryEntry->id = (string)$category->getId();
                 $categoryEntry->label = (string)$category->getName();
+                $categoryEntry->count = 0;
                 $ancestors = $category->getAncestors();
                 $categoryEntry->ancestors = [];
                 if (!is_null($ancestors)) {
@@ -354,27 +345,49 @@ class CatalogController extends SunriseController
                 }
                 $categoryTree[$category->getId()] = $categoryEntry;
             }
+            foreach ($categoryTree as $entry) {
+                $children = array_keys($categoryData->getByParent($entry->id));
+                if ($children) {
+                    $entry->children = new ViewDataCollection();
+                }
+                foreach ($children as $id) {
+                    $entry->children->add($categoryTree[$id], $id);
+                }
+            }
             $cache->store($cacheKey, serialize($categoryTree));
         } else {
             $categoryTree = unserialize($cache->fetch($cacheKey));
         }
 
-        $limitedOptions = new ViewDataCollection();
-
         foreach ($categoryFacet->getTerms() as $term) {
             $categoryId = $term->getTerm();
             $categoryEntry = $categoryTree[$categoryId];
-            if (count($categoryEntry->ancestors) > $maxDepth) {
-                continue;
-            }
             $categoryEntry->count = $term->getCount();
-            $this->addToCollection($categoryTree, $limitedOptions, $categoryEntry->ancestors, $categoryId, $categoryEntry);
         }
 
+        $limitedOptions = new ViewDataCollection();
+        if (is_null($selectedCategory)) {
+            $categories = $categoryData->getRoots();
+            foreach ($categories as $category) {
+                $entry = $categoryTree[$category->getId()];
+                unset($entry->children);
+                $limitedOptions->add($entry);
+            }
+        } else {
+            $this->addToCollection(
+                $selectedCategory->getId(),
+                $limitedOptions,
+                $categoryTree[$selectedCategory->getId()]->ancestors,
+                $categoryTree
+            );
+        }
+
+        $queryParams = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
         $categories = new ViewData();
         $categories->hierarchicalSelectFacet = true;
         $categories->facet = new ViewData();
-        $categories->facet->clearUri = $this->generateUrl('pop');
+        $categories->facet->clearUri = $this->generateUrl('pop', $queryParams);
+        $categories->facet->countHidden = true;
         $categories->facet->available = true;
         $categories->facet->label = $this->trans('filters.productType', [], 'catalog');
         $categories->facet->key = 'product-type';
@@ -383,25 +396,46 @@ class CatalogController extends SunriseController
         return $categories;
     }
 
-    protected function getFilters(Request $request)
+    protected function addToCollection(
+        $categoryId,
+        ViewDataCollection $collection,
+        $ancestors,
+        $categoryTree
+    ) {
+        if (!empty($ancestors)) {
+            $firstAncestor = array_shift($ancestors);
+            $firstAncestorEntry = $categoryTree[$firstAncestor];
+            $firstAncestorEntry->selected = true;
+
+            foreach ($firstAncestorEntry->children as $id => $entry) {
+                if ($id != $categoryId && !in_array($id, $ancestors)) {
+                    unset($entry->children);
+                }
+            }
+            $collection->add($firstAncestorEntry, $firstAncestor);
+            $this->addToCollection($categoryId, $firstAncestorEntry->children, $ancestors, $categoryTree);
+        } else {
+            $categoryEntry = $categoryTree[$categoryId];
+            $categoryEntry->selected = true;
+            if (isset($categoryEntry->children)) {
+                foreach ($categoryEntry->children as $entry) {
+                    unset($entry->children);
+                }
+            }
+            $collection->add($categoryEntry, $categoryId);
+        }
+    }
+
+
+    protected function getFilters(UriInterface $uri, Category $category = null)
     {
         $filters = [];
 
         $facetConfigs = $this->config->get('sunrise.products.facets');
-        $uri = new Uri($request->getRequestUri());
         $queryParams = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
 
-        $category = $request->get('category');
-
-        if ($category) {
-            /**
-             * @var CategoryCollection $categories
-             */
-            $categories = $this->get('app.repository.category')->getCategories();
-            $category = $categories->getBySlug($category, $this->locale);
-            if ($category instanceof Category) {
-                $filters[] = Filter::of()->setName('categories.id')->setValue($category->getId());
-            }
+        if ($category instanceof Category) {
+            $filters['filter'][] = Filter::of()->setName('categories.id')->setValue($category->getId());
         }
         foreach ($queryParams as $filterName => $params) {
             if (!isset($facetConfigs[$filterName])) {
@@ -418,10 +452,12 @@ class CatalogController extends SunriseController
             }
             switch ($facetConfig['type']) {
                 case 'text':
-                    $filters[] = $filter->setName('variants.attributes.' . $facetConfig['attribute'])->setValue($params);
+                    $filter = $filter->setName('variants.attributes.' . $facetConfig['attribute'])->setValue($params);
+                    $filters['filter'][] = $filters['filter.facets'][] = $filter;
                     break;
                 case 'enum':
-                    $filters[] = $filter->setName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setValue($params);
+                    $filter = $filter->setName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setValue($params);
+                    $filters['filter'][] = $filters['filter.facets'][] = $filter;
                     break;
                 default:
                     throw new \InvalidArgumentException('Facet type not implemented');
@@ -430,8 +466,9 @@ class CatalogController extends SunriseController
         return $filters;
     }
 
-    protected function getProducts(Request $request)
+    protected function getProducts(Request $request, Category $category = null)
     {
+        $uri = new Uri($request->getRequestUri());
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('currencies.'. $country);
         $itemsPerPage = $this->getItemsPerPage($request);
@@ -448,16 +485,32 @@ class CatalogController extends SunriseController
             $sort,
             $currency,
             $country,
-            $this->getFilters($request),
+            $this->getFilters($uri, $category),
             $this->getFacetDefinitions()
         );
 
-        $this->applyPagination(new Uri($request->getRequestUri()), $offset, $total, $itemsPerPage);
-        $this->pagination->currentPage = $products->count(); // @todo this is actually the count of products
-        $this->pagination->totalPages = $total; // @todo this is actually the total count of products
+        $this->applyPagination($uri, $offset, $total, $itemsPerPage);
         $this->facets = $facets;
 
         return $products;
+    }
+
+    /**
+     * @param Request $request
+     * @return Category|null
+     */
+    protected function getCategory(Request $request)
+    {
+        $category = $request->get('category');
+
+        if (!is_null($category)) {
+            /**
+             * @var CategoryCollection $categories
+             */
+            $categories = $this->get('app.repository.category')->getCategories();
+            $category = $categories->getBySlug($category, $this->locale);
+        }
+        return $category;
     }
 
     protected function getProductModel()
@@ -474,5 +527,14 @@ class CatalogController extends SunriseController
         );
 
         return $model;
+    }
+
+    protected function getCachableResponse()
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setSharedMaxAge(60);
+
+        return $response;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author @Ylambers <yaron.lambers@commercetools.de>
+ * @author Ylambers <yaron.lambers@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
@@ -9,50 +9,29 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Common\Address;
 use Commercetools\Core\Model\Common\Money;
-use Commercetools\Core\Model\Customer\Customer;
 use Commercetools\Core\Model\Order\Order;
-use Commercetools\Core\Request\Carts\CartQueryRequest;
 use Commercetools\Core\Request\Customers\Command\CustomerChangeAddressAction;
 use Commercetools\Core\Request\Customers\CustomerByIdGetRequest;
 use Commercetools\Core\Request\Customers\CustomerUpdateRequest;
-use Commercetools\Core\Request\Orders\OrderByIdGetRequest;
-use Commercetools\Core\Request\Orders\OrderQueryRequest;
 use Commercetools\Sunrise\AppBundle\Entity\UserAddress;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Security\User\CTPUser;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserController extends SunriseController
 {
-    public function editAddress(Request $request)
+    public function editAddressAction(Request $request)
     {
         $customer = $this->getCustomer($this->getUser());
         $address = $customer->getDefaultShippingAddress();
 
-        $userAddress = new UserAddress();
-        $userAddress->setFirstName($address->getFirstName());
-        $userAddress->setLastName($address->getLastName());
-        $userAddress->setCompany($address->getCompany());
-        $userAddress->setEmail($customer->getEmail());
-        $userAddress->setTitle($customer->getTitle());
-
-        $userAddress->setStreetName($address->getStreetName());
-        $userAddress->setStreetNumber($address->getStreetNumber());
-        $userAddress->setPostalCode($address->getPostalCode());
-        $userAddress->setCity($address->getCity());
-        $userAddress->setRegion($address->getRegion());
-        $userAddress->setCountry($address->getCountry());
-        $userAddress->setPhone($address->getPhone());
+        $userAddress = UserAddress::ofAddress($address);
 
         $form = $this->createFormBuilder($userAddress)
             ->add('firstName', TextType::class)
@@ -77,19 +56,7 @@ class UserController extends SunriseController
              * @var UserAddress $formAddress
              */
             $formAddress = $form->getData();
-            $newAddress = Address::of();
-            $newAddress->setFirstName($formAddress->getFirstName());
-            $newAddress->setLastName($formAddress->getLastName());
-            $newAddress->setCompany($formAddress->getCompany());
-            $newAddress->setEmail($formAddress->getEmail());
-            $newAddress->setTitle($formAddress->getTitle());
-            $newAddress->setStreetName($formAddress->getStreetName());
-            $newAddress->setStreetNumber($formAddress->getStreetNumber());
-            $newAddress->setPostalCode($formAddress->getPostalCode());
-            $newAddress->setCity($formAddress->getCity());
-            $newAddress->setRegion($formAddress->getRegion());
-            $newAddress->setCountry($formAddress->getCountry());
-            $newAddress->setPhone($formAddress->getPhone());
+            $newAddress = $formAddress->toCTPAddress();
 
             $request = CustomerUpdateRequest::ofIdAndVersion($customer->getId(), $customer->getVersion());
             $request->addAction(CustomerChangeAddressAction::ofAddressIdAndAddress($address->getId(), $newAddress));
@@ -101,8 +68,8 @@ class UserController extends SunriseController
             $response = $request->executeWithClient($client);
 
             $newCustomer = $request->mapResponse($response);
-
-            return new response('User has bin updated!');
+            $this->addFlash('notice', $this->trans('User has been updated!'));
+            return $this->redirect($this->generateUrl('myAdressBook'));
         }
 
         return $this->render('editAddress.html.twig', array(
@@ -110,7 +77,7 @@ class UserController extends SunriseController
         ));
     }
 
-    public function login(Request $request)
+    public function loginAction(Request $request)
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             return new RedirectResponse($this->generateUrl('myAccount'));
@@ -126,17 +93,18 @@ class UserController extends SunriseController
         return $this->render('my-account-login.hbs', $viewData->toArray());
     }
 
-    public function secret(Request $request)
+    public function secretAction(Request $request)
     {
         return new Response('Top secret');
     }
 
-    public function details(Request $request)
+    public function detailsAction(Request $request)
     {
 
         $viewData = $this->getViewData('MyAccount - Details', $request);
 
         $customer = $this->getCustomer($this->getUser());
+        $address = $customer->getDefaultShippingAddress();
 
         $viewData->content->personalDetails = new ViewData();
         $viewData->content->personalDetails->name = $customer->getFirstName() . ' ' . $customer->getLastName();
@@ -146,50 +114,36 @@ class UserController extends SunriseController
         return $this->render('my-account-personal-details.hbs', $viewData->toArray());
     }
 
-    public function addresses(Request $request)
+    public function addressesAction(Request $request)
     {
-        $viewData = $this->getViewData('MyAccount - Details');
+        $viewData = $this->getViewData('MyAccount - Details', $request);
 
         $customer = $this->getCustomer($this->getUser());
 
-        $shippingAddressData = $customer->getDefaultShippingAddress();
-        $billingAddressData = $customer->getDefaultBillingAddress();
-
-
-        $shippingAddress = new ViewData();
-        $billingAddress = new ViewData();
-
-        $billingAddress->name = $billingAddressData->getFirstName() . ' ' . $billingAddressData->getLastName();
-        //adress query
-        $billingAddress->address = $billingAddressData->getCity() . ' ' . $billingAddressData->getPostalCode();
-        $billingAddress->address = $billingAddressData->getStreetName() . ' ' .
-            $billingAddressData->getStreetNumber() . ' ';
-        $billingAddress->postalCode = $billingAddressData->getPostalCode() . ' ' . $billingAddressData->getCity();
-        $billingAddress->country = $billingAddressData->getCountry();
-        $billingAddress->compay = $billingAddressData->getCompany();
-
-
-        $shippingAddress->title = $shippingAddressData->getTitle();
-        $shippingAddress->name = $shippingAddressData->getFirstName() . ' ' . $shippingAddressData->getLastName();
-
-        //adress query
-        $shippingAddress->address = $shippingAddressData->getCity() . ' ' . $shippingAddressData->getPostalCode();
-        $shippingAddress->address = $shippingAddressData->getStreetName() . ' ' .
-            $shippingAddressData->getStreetNumber() . ' ';
-        $shippingAddress->postalCode = $shippingAddressData->getPostalCode() . ' ' . $shippingAddressData->getCity();
-        $shippingAddress->country = $shippingAddressData->getCountry();
-
-        $viewData->content->shippingAddress = $shippingAddress;
-        $viewData->content->billingAddress = $billingAddress;
+        $viewData->content->shippingAddress = $this->getViewAddress($customer->getDefaultShippingAddress());
+        $viewData->content->billingAddress = $this->getViewAddress($customer->getDefaultBillingAddress());;
 
         return $this->render('my-account-address-book.hbs', $viewData->toArray());
 
     }
 
-
-    public function orders(Request $request)
+    protected function getViewAddress(Address $address)
     {
-        $viewData = $this->getViewData('MyAccount - Orders');
+        $viewAddress = new ViewData();
+
+        $viewAddress->name = $address->getFirstName() . ' ' . $address->getLastName();
+        $viewAddress->address = $address->getCity() . ' ' . $address->getPostalCode();
+        $viewAddress->address = $address->getStreetName() . ' ' . $address->getStreetNumber() . ' ';
+        $viewAddress->postalCode = $address->getPostalCode() . ' ' . $address->getCity();
+        $viewAddress->country = $address->getCountry();
+        $viewAddress->compay = $address->getCompany();
+
+        return $viewAddress;
+    }
+
+    public function ordersAction(Request $request)
+    {
+        $viewData = $this->getViewData('MyAccount - Orders', $request);
         $orders = $this->get('app.repository.order')->getOrders($this->getUser()->getId());
 
 
@@ -217,11 +171,11 @@ class UserController extends SunriseController
     }
 
 
-    public function orderDetail(Request $request, $orderId)
+    public function orderDetailAction(Request $request, $orderId)
     {
         // @todo change every title, now it is hardcoded
 
-        $viewData = $this->getViewData('MyAccount - Orders');
+        $viewData = $this->getViewData('MyAccount - Orders', $request);
         /**
          * @var Order $order
          */
@@ -232,12 +186,19 @@ class UserController extends SunriseController
             throw new AccessDeniedException();
         }
 
-        $viewData->content->yourOrderTitle = $this->trans('Your Order Details');
-        $viewData->content->orderNumberTitle = $this->trans('Order number');
-        $viewData->content->orderNumber = $order->getOrderNumber();
-        $viewData->content->orderDateTitle = $this->trans('Order date');
-        $viewData->content->orderDate = $order->getCreatedAt()->format('d.m.Y');
-        $viewData->content->printReceiptBtn = $this->trans('print receipt');
+        $this->addOrderDetails($viewData->content, $order);
+
+        return $this->render('my-account-my-orders-order.hbs', $viewData->toArray());
+    }
+
+    protected function addOrderDetails($content, Order $order)
+    {
+        $content->yourOrderTitle = $this->trans('Your Order Details');
+        $content->orderNumberTitle = $this->trans('Order number');
+        $content->orderNumber = $order->getOrderNumber();
+        $content->orderDateTitle = $this->trans('Order date');
+        $content->orderDate = $order->getCreatedAt()->format('d.m.Y');
+        $content->printReceiptBtn = $this->trans('print receipt');
 
         $shippingAddress = $order->getShippingAddress();
         $shippingAddressData = new ViewData();
@@ -252,7 +213,7 @@ class UserController extends SunriseController
         $shippingAddressData->number = $shippingAddress->getPhone();
         $shippingAddressData->email = $shippingAddress->getEmail();
 
-        $viewData->content->shippingAddress = $shippingAddressData;
+        $content->shippingAddress = $shippingAddressData;
 
 
         $billingAddress = $order->getBillingAddress();
@@ -269,14 +230,14 @@ class UserController extends SunriseController
         $billingAddressData->number = $billingAddress->getPhone();
         $billingAddressData->email = $billingAddress->getEmail();
 
-        $viewData->content->billingAddress = $billingAddressData;
+        $content->billingAddress = $billingAddressData;
 
         $shippingMethod = $order->getShippingInfo();
         $shippingMethodData = new ViewData();
         $shippingMethodData->title = $this->trans('Shipping Method');
         if (!is_null($shippingMethod)) {
             $shippingMethodData->text = $this->trans($shippingMethod->getShippingMethodName(), [], 'orders');
-            $viewData->content->shippingMethod = $shippingMethodData;
+            $content->shippingMethod = $shippingMethodData;
         }
 
         //@todo activate PAYMENT DETAILS, NOTE: not working properly
@@ -287,25 +248,25 @@ class UserController extends SunriseController
 //        $viewData->content->paymentDetails = $paymentDetails;
 
         //@todo check if the prices are right!!
-        $viewData->content->Code = $order->getDiscountCodes()->toArray();
-        $viewData->content->subtotal = $order->getTaxedPrice()->getTotalNet();
+        $content->Code = $order->getDiscountCodes()->toArray();
+        $content->subtotal = $order->getTaxedPrice()->getTotalNet();
 
-        $viewData->content->orderDiscountTitle = $this->trans('Order discount');
-        $viewData->content->standartDeliveryTitle = $this->trans('Standard Delivery');
+        $content->orderDiscountTitle = $this->trans('Order discount');
+        $content->standartDeliveryTitle = $this->trans('Standard Delivery');
 
         //@todo prices of orderdiscount and standartdelivery are not right yet
 
-        $viewData->promoCode = $order->getDiscountCodes();
+        $content->promoCode = $order->getDiscountCodes();
 
 //        $viewData->content->orderDiscount = $order->getTotalPrice();
 
-        $viewData->content->salesTaxTitle = $this->trans('Sales Tax');
-        $viewData->content->orderTotalTitle = $this->trans('Order Total');
+        $content->salesTaxTitle = $this->trans('Sales Tax');
+        $content->orderTotalTitle = $this->trans('Order Total');
         if ($order->getShippingInfo()) {
-            $viewData->content->standartDelivery = $order->getShippingInfo()->getPrice();
+            $content->standartDelivery = $order->getShippingInfo()->getPrice();
         }
-        $viewData->content->orderTotal = $order->getTotalPrice();
-        $viewData->content->salesTax = Money::ofCurrencyAndAmount(
+        $content->orderTotal = $order->getTotalPrice();
+        $content->salesTax = Money::ofCurrencyAndAmount(
             $order->getTaxedPrice()->getTotalGross()->getCurrencyCode(),
             $order->getTaxedPrice()->getTotalGross()->getCentAmount()
             - $order->getTaxedPrice()->getTotalNet()->getCentAmount()
@@ -313,7 +274,7 @@ class UserController extends SunriseController
 
         $lineItems = $order->getLineItems();
 
-        $viewData->content->order = new ViewDataCollection();
+        $content->order = new ViewDataCollection();
         foreach ($lineItems as $lineItem) {
             $variant = $lineItem->getVariant();
 
@@ -329,10 +290,9 @@ class UserController extends SunriseController
             $lineItemsData->price = (string)$price->getValue();
             $lineItemsData->productTitleOne = $lineItem->getName();
             $lineItemsData->sku = $lineItem->getVariant()->getSku();
-            $viewData->content->order->add($lineItemsData);
+            $content->order->add($lineItemsData);
         }
-            $viewData->content->productDescriptionTitle = $this->trans('Product Description');
-        return $this->render('my-account-my-orders-order.hbs', $viewData->toArray());
+        $content->productDescriptionTitle = $this->trans('Product Description');
     }
 
     protected function getCustomer(CTPUser $user)

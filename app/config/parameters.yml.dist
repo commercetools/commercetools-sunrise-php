@@ -1,0 +1,5 @@
+parameters:
+  secret: Secr3tT0ken
+  commercetools.client_id: YourClientId
+  commercetools.client_secret: YourClientSecret
+  commercetools.project: YourProjectKey

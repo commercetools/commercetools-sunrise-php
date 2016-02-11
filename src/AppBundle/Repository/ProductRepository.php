@@ -1,14 +1,10 @@
 <?php
 /**
- * @author @ct-jensschulze <jens.schulze@commercetools.de>
+ * @author jayS-de <jens.schulze@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Repository;
 
-
-use Commercetools\Core\Model\Category\Category;
-use Commercetools\Core\Model\Category\CategoryCollection;
-use Commercetools\Core\Model\Product\Filter;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Request\Products\ProductProjectionBySlugGetRequest;
 use Commercetools\Core\Request\Products\ProductProjectionSearchRequest;
@@ -77,11 +73,23 @@ class ProductRepository extends Repository
             }
         }
         if (!is_null($filters)) {
-            foreach ($filters as $filter) {
-                $searchRequest->addFilter($filter);
-                $searchRequest->addFilterFacets($filter);
+            foreach ($filters as $type => $typeFilters) {
+                foreach ($typeFilters as $filter) {
+                    switch ($type) {
+                        case 'filter':
+                            $searchRequest->addFilter($filter);
+                            break;
+                        case 'filter.query':
+                            $searchRequest->addFilterQuery($filter);
+                            break;
+                        case 'filter.facets':
+                            $searchRequest->addFilterFacets($filter);
+                            break;
+                    }
+                }
             }
         }
+
         $this->profiler->enter($profile = new Profile('getProducts'));
         $response = $searchRequest->executeWithClient($this->client);
         $this->profiler->leave($profile);

@@ -13,12 +13,12 @@ before_script:
 - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ `php-config --vernum` -ge 50400 ] && [ `php-config --vernum` -lt 70000 ]; then printf "yes\n" | pecl install -f apcu-4.0.10 ; fi"
 - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ `php-config --vernum` -ge 70000 ] ; then printf "yes\n" | pecl install -f apcu ; echo 'extension="apcu.so"' >> ./tests/apc.ini ; fi"
 - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ] && [ $TRAVIS_PHP_VERSION != 'nightly' ] ; then phpenv config-add ./tests/apc.ini; fi"
-- php -S 127.0.0.1:8001 -t web/ web/index.php > access.log 2>&1 &
 - composer install -o --ignore-platform-reqs --prefer-dist
+- php app/console.php server:start
 script:
 - vendor/bin/behat -p $BEHAT_PROFILE
 after_script:
-- cat access.log
+- php app/console.php server:stop
 - cat selenium.log
 matrix:
   allow_failures:

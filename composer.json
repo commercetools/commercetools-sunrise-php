@@ -1,5 +1,6 @@
 {
   "name": "commercetools/sunrise",
+  "description": "Commercetools Sunrise PHP template shop",
   "type": "project",
   "license": "MIT",
   "homepage": "https://github.com/sphereio/commercetools-sunrise-php",
@@ -14,16 +15,16 @@
     "ext-mbstring": "*",
     "commercetools/php-sdk": "dev-develop",
     "commercetools/sunrise-design": "*",
-    "commercetools/commons": "dev-master",
+    "commercetools/commons": "^0.1",
     "symfony/symfony": "^3.0",
-    "jays-de/handlebars-bundle": "dev-develop",
+    "jays-de/handlebars-bundle": "^0.2",
     "symfony/config": "^3.0",
     "symfony/yaml": "^3.0",
     "symfony/translation": "*",
     "monolog/monolog": "^1.7",
-    "dcro/secure-client-side-session-handler": "dev-master",
     "sensio/framework-extra-bundle": "^3.0",
-    "symfony/monolog-bundle": "^2.8"
+    "symfony/monolog-bundle": "^2.8",
+    "incenteev/composer-parameter-handler": "^2.0"
   },
   "require-dev": {
     "commercetools/sunrise-scenarios": "dev-behat",
@@ -44,22 +45,42 @@
   },
   "scripts": {
     "assetInstall": [
+      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
+      "cp -rf vendor/commercetools/sunrise-design/assets/img/favicon.ico web/favicon.ico",
       "php app/console.php assets:install web/assets"
     ],
     "post-update-cmd": "@assetInstall",
     "post-install-cmd": "@assetInstall"
+  },
+  "extra": {
+    "incenteev-parameters": [
+      {
+        "file": "app/config/parameters.yml",
+        "env-map": {
+          "secret": "SECRET_TOKEN",
+          "commercetools.client_id": "SPHERE_CLIENT_ID",
+          "commercetools.client_secret": "SPHERE_CLIENT_SECRET",
+          "commercetools.project": "SPHERE_PROJECT"
+        }
+      }
+    ]
   },
   "repositories": [
     {
       "type": "package",
       "package": {
         "name": "commercetools/sunrise-design",
-        "version": "0.16.0",
+        "version": "0.51.0",
+        "dist": {
+          "url": "https://github.com/sphereio/commercetools-sunrise-design/archive/de639179c73e5b123786efdae3dc6eb2460e2205.zip",
+          "type": "zip",
+          "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
+        },
         "source": {
-          "url": "https://github.com/sphereio/sphere-sunrise-design",
+          "url": "https://github.com/sphereio/commercetools-sunrise-design",
           "type": "git",
-          "reference": "gh-pages"
+          "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
         }
       }
     },

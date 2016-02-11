@@ -1,7 +1,5 @@
 <?php
 
-namespace Commercetools\Sunrise;
-
 use Commercetools\Sunrise\AppBundle\AppBundle;
 use JaySDe\HandlebarsBundle\HandlebarsBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
@@ -34,15 +32,19 @@ class AppKernel extends Kernel
             new MonologBundle(),
             new AppBundle(),
         ];
-//        if ($this->getEnvironment() == 'dev') {
+        if ($this->getEnvironment() == 'dev') {
             $bundles[] = new WebProfilerBundle();
-//        }
+        }
         return $bundles;
     }
 
     public function configureRoutes(RouteCollectionBuilder $routes)
     {
-        $routes->import(__DIR__ . '/config/routing.yml');
+        $file = 'routing.yml';
+        if ($this->getEnvironment() === 'dev') {
+            $file = 'routing_dev.yml';
+        }
+        $routes->import(__DIR__ . '/config/' . $file);
         // import the WebProfilerRoutes, only if the bundle is enabled
         if (isset($this->bundles['WebProfilerBundle'])) {
             $routes->mount('/_wdt', $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml'));
@@ -52,7 +54,8 @@ class AppKernel extends Kernel
 
     public function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config.yml');
+
+        $loader->load(__DIR__.'/config/config_' . $this->getEnvironment() . '.yml');
         if (!empty(getenv('SECRET_TOKEN'))) {
             $c->setParameter('kernel.secret', getenv('SECRET_TOKEN'));
         }

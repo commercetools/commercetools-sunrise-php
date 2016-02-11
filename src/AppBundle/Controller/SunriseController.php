@@ -1,12 +1,10 @@
 <?php
 /**
- * @author @ct-jensschulze <jens.schulze@commercetools.de>
+ * @author jayS-de <jens.schulze@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
-
-use Commercetools\Core\Client;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Sunrise\AppBundle\Model\Config;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;

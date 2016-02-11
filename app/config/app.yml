@@ -58,9 +58,7 @@ app:
     categories: true
     productTypes: true
     products: true
-#  commercetools:
-#    client_id: <client_id>
-#    client_secret: <client_secret>
-#    project: <project>
-imports:
-  - { resource: 'app.yaml', ignore_errors: true}
+  commercetools:
+    client_id: %commercetools.client_id%
+    client_secret: %commercetools.client_secret%
+    project: %commercetools.project%

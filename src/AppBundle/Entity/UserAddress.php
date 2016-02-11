@@ -1,11 +1,12 @@
 <?php
 /**
- * @author: @Ylambers <yaron.lambers@commercetools.de>
+ * @author: Ylambers <yaron.lambers@commercetools.de>
  */
 
 namespace Commercetools\Sunrise\AppBundle\Entity;
 
 
+use Commercetools\Core\Model\Common\Address;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -256,5 +257,51 @@ class UserAddress
 
         $metadata->addPropertyConstraint('title', new NotBlank());
         $metadata->addPropertyConstraint('title', new Length(['min' => 3, 'max' => 255]));
+    }
+
+    /**
+     * @param Address $address
+     * @return static
+     */
+    public static function ofAddress(Address $address)
+    {
+        $userAddress = new static();
+        $userAddress->setFirstName($address->getFirstName());
+        $userAddress->setLastName($address->getLastName());
+        $userAddress->setCompany($address->getCompany());
+        $userAddress->setEmail($address->getEmail());
+        $userAddress->setTitle($address->getTitle());
+
+        $userAddress->setStreetName($address->getStreetName());
+        $userAddress->setStreetNumber($address->getStreetNumber());
+        $userAddress->setPostalCode($address->getPostalCode());
+        $userAddress->setCity($address->getCity());
+        $userAddress->setRegion($address->getRegion());
+        $userAddress->setCountry($address->getCountry());
+        $userAddress->setPhone($address->getPhone());
+
+        return $userAddress;
+    }
+
+    /**
+     * @return Address
+     */
+    public function toCTPAddress()
+    {
+        $newAddress = Address::of();
+        $newAddress->setFirstName($this->getFirstName());
+        $newAddress->setLastName($this->getLastName());
+        $newAddress->setCompany($this->getCompany());
+        $newAddress->setEmail($this->getEmail());
+        $newAddress->setTitle($this->getTitle());
+        $newAddress->setStreetName($this->getStreetName());
+        $newAddress->setStreetNumber($this->getStreetNumber());
+        $newAddress->setPostalCode($this->getPostalCode());
+        $newAddress->setCity($this->getCity());
+        $newAddress->setRegion($this->getRegion());
+        $newAddress->setCountry($this->getCountry());
+        $newAddress->setPhone($this->getPhone());
+
+        return $newAddress;
     }
 }
