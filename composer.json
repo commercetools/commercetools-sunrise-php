@@ -23,6 +23,7 @@
     "symfony/translation": "*",
     "monolog/monolog": "^1.7",
     "sensio/framework-extra-bundle": "^3.0",
+    "sensio/distribution-bundle": "^5.0",
     "symfony/monolog-bundle": "^2.8",
     "incenteev/composer-parameter-handler": "^2.0"
   },
@@ -38,7 +39,8 @@
   "autoload": {
     "psr-4": {
       "Commercetools\\Sunrise\\": ["src/"]
-    }
+    },
+    "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
   },
   "autoload-dev": {
     "psr-4": {"Commercetools\\Sunrise\\": ["tests/unit/", "tests/integration/", "tests/behat/"]}
@@ -46,14 +48,21 @@
   "scripts": {
     "assetInstall": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
       "cp -rf vendor/commercetools/sunrise-design/assets web/",
       "cp -rf vendor/commercetools/sunrise-design/assets/img/favicon.ico web/favicon.ico",
-      "php app/console.php assets:install web/assets"
+      "bin/console assets:install web/assets"
     ],
     "post-update-cmd": "@assetInstall",
     "post-install-cmd": "@assetInstall"
   },
   "extra": {
+    "symfony-app-dir": "app",
+    "symfony-bin-dir": "bin",
+    "symfony-var-dir": "var",
+    "symfony-web-dir": "web",
     "incenteev-parameters": [
       {
         "file": "app/config/parameters.yml",

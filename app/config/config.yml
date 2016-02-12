@@ -16,7 +16,7 @@ framework:
   fragments: ~
   session:
     name: sunrise_session
-    save_path: ~
+    save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
   translator:
     paths:
     - %kernel.root_dir%/../vendor/commercetools/sunrise-design/translations

@@ -1,9 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-namespace Commercetools\Sunrise;
-
-use Commercetools\Sunrise\AppKernel;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -14,8 +11,7 @@ set_time_limit(0);
 /**
  * @var \Composer\Autoload\ClassLoader $loader
  */
-$loader = require __DIR__.'/../vendor/autoload.php';
-require __DIR__.'/AppKernel.php';
+$loader = require __DIR__ . '/../app/autoload.php';
 // auto-load annotations
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
@@ -25,6 +21,6 @@ $debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-d
 if ($debug) {
     Debug::enable();
 }
-$kernel = new \AppKernel($env, $debug);
+$kernel = new AppKernel($env, $debug);
 $application = new Application($kernel);
 $application->run($input);
