@@ -466,11 +466,12 @@ class CatalogController extends SunriseController
         return $filters;
     }
 
-    protected function getProducts(Request $request, Category $category = null)
+    protected function getProducts(Request $request)
     {
         $uri = new Uri($request->getRequestUri());
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('currencies.'. $country);
+        $category = $this->getCategory($request);
         $itemsPerPage = $this->getItemsPerPage($request);
         $currentPage = $this->getCurrentPage($request);
         $sort = $this->getSort($request, 'sunrise.products.sort')['searchParam'];
