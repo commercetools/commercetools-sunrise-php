@@ -14,7 +14,7 @@
     "ext-apcu": "*",
     "ext-mbstring": "*",
     "commercetools/php-sdk": "dev-develop",
-    "commercetools/sunrise-design": "*",
+    "commercetools/sunrise-theme": "dev-master",
     "commercetools/commons": "^0.1",
     "symfony/symfony": "^3.0",
     "jays-de/handlebars-bundle": "^0.2",
@@ -51,8 +51,8 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
-      "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "cp -rf vendor/commercetools/sunrise-design/assets/img/favicon.ico web/favicon.ico",
+      "cp -rf vendor/commercetools/sunrise-theme/assets web/",
+      "cp -rf vendor/commercetools/sunrise-theme/assets/img/favicon.ico web/favicon.ico",
       "bin/console assets:install web/assets"
     ],
     "post-update-cmd": "@assetInstall",
@@ -77,21 +77,8 @@
   },
   "repositories": [
     {
-      "type": "package",
-      "package": {
-        "name": "commercetools/sunrise-design",
-        "version": "0.51.0",
-        "dist": {
-          "url": "https://github.com/sphereio/commercetools-sunrise-design/archive/de639179c73e5b123786efdae3dc6eb2460e2205.zip",
-          "type": "zip",
-          "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
-        },
-        "source": {
-          "url": "https://github.com/sphereio/commercetools-sunrise-design",
-          "type": "git",
-          "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
-        }
-      }
+      "type": "vcs",
+      "url": "https://github.com/jayS-de/sunrise-theme"
     },
     {
       "type": "vcs",

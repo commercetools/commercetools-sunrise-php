@@ -19,7 +19,7 @@ framework:
     save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
   translator:
     paths:
-    - %kernel.root_dir%/../vendor/commercetools/sunrise-design/translations
+    - %kernel.root_dir%/../vendor/commercetools/sunrise-theme/translations
 twig:
   debug:            "%kernel.debug%"
   strict_variables: "%kernel.debug%"
@@ -27,7 +27,7 @@ handlebars:
   cache: %kernel.cache_dir%/handlebars
   paths:
     - %kernel.root_dir%/Resources/views
-    - %kernel.root_dir%/../vendor/commercetools/sunrise-design/templates
+    - %kernel.root_dir%/../vendor/commercetools/sunrise-theme/templates
   helpers:
     esi: JaySDe\HandlebarsBundle\HandlebarsHelper::esi
     i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
