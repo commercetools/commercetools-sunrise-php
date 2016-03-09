@@ -28,6 +28,9 @@ class UserAddress
     private $title;
     public $password;
 
+    public $csrfToken;
+    public $additionalStreetInfo;
+
     /**
      * @return mixed
      */
@@ -243,8 +246,8 @@ class UserAddress
         $metadata->addPropertyConstraint('region', new NotBlank());
         $metadata->addPropertyConstraint('region', new Length(['min' => 3, 'max' => 255]));
 
-        $metadata->addPropertyConstraint('country', new NotBlank());
-        $metadata->addPropertyConstraint('country', new Length(['min' => 2, 'max' => 2]));
+//        $metadata->addPropertyConstraint('country', new NotBlank());
+//        $metadata->addPropertyConstraint('country', new Length(['min' => 2, 'max' => 2]));
 
         $metadata->addPropertyConstraint('company', new NotBlank());
         $metadata->addPropertyConstraint('company', new Length(['min' => 3, 'max' => 255]));
@@ -256,8 +259,8 @@ class UserAddress
         $metadata->addPropertyConstraint('email', new Email() );
         $metadata->addPropertyConstraint('email', new Length(['min' => 5, 'max' => 255]));
 
-        $metadata->addPropertyConstraint('title', new NotBlank());
-        $metadata->addPropertyConstraint('title', new Length(['min' => 3, 'max' => 255]));
+//        $metadata->addPropertyConstraint('title', new NotBlank());
+//        $metadata->addPropertyConstraint('title', new Length(['min' => 3, 'max' => 255]));
     }
 
     /**
@@ -294,7 +297,7 @@ class UserAddress
         $newAddress->setLastName($this->getLastName());
         $newAddress->setCompany($this->getCompany());
         $newAddress->setEmail($this->getEmail());
-        $newAddress->setTitle($this->getTitle());
+//        $newAddress->setTitle($this->getTitle());
         $newAddress->setStreetName($this->getStreetName());
         $newAddress->setStreetNumber($this->getStreetNumber());
         $newAddress->setPostalCode($this->getPostalCode());

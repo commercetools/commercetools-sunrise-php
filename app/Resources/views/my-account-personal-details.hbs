@@ -67,31 +67,35 @@
                         <div class="col-sm-6">
                           <div class="form-sections">
                             <span class="form-labels">{{i18n "First name"}}*</span><br>
-                            <input class="form-inputs" type="text" name="firstName" value="{{content.editPersonalDetails.firstName}}">
+                            <input class="form-inputs" tabindex="1" type="text" name="firstName" value="{{content.editPersonalDetails.firstName}}">
+                          </div>
+                          <div class="form-sections">
+                            <span class="form-labels">{{i18n "Current password"}}*</span><br>
+                            <input class="form-inputs" tabindex="3" name="currentPassword" type="password">
                           </div>
                           <div class="form-sections">
                             <span class="form-labels">{{i18n "Password"}}*</span><br>
-                            <input class="form-inputs" name="password[main]" type="password">
+                            <input class="form-inputs" tabindex="4" name="password[main]" type="password">
                           </div>
                           <div class="form-sections">
-                            <span class="form-labels">{{content.editPersonalDetails.primaryPhone}}*</span><br>
-                            <input class="form-inputs" type="text"><br>
-                            <span class="form-notes">{{content.editPersonalDetails.formNotesOne}}</span>
+                            <span class="form-labels">{{i18n "Email"}}*</span><br>
+                            <input class="form-inputs" tabindex="6" name="email" type="email" value="{{content.editPersonalDetails.email}}"><br>
+                            <span class="form-notes">{{content.editPersonalDetails.formNotesTwo}}</span>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-sections">
                             <span class="form-labels">{{i18n "Last name"}}*</span><br>
-                            <input class="form-inputs" name="lastName" type="text" value="{{content.editPersonalDetails.secondName}}">
+                            <input class="form-inputs" tabindex="2" name="lastName" type="text" value="{{content.editPersonalDetails.secondName}}">
+                          </div>
+                          <div class="form-sections">
+                            <span class="form-labels">{{content.editPersonalDetails.primaryPhone}}*</span><br>
+                            <input class="form-inputs"  type="text"><br>
+                            <span class="form-notes">{{content.editPersonalDetails.formNotesOne}}</span>
                           </div>
                           <div class="form-sections">
                             <span class="form-labels">{{i18n "Confirm password"}}*</span><br>
-                            <input class="form-inputs" name="password[confirm]" type="password">
-                          </div>
-                          <div class="form-sections">
-                            <span class="form-labels">{{i18n "Email"}}*</span><br>
-                            <input class="form-inputs" name="email" type="email" value="{{content.editPersonalDetails.email}}"><br>
-                            <span class="form-notes">{{content.editPersonalDetails.formNotesTwo}}</span>
+                            <input class="form-inputs" tabindex="5" name="password[confirm]" type="password">
                           </div>
                         </div>
                       </div>

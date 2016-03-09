@@ -6,6 +6,7 @@
 namespace Commercetools\Sunrise\AppBundle\Entity;
 
 
+use Commercetools\Core\Model\Customer\Customer;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Email;
@@ -18,7 +19,23 @@ class UserDetails
     private $lastName;
     private $email;
     private $password;
+    private $currentPassword;
 
+    /**
+     * @return mixed
+     */
+    public function getCurrentPassword()
+    {
+        return $this->currentPassword;
+    }
+
+    /**
+     * @param mixed $currentPassword
+     */
+    public function setCurrentPassword($currentPassword)
+    {
+        $this->currentPassword = $currentPassword;
+    }
     /**
      * @return mixed
      */
@@ -94,5 +111,16 @@ class UserDetails
         $metadata->addPropertyConstraint('email', new NotBlank());
         $metadata->addPropertyConstraint('email', new Length(['min' => 3, 'max' => 255]));
         $metadata->addPropertyConstraint('email', new Email());
+
+    }
+
+    public static function ofCustomer(Customer $customer)
+    {
+        $userDetails = new static();
+        $firstName = $userDetails->getFirstName();
+        $lastName = $userDetails->getLastName();
+        $email = $userDetails->getEmail();
+
+        return $userDetails;
     }
 }

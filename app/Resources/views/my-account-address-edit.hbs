@@ -1,0 +1,50 @@
+<!-- start my-account-address-book.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {{> common/htmlhead}}
+</head>
+
+<body>
+  <div class="darkbg hidden"></div>
+  {{> common/header}}
+  <div class="address-book">
+    <div class="container">
+      <div class="my-account-title">
+        <span class="my-account-title-text icon-user">{{i18n "my-account:myAccount.title"}}</span>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="address-book-wrapper">
+            <div class="row">
+              <div class="col-sm-3">
+                {{> catalog/my-account-sidebar positionTwo=true}}
+              </div>
+              <div id="my-account-desktop-content" class="col-sm-9">
+                <div class="address-book-content">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="address-book-title hidden-xs">
+                        {{content.contentTitle}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                      {{> myaccount/address-form address=content.address}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{!-- {{> catalog/wishlist}} --}}
+  {{> common/footer}}
+  {{> common/htmlscripts}}
+</body>
+
+</html>
+<!-- end my-account-address-book.hbs -->
