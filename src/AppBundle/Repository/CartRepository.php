@@ -10,12 +10,13 @@ use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Cart\Cart;
 use Commercetools\Core\Model\Cart\CartDraft;
+use Commercetools\Core\Model\Cart\CartState;
 use Commercetools\Core\Model\Cart\LineItemDraft;
 use Commercetools\Core\Model\Cart\LineItemDraftCollection;
 use Commercetools\Core\Model\Common\Address;
 use Commercetools\Core\Model\ShippingMethod\ShippingMethodCollection;
-use Commercetools\Core\Request\Carts\CartByIdGetRequest;
 use Commercetools\Core\Request\Carts\CartCreateRequest;
+use Commercetools\Core\Request\Carts\CartQueryRequest;
 use Commercetools\Core\Request\Carts\CartUpdateRequest;
 use Commercetools\Core\Request\Carts\Command\CartAddLineItemAction;
 use Commercetools\Core\Request\Carts\Command\CartChangeLineItemQuantityAction;
@@ -43,15 +44,23 @@ class CartRepository extends Repository
     }
 
 
-    public function getCart($cartId = null)
+    public function getCart($cartId = null, $customerId = null)
     {
         $cart = null;
         if ($cartId) {
-            $cartRequest = CartByIdGetRequest::ofId($cartId);
+            $cartRequest = CartQueryRequest::of();
+            $predicate = 'id = "' . $cartId . '" and cartState = "' . CartState::ACTIVE . '"';
+            if (!is_null($customerId)) {
+                $predicate .= ' and customerId="' . $customerId . '"';
+            }
+            $cartRequest->where($predicate)->limit(1);
             $this->profiler->enter($profile = new Profile('getCart'));
             $cartResponse = $cartRequest->executeWithClient($this->client);
             $this->profiler->leave($profile);
-            $cart = $cartRequest->mapResponse($cartResponse);
+            $carts = $cartRequest->mapResponse($cartResponse);
+            if (!is_null($carts)) {
+                $cart = $carts->current();
+            }
         }
 
         if (is_null($cart)) {
@@ -103,14 +112,16 @@ class CartRepository extends Repository
     {
         $cart = $this->getCart($cartId);
 
-        $cartUpdateRequest = CartUpdateRequest::ofIdAndVersion($cart->getId(), $cart->getVersion());
-        $cartUpdateRequest->addAction(
-            CartRemoveLineItemAction::ofLineItemId($lineItemId)
-        );
-        $this->profiler->enter($profile = new Profile('deleteLineItem'));
-        $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
-        $this->profiler->leave($profile);
-        $cart = $cartUpdateRequest->mapResponse($cartResponse);
+        if (!is_null($cart->getId())) {
+            $cartUpdateRequest = CartUpdateRequest::ofIdAndVersion($cart->getId(), $cart->getVersion());
+            $cartUpdateRequest->addAction(
+                CartRemoveLineItemAction::ofLineItemId($lineItemId)
+            );
+            $this->profiler->enter($profile = new Profile('deleteLineItem'));
+            $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
+            $this->profiler->leave($profile);
+            $cart = $cartUpdateRequest->mapResponse($cartResponse);
+        }
 
         return $cart;
     }
@@ -119,22 +130,24 @@ class CartRepository extends Repository
     {
         $cart = $this->getCart($cartId);
 
-        $cartUpdateRequest = CartUpdateRequest::ofIdAndVersion($cart->getId(), $cart->getVersion());
-        $cartUpdateRequest->addAction(
-            CartChangeLineItemQuantityAction::ofLineItemIdAndQuantity($lineItemId, $quantity)
-        );
-        $this->profiler->enter($profile = new Profile('changeLineItem'));
-        $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
-        $this->profiler->leave($profile);
-        $cart = $cartUpdateRequest->mapResponse($cartResponse);
+        if (!is_null($cart->getId())) {
+            $cartUpdateRequest = CartUpdateRequest::ofIdAndVersion($cart->getId(), $cart->getVersion());
+            $cartUpdateRequest->addAction(
+                CartChangeLineItemQuantityAction::ofLineItemIdAndQuantity($lineItemId, $quantity)
+            );
+            $this->profiler->enter($profile = new Profile('changeLineItem'));
+            $cartResponse = $cartUpdateRequest->executeWithClient($this->client);
+            $this->profiler->leave($profile);
+            $cart = $cartUpdateRequest->mapResponse($cartResponse);
+        }
 
         return $cart;
     }
 
     /**
-     * @param $cartId
      * @param $currency
      * @param $country
+     * @param LineItemDraftCollection $lineItems
      * @return Cart|null
      */
     public function createCart($currency, $country, LineItemDraftCollection $lineItems)
