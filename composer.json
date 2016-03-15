@@ -14,7 +14,7 @@
     "ext-apcu": "*",
     "ext-mbstring": "*",
     "commercetools/php-sdk": "dev-develop",
-    "commercetools/sunrise-theme": "dev-master",
+    "commercetools/sunrise-theme": "^0.57@dev",
     "commercetools/commons": "^0.1",
     "symfony/symfony": "^3.0",
     "jays-de/handlebars-bundle": "^0.2",
@@ -76,10 +76,6 @@
     ]
   },
   "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/jayS-de/sunrise-theme"
-    },
     {
       "type": "vcs",
       "url": "https://github.com/sphereio/sphere-sunrise-scenarios"

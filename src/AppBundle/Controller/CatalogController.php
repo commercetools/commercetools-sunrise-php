@@ -405,21 +405,31 @@ class CatalogController extends SunriseController
         if (!empty($ancestors)) {
             $firstAncestor = array_shift($ancestors);
             $firstAncestorEntry = $categoryTree[$firstAncestor];
-            $firstAncestorEntry->selected = true;
+            if ($categoryId == $firstAncestorEntry->id) {
+                $firstAncestorEntry->selected = true;
+            }
 
             foreach ($firstAncestorEntry->children as $id => $entry) {
                 if ($id != $categoryId && !in_array($id, $ancestors)) {
                     unset($entry->children);
+                }
+                if ($categoryId == $id) {
+                    $entry->selected = true;
                 }
             }
             $collection->add($firstAncestorEntry, $firstAncestor);
             $this->addToCollection($categoryId, $firstAncestorEntry->children, $ancestors, $categoryTree);
         } else {
             $categoryEntry = $categoryTree[$categoryId];
-            $categoryEntry->selected = true;
+            if ($categoryId == $categoryEntry->id) {
+                $categoryEntry->selected = true;
+            }
             if (isset($categoryEntry->children)) {
                 foreach ($categoryEntry->children as $entry) {
                     unset($entry->children);
+                    if ($categoryId == $entry->id) {
+                        $entry->selected = true;
+                    }
                 }
             }
             $collection->add($categoryEntry, $categoryId);
