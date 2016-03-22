@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c35ee855a4e03bc5add5c06efbb4dca1",
-    "content-hash": "d4130c72ac167e5f0e056872bc063a70",
+    "hash": "653f9cd0f8312d09b9980bb97401a421",
+    "content-hash": "76cdbab74f2e7447cf4798a0a2daa73e",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -63,16 +63,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "dev-develop",
+            "version": "v1.0.0-RC10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "9781f445c183ad3e0c950b58ad7f3a57214d5dd5"
+                "reference": "2d0c9cda76b13226381157f0081dace975c72809"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/9781f445c183ad3e0c950b58ad7f3a57214d5dd5",
-                "reference": "9781f445c183ad3e0c950b58ad7f3a57214d5dd5",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/2d0c9cda76b13226381157f0081dace975c72809",
+                "reference": "2d0c9cda76b13226381157f0081dace975c72809",
                 "shasum": ""
             },
             "require": {
@@ -129,7 +129,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-03-15 11:19:43"
+            "time": "2016-03-22 08:46:14"
         },
         {
             "name": "commercetools/sunrise-theme",
@@ -559,16 +559,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.1.1",
+            "version": "6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c"
+                "reference": "d094e337976dff9d8e2424e8485872194e768662"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c6851d6e48f63b69357cbfa55bca116448140e0c",
-                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d094e337976dff9d8e2424e8485872194e768662",
+                "reference": "d094e337976dff9d8e2424e8485872194e768662",
                 "shasum": ""
             },
             "require": {
@@ -584,7 +584,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.1-dev"
+                    "dev-master": "6.2-dev"
                 }
             },
             "autoload": {
@@ -617,7 +617,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-11-23 00:47:50"
+            "time": "2016-03-21 20:02:09"
         },
         {
             "name": "guzzlehttp/promises",
@@ -911,16 +911,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.2.2",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "b3313b618f4edd76523572531d5d7e22fe747430"
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b3313b618f4edd76523572531d5d7e22fe747430",
-                "reference": "b3313b618f4edd76523572531d5d7e22fe747430",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c7e26a21ba357863de030f0b9e701c7d04593774",
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774",
                 "shasum": ""
             },
             "require": {
@@ -955,7 +955,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-03-11 19:54:08"
+            "time": "2016-03-18 20:34:03"
         },
         {
             "name": "pimple/pimple",
@@ -1092,16 +1092,16 @@
         },
         {
             "name": "sensio/distribution-bundle",
-            "version": "v5.0.4",
+            "version": "v5.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "2c167426fc24f9de116345195bc1697a748ee847"
+                "reference": "3a160355bb1364da55ed9e415c1aa1fa8d457b6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/2c167426fc24f9de116345195bc1697a748ee847",
-                "reference": "2c167426fc24f9de116345195bc1697a748ee847",
+                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/3a160355bb1364da55ed9e415c1aa1fa8d457b6f",
+                "reference": "3a160355bb1364da55ed9e415c1aa1fa8d457b6f",
                 "shasum": ""
             },
             "require": {
@@ -1140,7 +1140,7 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2016-02-12 16:21:30"
+            "time": "2016-03-15 16:21:41"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -1975,12 +1975,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/Mink.git",
-                "reference": "d2c32350b42a4d4713e107bcc3fb4a4bd525fdb3"
+                "reference": "a88582ed857ea9792519e723b73d40a399e2a221"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/Mink/zipball/d2c32350b42a4d4713e107bcc3fb4a4bd525fdb3",
-                "reference": "d2c32350b42a4d4713e107bcc3fb4a4bd525fdb3",
+                "url": "https://api.github.com/repos/minkphp/Mink/zipball/a88582ed857ea9792519e723b73d40a399e2a221",
+                "reference": "a88582ed857ea9792519e723b73d40a399e2a221",
                 "shasum": ""
             },
             "require": {
@@ -2025,7 +2025,7 @@
                 "testing",
                 "web"
             ],
-            "time": "2016-03-05 08:33:20"
+            "time": "2016-03-21 10:12:43"
         },
         {
             "name": "behat/mink-extension",
@@ -2291,16 +2291,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v97",
+            "version": "v98",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "f5c08f61f14d376320c6b7ec3418bae7a962fca2"
+                "reference": "4ed1bd8f6961b8951c24778b3bb0fc06f07e8c12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/f5c08f61f14d376320c6b7ec3418bae7a962fca2",
-                "reference": "f5c08f61f14d376320c6b7ec3418bae7a962fca2",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/4ed1bd8f6961b8951c24778b3bb0fc06f07e8c12",
+                "reference": "4ed1bd8f6961b8951c24778b3bb0fc06f07e8c12",
                 "shasum": ""
             },
             "bin": [
@@ -2331,7 +2331,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2016-03-10 18:54:45"
+            "time": "2016-03-21 23:17:57"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -3385,7 +3385,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/php-sdk": 20,
+        "commercetools/php-sdk": 10,
         "commercetools/sunrise-theme": 20,
         "commercetools/sunrise-scenarios": 20,
         "behat/mink": 20,
