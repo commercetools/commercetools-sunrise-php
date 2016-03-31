@@ -30,5 +30,6 @@ handlebars:
     - %kernel.root_dir%/../vendor/commercetools/sunrise-theme/templates
   helpers:
     esi: JaySDe\HandlebarsBundle\HandlebarsHelper::esi
+    cms: JaySDe\HandlebarsBundle\HandlebarsHelper::cms
     i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
     json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
