@@ -12,7 +12,7 @@ define('PROJECT_DIR', dirname(__DIR__));
 require __DIR__.'/autoload.php';
 include_once __DIR__.'/../var/bootstrap.php.cache';
 
-$kernel = new \AppKernel('prod', true);
+$kernel = new \AppKernel('prod', false);
 $kernel->loadClassCache();
 $kernel = new \AppCache($kernel);
 
