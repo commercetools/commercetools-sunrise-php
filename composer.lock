@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6978bc1b9b4fa44472032292db04f94f",
-    "content-hash": "0419e528e4920dffdb28b9f695874c58",
+    "hash": "7cb9c925f8f5fa0948ed95cbc4ee88c8",
+    "content-hash": "03f0da0404e54da87f914b672eec30a5",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -63,16 +63,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "v1.0.0-RC10",
+            "version": "v1.0.0-RC11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "2d0c9cda76b13226381157f0081dace975c72809"
+                "reference": "1268a423b06a4877aa6b64d69321fb8f63c12d84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/2d0c9cda76b13226381157f0081dace975c72809",
-                "reference": "2d0c9cda76b13226381157f0081dace975c72809",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/1268a423b06a4877aa6b64d69321fb8f63c12d84",
+                "reference": "1268a423b06a4877aa6b64d69321fb8f63c12d84",
                 "shasum": ""
             },
             "require": {
@@ -91,14 +91,12 @@
                 "guzzlehttp/guzzle": "^6.0",
                 "incenteev/composer-parameter-handler": "^2.0",
                 "mayflower/php-codebrowser": "^1.0",
-                "micheh/teamcity-clover": "^0.6.0",
                 "monolog/monolog": "^1.12",
-                "munkie/phpunit-teamcity-testlistener": "^1.2",
                 "pdepend/pdepend": "@stable",
                 "phploc/phploc": "^2.0",
                 "phpmd/phpmd": "@stable",
                 "phpunit/phpcov": "*",
-                "phpunit/phpunit": "^4.0",
+                "phpunit/phpunit": "^5.0 || ^4.0",
                 "sebastian/phpcpd": "@stable",
                 "squizlabs/php_codesniffer": "@stable",
                 "symfony/yaml": "*"
@@ -111,6 +109,8 @@
                         "env-map": {
                             "client_id": "COMMERCETOOLS_CLIENT_ID",
                             "client_secret": "COMMERCETOOLS_CLIENT_SECRET",
+                            "view_products-client_id": "COMMERCETOOLS_CLIENT_ID_VIEW",
+                            "view_products-client_secret": "COMMERCETOOLS_CLIENT_SECRET_VIEW",
                             "project": "COMMERCETOOLS_PROJECT",
                             "oauth_url": "COMMERCETOOLS_OAUTH_URL",
                             "api_url": "COMMERCETOOLS_API_URL"
@@ -129,20 +129,20 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-03-22 08:46:14"
+            "time": "2016-04-06 15:59:34"
         },
         {
             "name": "commercetools/sunrise-theme",
-            "version": "0.57.0-RC1",
+            "version": "0.57.0-RC2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/sunrise-theme.git",
-                "reference": "28670bc419edea11d282680aad86f696bc881e53"
+                "reference": "eca0b3504c4cf09501bca3637845410f40cec033"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/sunrise-theme/zipball/28670bc419edea11d282680aad86f696bc881e53",
-                "reference": "28670bc419edea11d282680aad86f696bc881e53",
+                "url": "https://api.github.com/repos/jayS-de/sunrise-theme/zipball/eca0b3504c4cf09501bca3637845410f40cec033",
+                "reference": "eca0b3504c4cf09501bca3637845410f40cec033",
                 "shasum": ""
             },
             "type": "library",
@@ -157,7 +157,7 @@
                 }
             ],
             "description": "Commercetools Sunrise theme",
-            "time": "2016-03-15 08:51:01"
+            "time": "2016-04-11 14:53:13"
         },
         {
             "name": "doctrine/annotations",
@@ -781,16 +781,16 @@
         },
         {
             "name": "jays-de/handlebars-bundle",
-            "version": "0.3.0",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/HandlebarsBundle.git",
-                "reference": "2b36cd28ebc31c4302bea174cf2ad5e64aab49a0"
+                "reference": "dd5bfa93c803b4244130bf37f0fa377ec90f7705"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/2b36cd28ebc31c4302bea174cf2ad5e64aab49a0",
-                "reference": "2b36cd28ebc31c4302bea174cf2ad5e64aab49a0",
+                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/dd5bfa93c803b4244130bf37f0fa377ec90f7705",
+                "reference": "dd5bfa93c803b4244130bf37f0fa377ec90f7705",
                 "shasum": ""
             },
             "require": {
@@ -800,6 +800,7 @@
                 "zordius/lightncandy": "^0.92"
             },
             "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.0",
                 "symfony/yaml": "^3.0"
             },
             "type": "symfony-bundle",
@@ -829,20 +830,20 @@
                 "symfony",
                 "templating"
             ],
-            "time": "2016-03-31 14:10:39"
+            "time": "2016-04-08 09:35:39"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.1",
+            "version": "1.18.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45"
+                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
-                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/064b38c16790249488e7a8b987acf1c9d7383c09",
+                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09",
                 "shasum": ""
             },
             "require": {
@@ -857,13 +858,13 @@
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
                 "jakub-onderka/php-parallel-lint": "0.9",
+                "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
                 "raven/raven": "^0.13",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "swiftmailer/swiftmailer": "~5.3",
-                "videlalvaro/php-amqplib": "~2.4"
+                "swiftmailer/swiftmailer": "~5.3"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -872,11 +873,11 @@
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
@@ -907,7 +908,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-03-13 16:08:35"
+            "time": "2016-04-02 13:12:58"
         },
         {
             "name": "paragonie/random_compat",
@@ -1591,6 +1592,60 @@
                 "shim"
             ],
             "time": "2016-01-20 09:13:37"
+        },
+        {
+            "name": "symfony/psr-http-message-bridge",
+            "version": "v0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/psr-http-message-bridge.git",
+                "reference": "dc7e308e1dc2898a46776e2221a643cb08315453"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/psr-http-message-bridge/zipball/dc7e308e1dc2898a46776e2221a643cb08315453",
+                "reference": "dc7e308e1dc2898a46776e2221a643cb08315453",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "psr/http-message": "~1.0",
+                "symfony/http-foundation": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "~2.7|~3.0"
+            },
+            "suggest": {
+                "zendframework/zend-diactoros": "To use the Zend Diactoros factory"
+            },
+            "type": "symfony-bridge",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Bridge\\PsrHttpMessage\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "PSR HTTP message bridge",
+            "homepage": "http://symfony.com",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr-7"
+            ],
+            "time": "2015-05-29 17:57:12"
         },
         {
             "name": "symfony/symfony",
@@ -2288,16 +2343,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v99",
+            "version": "v100",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "9fa233a21466e9b0364ce7436a56e52aa4a24fbd"
+                "reference": "092b9d33d98764704ccd75db0ea1cef8eeee4b25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/9fa233a21466e9b0364ce7436a56e52aa4a24fbd",
-                "reference": "9fa233a21466e9b0364ce7436a56e52aa4a24fbd",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/092b9d33d98764704ccd75db0ea1cef8eeee4b25",
+                "reference": "092b9d33d98764704ccd75db0ea1cef8eeee4b25",
                 "shasum": ""
             },
             "bin": [
@@ -2328,7 +2383,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2016-03-23 17:39:59"
+            "time": "2016-03-31 13:33:46"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -2543,16 +2598,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "3.3.0",
+            "version": "3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "fe33716763b604ade4cb442c0794f5bd5ad73004"
+                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/fe33716763b604ade4cb442c0794f5bd5ad73004",
-                "reference": "fe33716763b604ade4cb442c0794f5bd5ad73004",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2431befdd451fac43fbcde94d1a92fb3b8b68f86",
+                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86",
                 "shasum": ""
             },
             "require": {
@@ -2570,7 +2625,7 @@
             },
             "suggest": {
                 "ext-dom": "*",
-                "ext-xdebug": ">=2.2.1",
+                "ext-xdebug": ">=2.4.0",
                 "ext-xmlwriter": "*"
             },
             "type": "library",
@@ -2602,7 +2657,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-03-03 08:49:08"
+            "time": "2016-04-08 08:14:53"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2784,16 +2839,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.2.12",
+            "version": "5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "6f0948bab32270352f97d1913d82a49338dcb0da"
+                "reference": "34a3acb401ae79deb37bc6e5f5ec3d325b369b4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6f0948bab32270352f97d1913d82a49338dcb0da",
-                "reference": "6f0948bab32270352f97d1913d82a49338dcb0da",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/34a3acb401ae79deb37bc6e5f5ec3d325b369b4c",
+                "reference": "34a3acb401ae79deb37bc6e5f5ec3d325b369b4c",
                 "shasum": ""
             },
             "require": {
@@ -2808,13 +2863,14 @@
                 "phpunit/php-code-coverage": "^3.3.0",
                 "phpunit/php-file-iterator": "~1.4",
                 "phpunit/php-text-template": "~1.2",
-                "phpunit/php-timer": ">=1.0.6",
-                "phpunit/phpunit-mock-objects": ">=3.0.5",
+                "phpunit/php-timer": "^1.0.6",
+                "phpunit/phpunit-mock-objects": "^3.1",
                 "sebastian/comparator": "~1.1",
                 "sebastian/diff": "~1.2",
                 "sebastian/environment": "~1.3",
                 "sebastian/exporter": "~1.2",
                 "sebastian/global-state": "~1.0",
+                "sebastian/object-enumerator": "~1.0",
                 "sebastian/resource-operations": "~1.0",
                 "sebastian/version": "~1.0|~2.0",
                 "symfony/yaml": "~2.1|~3.0"
@@ -2828,7 +2884,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.2.x-dev"
+                    "dev-master": "5.3.x-dev"
                 }
             },
             "autoload": {
@@ -2854,7 +2910,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-03-15 05:59:58"
+            "time": "2016-04-07 07:04:34"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3241,6 +3297,52 @@
             "time": "2015-10-12 03:26:01"
         },
         {
+            "name": "sebastian/object-enumerator",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/object-enumerator.git",
+                "reference": "d4ca2fb70344987502567bc50081c03e6192fb26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/object-enumerator/zipball/d4ca2fb70344987502567bc50081c03e6192fb26",
+                "reference": "d4ca2fb70344987502567bc50081c03e6192fb26",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "sebastian/recursion-context": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de"
+                }
+            ],
+            "description": "Traverses array structures and object graphs to enumerate all referenced objects",
+            "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
+            "time": "2016-01-28 13:25:10"
+        },
+        {
             "name": "sebastian/recursion-context",
             "version": "1.0.2",
             "source": {
@@ -3383,7 +3485,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "commercetools/php-sdk": 10,
-        "commercetools/sunrise-theme": 20,
+        "commercetools/sunrise-theme": 10,
         "commercetools/sunrise-scenarios": 20,
         "behat/mink": 20,
         "behat/behat": 10,

@@ -34,12 +34,12 @@ For local development purposes you can run the application in the php built-in w
 
 Production Site:
 ```php
-php app/console.php server:start --env prod
+php bin/console server:run --env prod
 ```
 
 Development Site:
 ```php
-php app/console.php server:start
+php bin/console server:run
 ```
 
 Open [http://localhost:8000/](http://localhost:8000/)
@@ -54,13 +54,13 @@ IMPORTANT: The composer configuration clones the PHP commons library and the sun
 
 ### Available console commands
 ```
-php app/console.php list
+php bin/console list
 ```
 
 ### Cache warm up
 
 ```
-php app/console.php cache:warmup
+php bin/console cache:warmup
 ```
 
 ## Deployment
