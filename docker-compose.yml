@@ -1,0 +1,18 @@
+application:
+    image: jaysde/symfony-php-fpm
+    tty: true
+    ports:
+        - 9000:9000
+    volumes:
+      - .:/var/www/symfony
+nginx:
+    image: jaysde/symfony-nginx
+    ports:
+        - 80:80
+    links:
+        - application
+    volumes_from:
+        - application
+    volumes:
+        - ./var/logs/:/var/log/nginx
+
