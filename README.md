@@ -75,6 +75,7 @@ For an easy and fast deployment of your application we recommend [heroku](https:
 The Sunrise app is delivered with a docker compose configuration.
 
 ```sh
+docker run -v $PWD:/var/www/symfony -w /var/www/symfony --rm=true jaysde/symfony-php-fpm composer install --prefer-dist
 docker-compose up
 ```
 
