@@ -3,6 +3,7 @@
 use Commercetools\Sunrise\AppBundle\AppBundle;
 use JaySDe\HandlebarsBundle\HandlebarsBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Sensio\Bundle\DistributionBundle\SensioDistributionBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -34,6 +35,7 @@ class AppKernel extends Kernel
         ];
         if ($this->getEnvironment() == 'dev') {
             $bundles[] = new WebProfilerBundle();
+            $bundles[] = new SensioDistributionBundle();
         }
         return $bundles;
     }
@@ -66,5 +68,20 @@ class AppKernel extends Kernel
                 'intercept_redirects' => false,
             ));
         }
+    }
+
+    public function getRootDir()
+    {
+        return __DIR__;
+    }
+
+    public function getCacheDir()
+    {
+        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+    }
+
+    public function getLogDir()
+    {
+        return dirname(__DIR__).'/var/logs';
     }
 }

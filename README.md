@@ -19,8 +19,7 @@ Please read the [Changelog](CHANGELOG.md) before updating in any case.
 
 To run, you need a project on the commercetools platform that contains some minimum necessary content (e.g. the sample data). Then get your project key, client ID and client secret from the merchant center and provide them in one of the following ways:
 
- 1. TODO how to get stuff into the $_SERVER vars ? environment variables? CGI?
- 2. create a file `app/config/parameters.yml` with the following format:
+ 1. create a file `app/config/parameters.yml` with the following format:
 
 ```yml
 parameters:
@@ -34,12 +33,12 @@ For local development purposes you can run the application in the php built-in w
 
 Production Site:
 ```php
-php app/console.php server:start --env prod
+php bin/console server:run --env prod
 ```
 
 Development Site:
 ```php
-php app/console.php server:start
+php bin/console server:run
 ```
 
 Open [http://localhost:8000/](http://localhost:8000/)
@@ -54,20 +53,33 @@ IMPORTANT: The composer configuration clones the PHP commons library and the sun
 
 ### Available console commands
 ```
-php app/console.php list
+php bin/console list
 ```
 
 ### Cache warm up
 
 ```
-php app/console.php cache:warmup
+php bin/console cache:warmup
 ```
 
 ## Deployment
 
+### Heroku
+
 For an easy and fast deployment of your application we recommend [heroku](https://www.heroku.com):
 
 <a href="https://heroku.com/deploy?template=https://github.com/sphereio/commercetools-sunrise-php"><img src="https://www.herokucdn.com/deploy/button.png" alt="Deploy"></a>
+
+### Docker
+
+The Sunrise app is delivered with a docker compose configuration.
+
+```sh
+docker run -v $PWD:/var/www/symfony -w /var/www/symfony --rm=true jaysde/symfony-php-fpm composer install --prefer-dist
+docker-compose up
+```
+
+This starts a nginx and a php-fpm docker container serving the application.
 
 # Create your own shop
 

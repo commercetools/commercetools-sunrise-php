@@ -205,7 +205,7 @@ class SunriseController extends Controller
         $meta->_links->miniCart = new ViewLink($this->generateUrl('miniCart'));
         $meta->_links->cart = new ViewLink($this->generateUrl('cart'));
         $meta->_links->signIn = new ViewLink($this->generateUrl('login_route'));
-        $meta->_links->loginCheck = new ViewLink($this->generateUrl('login_check'));
+        $meta->_links->logInSubmit = new ViewLink($this->generateUrl('login_check'));
         $meta->csrfToken = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
         $bagItems = new ViewDataCollection();
         for ($i = 1; $i < 10; $i++) {

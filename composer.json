@@ -13,17 +13,16 @@
     "php": ">=5.6",
     "ext-apcu": "*",
     "ext-mbstring": "*",
-    "commercetools/php-sdk": "dev-develop",
-    "commercetools/sunrise-design": "*",
+    "commercetools/php-sdk": "^1.0@beta",
+    "commercetools/sunrise-theme": "^0.57@beta",
     "commercetools/commons": "^0.1",
-    "symfony/symfony": "^3.0",
-    "jays-de/handlebars-bundle": "^0.2",
-    "symfony/config": "^3.0",
-    "symfony/yaml": "^3.0",
-    "symfony/translation": "*",
+    "jays-de/handlebars-bundle": "^0.4",
     "monolog/monolog": "^1.7",
-    "sensio/framework-extra-bundle": "^3.0",
+    "symfony/symfony": "^3.0",
     "symfony/monolog-bundle": "^2.8",
+    "symfony/psr-http-message-bridge": "^0.2.0",
+    "sensio/framework-extra-bundle": "^3.0",
+    "sensio/distribution-bundle": "^5.0",
     "incenteev/composer-parameter-handler": "^2.0"
   },
   "require-dev": {
@@ -33,12 +32,13 @@
     "behat/mink-extension": "^2.0@dev",
     "behat/mink-selenium2-driver": "^1.2@dev",
     "heroku/heroku-buildpack-php": "*",
-    "phpunit/phpunit": "^4.7"
+    "phpunit/phpunit": "^5.0"
   },
   "autoload": {
     "psr-4": {
       "Commercetools\\Sunrise\\": ["src/"]
-    }
+    },
+    "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
   },
   "autoload-dev": {
     "psr-4": {"Commercetools\\Sunrise\\": ["tests/unit/", "tests/integration/", "tests/behat/"]}
@@ -46,14 +46,21 @@
   "scripts": {
     "assetInstall": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-      "cp -rf vendor/commercetools/sunrise-design/assets web/",
-      "cp -rf vendor/commercetools/sunrise-design/assets/img/favicon.ico web/favicon.ico",
-      "php app/console.php assets:install web/assets"
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
+      "cp -rf vendor/commercetools/sunrise-theme/assets web/",
+      "cp -rf vendor/commercetools/sunrise-theme/assets/img/favicon.ico web/favicon.ico",
+      "bin/console assets:install web/assets"
     ],
     "post-update-cmd": "@assetInstall",
     "post-install-cmd": "@assetInstall"
   },
   "extra": {
+    "symfony-app-dir": "app",
+    "symfony-bin-dir": "bin",
+    "symfony-var-dir": "var",
+    "symfony-web-dir": "web",
     "incenteev-parameters": [
       {
         "file": "app/config/parameters.yml",
@@ -67,23 +74,6 @@
     ]
   },
   "repositories": [
-    {
-      "type": "package",
-      "package": {
-        "name": "commercetools/sunrise-design",
-        "version": "0.51.0",
-        "dist": {
-          "url": "https://github.com/sphereio/commercetools-sunrise-design/archive/de639179c73e5b123786efdae3dc6eb2460e2205.zip",
-          "type": "zip",
-          "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
-        },
-        "source": {
-          "url": "https://github.com/sphereio/commercetools-sunrise-design",
-          "type": "git",
-          "reference": "de639179c73e5b123786efdae3dc6eb2460e2205"
-        }
-      }
-    },
     {
       "type": "vcs",
       "url": "https://github.com/sphereio/sphere-sunrise-scenarios"
