@@ -20,8 +20,8 @@ pdp:
   methods:  [GET, HEAD]
 
 myAccount:
-  path: /{_locale}/user/secret
-  defaults:  { _controller: app.user.controller:secretAction }
+  path: /{_locale}/user/details
+  defaults:  { _controller: app.user.controller:detailsAction }
   methods:  [GET, HEAD]
 myDetails:
   path: /{_locale}/user/details

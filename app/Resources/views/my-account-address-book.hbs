@@ -19,7 +19,7 @@
           <div class="address-book-wrapper">
             <div class="row">
               <div class="col-sm-3">
-                {{> catalog/my-account-sidebar positionTwo=true}}
+                {{> myaccount/my-account-sidebar positionTwo=true}}
               </div>
               <div id="my-account-desktop-content" class="col-sm-9">
                 <div class="address-book-content">
@@ -44,11 +44,11 @@
                         <div>{{content.shippingAddress.country}}</div>
                         <div class="address-box-edit-btn">
                             <a href="{{content.shippingAddress.link}}"><button>
-                              <img src="{{meta.assetsPath}}/img/edit-1.png" alt="edit icon">{{content.shippingAddress.edit}}
+                              <img src="{{meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="edit icon">{{content.shippingAddress.edit}}
                           </button></a>
                         </div>
                       </div>
-                      <div class="address-book-dark-box">2
+                      <div class="address-book-dark-box">
                         <div class="address-book-dark-box-title">{{content.billingAddress.title}}</div>
                         <div>{{content.billingAddress.name}}</div>
                         <div>{{content.billingAddress.address}}</div>
@@ -57,7 +57,7 @@
                         <div>{{content.billingAddress.country}}</div>
                         <div class="address-box-edit-btn">
                           <a href="{{content.billingAddress.link}}"><button>
-                              <img src="{{meta.assetsPath}}/img/edit-1.png" alt="edit icon">{{content.billingAddress.edit}}
+                              <img src="{{meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="edit icon">{{content.billingAddress.edit}}
                           </button></a>
                         </div>
                       </div>
@@ -73,8 +73,8 @@
                         <div>{{content.secondaryAddress.postalCode}}</div>
                         <div>{{content.secondaryAddress.country}}</div>
                         <div class="address-book-edit-delete">
-                          <div><button><img src="{{meta.assetsPath}}/img/edit-1.png" alt="">{{content.secondaryAddress.edit}}</button></div>
-                          <div><button><img src="{{meta.assetsPath}}/img/delete-60px.png" alt="">{{content.secondaryAddress.delete}}</button></div>
+                          <div><button><img src="{{meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="">{{content.secondaryAddress.edit}}</button></div>
+                          <div><button><img src="{{meta.assetsPath}}/img/delete-60px-ca8af169baa3c3762ed83c64371a50ac.png" alt="">{{content.secondaryAddress.delete}}</button></div>
                         </div>
                       </div>
                       <div class="box-addresses-title">
@@ -87,8 +87,8 @@
                         <div>{{content.additionalAddress.postalCode}}</div>
                         <div>{{content.additionalAddress.country}}</div>
                         <div class="address-book-edit-delete">
-                          <div><button><img src="{{meta.assetsPath}}/img/edit-1.png" alt="">{{content.additionalAddress.edit}}</button></div>
-                          <div><button><img src="{{meta.assetsPath}}/img/delete-60px.png" alt="">{{content.additionalAddress.delete}}</button></div>
+                          <div><button><img src="{{meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="">{{content.additionalAddress.edit}}</button></div>
+                          <div><button><img src="{{meta.assetsPath}}/img/delete-60px-ca8af169baa3c3762ed83c64371a50ac.png" alt="">{{content.additionalAddress.delete}}</button></div>
                         </div>
                       </div>
                     </div>
@@ -108,7 +108,7 @@
       </div>
     </div>
   </div>
-  {{!-- {{> catalog/wishlist}} --}}
+  {{!-- {{> common/wishlist}} --}}
   {{> common/footer}}
   {{> common/htmlscripts}}
 </body>

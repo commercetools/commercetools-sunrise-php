@@ -5,7 +5,7 @@
     <span class="text-uppercase shipping-info-title">{{i18n "myAccount:addressInformation"}}</span>
     <span class="pull-right required-fields">{{i18n "main:form.required"}}*</span>
   </div>
-  {{> checkout/global-form-errors errors=addressForm.errors}}
+  {{> form/global-errors errors=addressForm.errors}}
   {{> myaccount/address-form-elements form=address}}
 </form>
 <!-- end myaccount/address-form.hbs -->
