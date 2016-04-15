@@ -1,6 +1,7 @@
 <?php
 
 use Commercetools\Sunrise\AppBundle\AppBundle;
+use Commercetools\Symfony\CtpBundle\CtpBundle;
 use JaySDe\HandlebarsBundle\HandlebarsBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Sensio\Bundle\DistributionBundle\SensioDistributionBundle;
@@ -32,6 +33,7 @@ class AppKernel extends Kernel
             new SensioFrameworkExtraBundle(),
             new MonologBundle(),
             new AppBundle(),
+            new CtpBundle()
         ];
         if ($this->getEnvironment() == 'dev') {
             $bundles[] = new WebProfilerBundle();

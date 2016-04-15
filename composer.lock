@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9e9d8263262b3c49afaad288726dabe9",
-    "content-hash": "d2854d1128655d15fcdfbe7945ab7c77",
+    "hash": "f92e226a977038f2b9e8644a62b0a309",
+    "content-hash": "92f8fbdbc6b05ce73c41cb23626b50de",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -158,6 +158,42 @@
             ],
             "description": "Commercetools Sunrise theme",
             "time": "2016-04-11 14:53:13"
+        },
+        {
+            "name": "commercetools/symfony-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sphereio/commercetools-php-symfony.git",
+                "reference": "55168f6f4bdd23406a2f0f4cf1472ee6dbb1ce5b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/55168f6f4bdd23406a2f0f4cf1472ee6dbb1ce5b",
+                "reference": "55168f6f4bdd23406a2f0f4cf1472ee6dbb1ce5b",
+                "shasum": ""
+            },
+            "require": {
+                "commercetools/commons": "*",
+                "commercetools/php-sdk": "^1.0@beta",
+                "php": ">=5.5.9",
+                "symfony/symfony": "3.0.*"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Commercetools\\Symfony\\CtpBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Symfony bundle for Commercetools platform",
+            "time": "2016-04-13 10:39:31"
         },
         {
             "name": "doctrine/annotations",
@@ -3486,6 +3522,7 @@
     "stability-flags": {
         "commercetools/php-sdk": 10,
         "commercetools/sunrise-theme": 10,
+        "commercetools/symfony-bundle": 20,
         "commercetools/sunrise-scenarios": 20,
         "behat/mink": 20,
         "behat/behat": 10,

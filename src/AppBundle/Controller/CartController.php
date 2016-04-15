@@ -23,7 +23,7 @@ class CartController extends SunriseController
         $session = $this->get('session');
         $viewData = $this->getViewData('Sunrise - Cart', $request);
         $cartId = $session->get('cartId');
-        $cart = $this->get('app.repository.cart')->getCart($cartId);
+        $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId);
         $viewData->content = new ViewData();
         $viewData->content->cart = $this->getCart($cart);
         $viewData->meta->_links->continueShopping = new ViewLink($this->generateUrl('home'));
@@ -46,8 +46,8 @@ class CartController extends SunriseController
         $cartId = $session->get('cartId');
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('currencies.'. $country);
-        $cart = $this->get('app.repository.cart')
-            ->addLineItem($cartId, $productId, $variantId, $quantity, $currency, $country);
+        $cart = $this->get('commercetools.repository.cart')
+            ->addLineItem($request->getLocale(), $cartId, $productId, $variantId, $quantity, $currency, $country);
         $session->set('cartId', $cart->getId());
         $session->set('cartNumItems', $this->getItemCount($cart));
         $session->save();
@@ -80,8 +80,8 @@ class CartController extends SunriseController
         $lineItemId = $request->get('lineItemId');
         $lineItemCount = (int)$request->get('quantity');
         $cartId = $session->get('cartId');
-        $cart = $this->get('app.repository.cart')
-            ->changeLineItemQuantity($cartId, $lineItemId, $lineItemCount);
+        $cart = $this->get('commercetools.repository.cart')
+            ->changeLineItemQuantity($request->getLocale(), $cartId, $lineItemId, $lineItemCount);
 
         $session->set('cartNumItems', $this->getItemCount($cart));
         $session->save();
@@ -94,7 +94,8 @@ class CartController extends SunriseController
         $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
         $cartId = $session->get('cartId');
-        $cart = $this->get('app.repository.cart')->deleteLineItem($cartId, $lineItemId);
+        $cart = $this->get('commercetools.repository.cart')
+            ->deleteLineItem($request->getLocale(), $cartId, $lineItemId);
 
         $session->set('cartNumItems', $this->getItemCount($cart));
         $session->save();

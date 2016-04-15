@@ -15,6 +15,7 @@
     "ext-mbstring": "*",
     "commercetools/php-sdk": "^1.0@beta",
     "commercetools/sunrise-theme": "^0.57@beta",
+    "commercetools/symfony-bundle": "@dev",
     "commercetools/commons": "^0.1",
     "jays-de/handlebars-bundle": "^0.4",
     "monolog/monolog": "^1.7",

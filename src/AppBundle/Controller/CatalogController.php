@@ -106,7 +106,7 @@ class CatalogController extends SunriseController
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page', $request);
 
-        $product = $this->get('app.repository.product')->getProductBySlug($slug, $this->locale);
+        $product = $this->get('commercetools.repository.product')->getProductBySlug($slug, $this->locale);
         $productData = $this->getProductModel()->getProductDetailData($product, $sku, $this->locale);
         $viewData->content->product = $productData;
 
@@ -237,7 +237,7 @@ class CatalogController extends SunriseController
         $attributeName = $facetConfig['attribute'];
         $cache = $this->get('app.cache');
         $cacheKey = $facetName .'-facet-' . $this->locale;
-        $typeData = $this->get('app.repository.productType')->getTypes();
+        $typeData = $this->get('app.repository.product_type')->getTypes();
         if (!$cache->has($cacheKey)) {
             $facetValues = [];
             /**
@@ -490,12 +490,14 @@ class CatalogController extends SunriseController
          * @var ProductProjectionCollection $products
          * @var PagedSearchResponse $response
          */
-        list($products, $facets, $offset, $total) = $this->get('app.repository.product')->getProducts(
+        list($products, $facets, $offset, $total) = $this->get('commercetools.repository.product')->getProducts(
+            $request->getLocale(),
             $itemsPerPage,
             $currentPage,
             $sort,
             $currency,
             $country,
+            null,
             $this->getFilters($uri, $category),
             $this->getFacetDefinitions()
         );
@@ -533,7 +535,7 @@ class CatalogController extends SunriseController
         $model = new ProductModel(
             $cache,
             $this->config,
-            $this->get('app.repository.productType'),
+            $this->get('app.repository.product_type'),
             $this->get('router')->getGenerator()
         );
 

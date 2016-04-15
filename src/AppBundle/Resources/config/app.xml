@@ -9,26 +9,26 @@
             <factory service="app.cache.factory" method="get" />
         </service>
         <service id="app.cache.factory" class="Commercetools\Core\Cache\CacheAdapterFactory" />
-        <service id="commercetools.client.factory" class="Commercetools\Sunrise\AppBundle\Service\ClientFactory">
+        <service id="app.commercetools.client.factory" class="Commercetools\Sunrise\AppBundle\Service\ClientFactory">
             <argument>%app.commercetools%</argument>
             <argument>%app.fallback_languages%</argument>
             <argument type="service" id="app.cache" />
             <argument type="service" id="logger" on-invalid="null" />
         </service>
-        <service id="commercetools.client" class="Commercetools\Core\Client">
-            <factory service="commercetools.client.factory" method="build"/>
+        <service id="app.commercetools.client" class="Commercetools\Core\Client">
+            <factory service="app.commercetools.client.factory" method="build"/>
             <argument type="service" id="app.locale" />
         </service>
         <service id="app.repository.category" class="Commercetools\Sunrise\AppBundle\Repository\CategoryRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.commercetools.client"/>
             <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.cart" class="Commercetools\Sunrise\AppBundle\Repository\CartRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.commercetools.client"/>
             <argument type="service" id="app.repository.shipping_method"/>
             <argument type="service" id="app.locale"/>
             <argument type="service" id="app.extension.profiler" />
@@ -36,31 +36,31 @@
         <service id="app.repository.product" class="Commercetools\Sunrise\AppBundle\Repository\ProductRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.commercetools.client"/>
             <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.order" class="Commercetools\Sunrise\AppBundle\Repository\OrderRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.commercetools.client"/>
             <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.customer" class="Commercetools\Sunrise\AppBundle\Repository\CustomerRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.commercetools.client"/>
             <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.product_type" class="Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.commercetools.client"/>
             <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.repository.shipping_method" class="Commercetools\Sunrise\AppBundle\Repository\ShippingMethodRepository">
             <argument>%app.config%</argument>
             <argument type="service" id="app.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="app.commercetools.client"/>
             <argument type="service" id="app.extension.profiler" />
         </service>
         <service id="app.catalog.controller" class="Commercetools\Sunrise\AppBundle\Controller\CatalogController">
@@ -124,7 +124,7 @@
                  public="false"
         >
             <argument type="service" id="session" />
-            <argument type="service" id="commercetools.client.factory" />
+            <argument type="service" id="app.commercetools.client.factory" />
             <argument /> <!-- User Provider -->
             <argument type="service" id="security.user_checker" />
             <argument /> <!-- Provider-shared Key -->

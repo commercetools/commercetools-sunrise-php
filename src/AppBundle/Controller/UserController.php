@@ -112,8 +112,9 @@ class UserController extends SunriseController
              */
 
             try {
-                $this->get('app.repository.customer')
+                $this->get('commercetools.repository.customer')
                     ->setAddresses(
+                        $request->getLocale(),
                         $customer,
                         $userAddress->toCTPAddress(),
                         $addressId
@@ -150,7 +151,7 @@ class UserController extends SunriseController
         /**
          * @var Customer $customer
          */
-        $customer = $this->get('app.repository.customer')->getCustomer($customerId);
+        $customer = $this->get('commercetools.repository.customer')->getCustomer($request->getLocale(), $customerId);
 
         $viewData->content->personalDetails = new ViewData();
         $viewData->content->personalDetails->name = $customer->getFirstName() . ' ' . $customer->getLastName();
@@ -190,8 +191,8 @@ class UserController extends SunriseController
             $currentPassword = $userDetails->getCurrentPassword();
             $newPassword = $userDetails->getPassword();
 
-            $customer = $this->get('app.repository.customer')
-                ->setCustomerDetails($customer, $firstName, $lastName, $email);
+            $customer = $this->get('commercetools.repository.customer')
+                ->setCustomerDetails($request->getLocale(), $customer, $firstName, $lastName, $email);
 
             if (is_null($customer)) {
                 $this->addFlash('error', 'Error updating user');
@@ -201,8 +202,8 @@ class UserController extends SunriseController
             }
 
             try {
-                $this->get('app.repository.customer')
-                    ->setNewPassword($customer, $currentPassword, $newPassword);
+                $this->get('commercetools.repository.customer')
+                    ->setNewPassword($request->getLocale(), $customer, $currentPassword, $newPassword);
             } catch (\InvalidArgumentException $e) {
                 $this->addFlash('error', $this->trans($e->getMessage(), [], 'customers'));
                 return new Response($e->getMessage());
@@ -387,7 +388,7 @@ class UserController extends SunriseController
         /**
          * @var Client $client
          */
-        $client = $this->get('commercetools.client');
+        $client = $this->get('app.commercetools.client');
 
         $request = CustomerByIdGetRequest::ofId($user->getId());
 
