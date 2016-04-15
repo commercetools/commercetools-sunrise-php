@@ -141,12 +141,6 @@ class UserController extends SunriseController
         return $this->render('my-account-login.hbs', $viewData->toArray());
     }
 
-    public function secretAction(Request $request)
-    {
-        //@todo change button, now it navigate to the detail page
-        return $this->redirect($this->generateUrl('myDetails'));
-    }
-
     public function detailsAction(Request $request)
     {
         $viewData = $this->getViewData('MyAccount - Details', $request);
