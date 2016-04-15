@@ -20,19 +20,19 @@ pdp:
   methods:  [GET, HEAD]
 
 myAccount:
-  path: /{_locale}/user/secret
-  defaults:  { _controller: app.user.controller:secretAction }
+  path: /{_locale}/user/details
+  defaults:  { _controller: app.user.controller:detailsAction }
   methods:  [GET, HEAD]
 myDetails:
   path: /{_locale}/user/details
   defaults:  { _controller: app.user.controller:detailsAction }
-  methods:  [GET, HEAD]
+  methods:  [GET, HEAD, POST]
 myAdressBook:
   path: /{_locale}/user/addresses
   defaults:  { _controller: app.user.controller:addressesAction }
   methods:  [GET, HEAD]
 editAddress:
-  path: /{_locale}/user/address/edit
+  path: /{_locale}/user/address/edit/{id}
   defaults:  { _controller: app.user.controller:editAddressAction }
   methods:  [GET, HEAD, POST]
 myOrders:
@@ -44,7 +44,6 @@ myOrderDetails:
   path: /{_locale}/user/orders/{orderId}
   defaults: { _controller: app.user.controller:orderDetailAction }
   methods:  [GET, HEAD]
-
 
 login_route:
   path: /{_locale}/login

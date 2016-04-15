@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {{> common/htmlhead}}
+</head>
+
+<body>
+  <div class="darkbg hidden"></div>
+  {{> common/header}}
+  <div class="my-account">
+    <div class="container">
+      <div class="my-account-title">
+        <span class="my-account-title-text icon-user">{{i18n "my-account:myAccount.title"}}</span>
+      </div>
+      <div class="row">
+        <div class="col-sm-9">
+          <div class="my-account-content">
+            <div class="row">
+              <div class="col-sm-3">
+                {{> myaccount/my-account-sidebar positionOne=true}}
+              </div>
+              <div id="my-account-desktop-content" class="col-sm-9">
+                <div class="personal-details">
+                  <div class="personal-details-text-one">
+                    <span>{{i18n "my-account:personalDetails.welcomeBack"}}</span>
+                    <span>{{content.welcomeName}}</span>
+                  </div>
+                  <div class="personal-details-text-two">
+                    {{i18n "my-account:personalDetails.welcomeDescription"}}<br>
+                    <span class="customer-number">{{content.customerNumber}}</span>
+                  </div>
+                  <div class="personal-details-landing-wrapper">
+                    <div class="personal-details-title">
+                      {{i18n "my-account:personalDetails.personalDetailsTitle"}}
+                    </div>
+                    <div class="personal-details-box">
+                      <div>{{content.personalDetails.name}}</div>
+                      <div>{{content.personalDetails.password}}</div><br>
+                      <div>{{content.personalDetails.phone}}</div>
+                      <div>{{content.personalDetails.email}}</div><br>
+                      <div>{{content.personalDetails.subscribed}}</div>
+                      <div class="personal-details-box-edit">
+                        <button class="personal-details-edit-toggle"><img src="{{@root.meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="edit icon">{{i18n "main:form.edit"}}</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-details-edit-wrapper">
+                    <div class="personal-details-title">
+                      <span>{{i18n "my-account:personalDetails.personalDetailsTitle"}}</span>
+                      <span class="pull-right required-text">{{i18n "main:form.required"}}*</span>
+                    </div>
+                    <form action="" method="post" name="form">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-sections">
+                            <span class="form-labels">{{content.editPersonalDetails.title}}</span><br>
+                            <select class="select-input" name="" id="">
+                              {{#each content.editPersonalDetails.titleOptions}}
+                                <option value="{{value}}" {{#if disabled}}disabled{{/if}} {{#if selected}}selected{{/if}}>{{text}}</option>
+                              {{/each}}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-sections">
+                            <span class="form-labels">{{i18n "First name"}}*</span><br>
+                            <input class="form-inputs" tabindex="1" type="text" name="firstName" value="{{content.editPersonalDetails.firstName}}">
+                          </div>
+                          <div class="form-sections">
+                            <span class="form-labels">{{i18n "Current password"}}*</span><br>
+                            <input class="form-inputs" tabindex="3" name="currentPassword" type="password">
+                          </div>
+                          <div class="form-sections">
+                            <span class="form-labels">{{i18n "Password"}}*</span><br>
+                            <input class="form-inputs" tabindex="4" name="password[main]" type="password">
+                          </div>
+                          <div class="form-sections">
+                            <span class="form-labels">{{i18n "Email"}}*</span><br>
+                            <input class="form-inputs" tabindex="6" name="email" type="email" value="{{content.editPersonalDetails.email}}"><br>
+                            <span class="form-notes">{{content.editPersonalDetails.formNotesTwo}}</span>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-sections">
+                            <span class="form-labels">{{i18n "Last name"}}*</span><br>
+                            <input class="form-inputs" tabindex="2" name="lastName" type="text" value="{{content.editPersonalDetails.secondName}}">
+                          </div>
+                          <div class="form-sections">
+                            <span class="form-labels">{{content.editPersonalDetails.primaryPhone}}*</span><br>
+                            <input class="form-inputs"  type="text"><br>
+                            <span class="form-notes">{{content.editPersonalDetails.formNotesOne}}</span>
+                          </div>
+                          <div class="form-sections">
+                            <span class="form-labels">{{i18n "Confirm password"}}*</span><br>
+                            <input class="form-inputs" tabindex="5" name="password[confirm]" type="password">
+                          </div>
+                        </div>
+                      </div>
+                    <hr class="light-grey-hr">
+                    <div class="personal-details-newsletter">
+                      <span>
+                        <input type="checkbox">{{content.addMeTo}} <a href="">{{content.newsletter}}</a>
+                      </span>
+                    </div>
+                    <div class="personal-details-edit-btn">
+                      <span>
+                        <button class="update-btn" name="save" type="submit">{{i18n "my-account:personalDetails.updateBtn"}}</button>
+                        <button class="cancel-btn" type="reset">{{i18n "my-account:personalDetails.cancelBtn"}}</button>
+                      </span>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="my-account-banners">
+            <div class="banner-one-wrapper hidden-xs">
+              <div class="my-account-banner">
+                <div class="banner-title">
+                  {{i18n "my-account:personalDetails.bannerOne.title"}}
+                </div>
+                <hr class="banner-hr">
+                <div class="banner-subtitle">
+                  {{i18n "my-account:personalDetails.bannerOne.subtitle"}}
+                </div>
+                <div class="banner-btn-wrapper">
+                  <a class="banner-btn" href="{{content.bannerOne.url}}">{{i18n "my-account:personalDetails.shopAllBtn"}}</a>
+                </div>
+              </div>
+            </div>
+            <div class="banner-two-wrapper">
+              <div class="my-account-banner image-banner">
+                <div class="banner-title">
+                  {{i18n "my-account:personalDetails.bannerTwo.title"}}
+                </div>
+                <hr class="banner-hr">
+                <div class="banner-subtitle">
+                  {{i18n "my-account:personalDetails.bannerTwo.subtitle"}}
+                </div>
+                <div class="banner-btn-wrapper">
+                  <a class="banner-btn" href="{{content.bannerTwo.url}}">{{i18n "my-account:personalDetails.shopAllBtn"}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{!-- {{> catalog/wishlist}} --}}
+  {{> common/footer}}
+  {{> common/htmlscripts}}
+</body>
+
+</html>

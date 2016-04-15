@@ -5,18 +5,21 @@
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
-
 use Commercetools\Core\Client;
 use Commercetools\Core\Model\Common\Address;
 use Commercetools\Core\Model\Common\Money;
+use Commercetools\Core\Model\Customer\Customer;
 use Commercetools\Core\Model\Order\Order;
-use Commercetools\Core\Request\Customers\Command\CustomerChangeAddressAction;
 use Commercetools\Core\Request\Customers\CustomerByIdGetRequest;
-use Commercetools\Core\Request\Customers\CustomerUpdateRequest;
 use Commercetools\Sunrise\AppBundle\Entity\UserAddress;
+use Commercetools\Sunrise\AppBundle\Entity\UserDetails;
+use Commercetools\Sunrise\AppBundle\Model\View\Url;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Security\User\CTPUser;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,55 +29,103 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserController extends SunriseController
 {
+    protected function getViewData($title, Request $request = null)
+    {
+        $viewData = parent::getViewData($title, $request);
+        $viewData->content->url = new ViewData();
+
+        $viewData->content->sidebarItemOne = new Url('personal details', $this->generateUrl('myDetails'));
+        $viewData->content->sidebarItemTwo = new Url('addressbook', $this->generateUrl('myAdressBook'));
+        $viewData->content->sidebarItemFour =  new Url('myOrders', $this->generateUrl('myOrders'));
+        $viewData->content->sidebarItemSeven = new Url('logout', $this->generateUrl('logout'));
+
+//        $viewData->content->sidebarItemThree = $this->generateUrl('myAccount'); // payment details
+//        $viewData->content->sidebarItemSix = $this->generateUrl(''); // wishlist
+//        $viewData->content->sidebarItemFive = $this->generateUrl(''); // returns exchange
+
+        return $viewData;
+    }
+
     public function editAddressAction(Request $request)
     {
+        $addressId = $request->get('id');
+        $viewData = $this->getViewData('MyAccount - Edit Address', $request);
+
         $customer = $this->getCustomer($this->getUser());
-        $address = $customer->getDefaultShippingAddress();
+
+        $address = $customer->getAddresses()->getById($addressId);
 
         $userAddress = UserAddress::ofAddress($address);
 
-        $form = $this->createFormBuilder($userAddress)
+        $viewData->content->address = new ViewData();
+
+        $viewData->content->contentTitle = $this->trans('User addresses');
+
+        $viewData->content->address->firstName = $userAddress->getFirstName();
+        $viewData->content->address->lastName = $userAddress->getLastName();
+        $viewData->content->address->streetName = $userAddress->getStreetName();
+        $viewData->content->address->streetNumber = $userAddress->getStreetNumber();
+        $viewData->content->address->postalCode = $userAddress->getPostalCode();
+        $viewData->content->address->city = $userAddress->getCity();
+        $viewData->content->address->region = $userAddress->getRegion();
+        $viewData->content->address->country = $userAddress->getCountry();
+        $viewData->content->address->company = $userAddress->getCompany();
+        $viewData->content->address->phone = $userAddress->getPhone();
+        $viewData->content->address->email = $userAddress->getEmail();
+
+        $countries = new ViewData();
+        $countries->list = new ViewDataCollection();
+
+        foreach ($this->config->get('countries') as $country) {
+            $entry = new ViewData();
+            $entry->label = $country;
+            $entry->value = $country;
+            if ($address->getCountry() == $country) {
+                $entry->selected = true;
+            }
+            $countries->list->add($entry);
+        }
+        $viewData->content->address->countries = $countries;
+
+        $form = $this->createNamedFormBuilder('', $userAddress)
+            ->add('csrfToken', TextType::class)
+            ->add('additionalStreetInfo', TextType::class)
             ->add('firstName', TextType::class)
             ->add('lastName', TextType::class)
             ->add('streetName', TextType::class)
-            ->add('StreetNumber', TextType::class)
-            ->add('PostalCode', TextType::class)
-            ->add('City', TextType::class)
-            ->add('Region', TextType::class)
-            ->add('Country', TextType::class)
-            ->add('Company', TextType::class)
-            ->add('Phone', TextType::class)
-            ->add('Email', TextType::class)
-            ->add('title', TextType::class)
-            ->add('save', SubmitType::class, array('label' => 'Save user'))
+            ->add('streetNumber', TextType::class)
+            ->add('postalCode', TextType::class)
+            ->add('city', TextType::class)
+            ->add('region', TextType::class)
+            ->add('country', TextType::class)
+            ->add('company', TextType::class)
+            ->add('phone', TextType::class)
+            ->add('email', TextType::class)
+            ->add('title', ChoiceType::class)
             ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             /**
-             * @var UserAddress $formAddress
+             * @var UserDetails $userDetails
              */
-            $formAddress = $form->getData();
-            $newAddress = $formAddress->toCTPAddress();
 
-            $request = CustomerUpdateRequest::ofIdAndVersion($customer->getId(), $customer->getVersion());
-            $request->addAction(CustomerChangeAddressAction::ofAddressIdAndAddress($address->getId(), $newAddress));
-
-            /**
-             * @var Client $client
-             */
-            $client = $this->get('commercetools.client');
-            $response = $request->executeWithClient($client);
-
-            $newCustomer = $request->mapResponse($response);
-            $this->addFlash('notice', $this->trans('User has been updated!'));
+            try {
+                $this->get('app.repository.customer')
+                    ->setAddresses(
+                        $customer,
+                        $userAddress->toCTPAddress(),
+                        $addressId
+                    );
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash('error', $this->trans($e->getMessage(), 'customers'));
+                return new Response($e->getMessage());
+            }
             return $this->redirect($this->generateUrl('myAdressBook'));
         }
 
-        return $this->render('editAddress.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render('my-account-address-edit.hbs', $viewData->toArray());
     }
 
     public function loginAction(Request $request)
@@ -84,32 +135,81 @@ class UserController extends SunriseController
         }
         $viewData = $this->getViewData('MyAccount - Login', $request);
         $authUtils = $this->get('security.authentication_utils');
-        // get the login error if there is one
         $error = $authUtils->getLastAuthenticationError();
-
-        // last username entered by the user
         $lastUsername = $authUtils->getLastUsername();
 
         return $this->render('my-account-login.hbs', $viewData->toArray());
     }
 
-    public function secretAction(Request $request)
-    {
-        return new Response('Top secret');
-    }
-
     public function detailsAction(Request $request)
     {
-
         $viewData = $this->getViewData('MyAccount - Details', $request);
 
-        $customer = $this->getCustomer($this->getUser());
-        $address = $customer->getDefaultShippingAddress();
+        $customerId = $this->getUser()->getID();
+
+        /**
+         * @var Customer $customer
+         */
+        $customer = $this->get('app.repository.customer')->getCustomer($customerId);
 
         $viewData->content->personalDetails = new ViewData();
         $viewData->content->personalDetails->name = $customer->getFirstName() . ' ' . $customer->getLastName();
-        $viewData->content->personalDetails->name = $address->getFirstName() . ' ' . $address->getLastName();
+        $viewData->content->personalDetails->password = $this->trans('Password: ********');
+        $viewData->content->personalDetails->email = $customer->getEmail();
 
+        $editCustomer = new ViewData();
+        $editCustomer->firstName = $customer->getFirstName();
+        $editCustomer->secondName = $customer->getLastName();
+        $editCustomer->email = $customer->getEmail();
+        $viewData->content->editPersonalDetails = $editCustomer->toArray();
+
+        $userDetails = UserDetails::ofCustomer($customer);
+
+        $form = $this->createNamedFormBuilder('', $userDetails)
+            ->add('firstName', TextType::class)
+            ->add('lastName', TextType::class)
+            ->add('email', TextType::class)
+            ->add('currentPassword', TextType::class)
+            ->add(
+                'password',
+                RepeatedType::class,
+                ['type' => PasswordType::class, 'first_name' => 'main', 'second_name' => 'confirm']
+            )
+            ->add('save', SubmitType::class, array('label' => 'Save user'))
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            /**
+             * @var UserDetails $userDetails
+             */
+            $userDetails = $form->getData();
+            $firstName = $userDetails->getFirstName();
+            $lastName = $userDetails->getLastName();
+            $email = $userDetails->getEmail();
+            $currentPassword = $userDetails->getCurrentPassword();
+            $newPassword = $userDetails->getPassword();
+
+            $customer = $this->get('app.repository.customer')
+                ->setCustomerDetails($customer, $firstName, $lastName, $email);
+
+            if (is_null($customer)) {
+                $this->addFlash('error', 'Error updating user');
+                return $this->redirect($this->generateUrl('myDetails'));
+            } else {
+                $this->addFlash('notice', 'User updated');
+            }
+
+            try {
+                $this->get('app.repository.customer')
+                    ->setNewPassword($customer, $currentPassword, $newPassword);
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash('error', $this->trans($e->getMessage(), [], 'customers'));
+                return new Response($e->getMessage());
+            }
+
+            return $this->redirect($this->generateUrl('myDetails'));
+        }
 
         return $this->render('my-account-personal-details.hbs', $viewData->toArray());
     }
@@ -124,19 +224,18 @@ class UserController extends SunriseController
         $viewData->content->billingAddress = $this->getViewAddress($customer->getDefaultBillingAddress());;
 
         return $this->render('my-account-address-book.hbs', $viewData->toArray());
-
     }
 
     protected function getViewAddress(Address $address)
     {
         $viewAddress = new ViewData();
-
         $viewAddress->name = $address->getFirstName() . ' ' . $address->getLastName();
         $viewAddress->address = $address->getCity() . ' ' . $address->getPostalCode();
         $viewAddress->address = $address->getStreetName() . ' ' . $address->getStreetNumber() . ' ';
         $viewAddress->postalCode = $address->getPostalCode() . ' ' . $address->getCity();
         $viewAddress->country = $address->getCountry();
         $viewAddress->compay = $address->getCompany();
+        $viewAddress->link = $this->trans($this->generateUrl('editAddress', ['id' => $address->getId()]));
 
         return $viewAddress;
     }
@@ -146,8 +245,8 @@ class UserController extends SunriseController
         $viewData = $this->getViewData('MyAccount - Orders', $request);
         $orders = $this->get('app.repository.order')->getOrders($this->getUser()->getId());
 
-
         $viewData->content->orderNumberTitle = $this->trans('my-account:orderNumber');
+
         /**
          * @var Order $order
          */
@@ -164,7 +263,6 @@ class UserController extends SunriseController
             $orderData->detailUri = $this->generateUrl('myOrderDetails', ['orderId' => $order->getId()]);
 
             $viewData->content->order->add($orderData);
-
         }
 
         return $this->render('my-account-my-orders.hbs', $viewData->toArray());
@@ -173,9 +271,8 @@ class UserController extends SunriseController
 
     public function orderDetailAction(Request $request, $orderId)
     {
-        // @todo change every title, now it is hardcoded
-
         $viewData = $this->getViewData('MyAccount - Orders', $request);
+
         /**
          * @var Order $order
          */
@@ -215,11 +312,9 @@ class UserController extends SunriseController
 
         $content->shippingAddress = $shippingAddressData;
 
-
         $billingAddress = $order->getBillingAddress();
         $billingAddressData = new ViewData();
 
-        //@todo change the name to shippingaddress or leave it like billing address
         $billingAddressData->title = $this->trans('billing address');
         $billingAddressData->name = $billingAddress->getFirstName(). ' ' . $billingAddress->getLastName();
         $billingAddressData->address = $billingAddress->getStreetName(). ' ' . $billingAddress->getStreetNumber();
@@ -235,30 +330,19 @@ class UserController extends SunriseController
         $shippingMethod = $order->getShippingInfo();
         $shippingMethodData = new ViewData();
         $shippingMethodData->title = $this->trans('Shipping Method');
+
         if (!is_null($shippingMethod)) {
             $shippingMethodData->text = $this->trans($shippingMethod->getShippingMethodName(), [], 'orders');
             $content->shippingMethod = $shippingMethodData;
         }
 
-        //@todo activate PAYMENT DETAILS, NOTE: not working properly
-//        $paymentDetails = $order->getPaymentState();
-//        $paymentDetailsData = new ViewData();
-//
-//        $paymentDetailsData->title = $this->trans('Payment Details');
-//        $viewData->content->paymentDetails = $paymentDetails;
-
-        //@todo check if the prices are right!!
         $content->Code = $order->getDiscountCodes()->toArray();
         $content->subtotal = $order->getTaxedPrice()->getTotalNet();
 
         $content->orderDiscountTitle = $this->trans('Order discount');
         $content->standartDeliveryTitle = $this->trans('Standard Delivery');
 
-        //@todo prices of orderdiscount and standartdelivery are not right yet
-
         $content->promoCode = $order->getDiscountCodes();
-
-//        $viewData->content->orderDiscount = $order->getTotalPrice();
 
         $content->salesTaxTitle = $this->trans('Sales Tax');
         $content->orderTotalTitle = $this->trans('Order Total');
@@ -283,7 +367,6 @@ class UserController extends SunriseController
             $lineItemsData->image = $variant->getImages()->current()->getUrl();
             $lineItemsData->quantity = (string)$lineItem->getQuantity();
             $price = $lineItem->getPrice();
-            // @todo change to discountedPricePerQuantity the price is not right
             if (!is_null($price->getDiscounted())) {
                 $lineItemsData->discountedPrice = (string)$price->getDiscounted()->getValue();
             }

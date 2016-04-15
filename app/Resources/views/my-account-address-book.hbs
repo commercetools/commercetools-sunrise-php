@@ -1,0 +1,117 @@
+<!-- start my-account-address-book.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {{> common/htmlhead}}
+</head>
+
+<body>
+  <div class="darkbg hidden"></div>
+  {{> common/header}}
+  <div class="address-book">
+    <div class="container">
+      <div class="my-account-title">
+        <span class="my-account-title-text icon-user">{{i18n "my-account:myAccount.title"}}</span>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="address-book-wrapper">
+            <div class="row">
+              <div class="col-sm-3">
+                {{> myaccount/my-account-sidebar positionTwo=true}}
+              </div>
+              <div id="my-account-desktop-content" class="col-sm-9">
+                <div class="address-book-content">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="address-book-title hidden-xs">
+                        {{content.contentTitle}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="box-addresses-title">
+                        {{content.defaultAddressesTitle}}
+                      </div>
+                      <div class="address-book-dark-box">
+                        <div class="address-book-dark-box-title">{{content.shippingAddress.title}}</div>
+                        <div>{{content.shippingAddress.name}}</div>
+                        <div>{{content.shippingAddress.address}}</div>
+                        <div>{{content.shippingAddress.region}}</div>
+                        <div>{{content.shippingAddress.postalCode}}</div>
+                        <div>{{content.shippingAddress.country}}</div>
+                        <div class="address-box-edit-btn">
+                            <a href="{{content.shippingAddress.link}}"><button>
+                              <img src="{{meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="edit icon">{{content.shippingAddress.edit}}
+                          </button></a>
+                        </div>
+                      </div>
+                      <div class="address-book-dark-box">
+                        <div class="address-book-dark-box-title">{{content.billingAddress.title}}</div>
+                        <div>{{content.billingAddress.name}}</div>
+                        <div>{{content.billingAddress.address}}</div>
+                        <div>{{content.billingAddress.region}}</div>
+                        <div>{{content.billingAddress.postalCode}}</div>
+                        <div>{{content.billingAddress.country}}</div>
+                        <div class="address-box-edit-btn">
+                          <a href="{{content.billingAddress.link}}"><button>
+                              <img src="{{meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="edit icon">{{content.billingAddress.edit}}
+                          </button></a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="box-addresses-title">
+                        {{content.secondaryAddressTitle}}
+                      </div>
+                      <div class="address-book-white-box">
+                        <div>{{content.secondaryAddress.name}}</div>
+                        <div>{{content.secondaryAddress.address}}</div>
+                        <div>{{content.secondaryAddress.region}}</div>
+                        <div>{{content.secondaryAddress.postalCode}}</div>
+                        <div>{{content.secondaryAddress.country}}</div>
+                        <div class="address-book-edit-delete">
+                          <div><button><img src="{{meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="">{{content.secondaryAddress.edit}}</button></div>
+                          <div><button><img src="{{meta.assetsPath}}/img/delete-60px-ca8af169baa3c3762ed83c64371a50ac.png" alt="">{{content.secondaryAddress.delete}}</button></div>
+                        </div>
+                      </div>
+                      <div class="box-addresses-title">
+                        {{content.additionalAddressTitle}}
+                      </div>
+                      <div class="address-book-white-box">
+                        <div>{{content.additionalAddress.name}}</div>
+                        <div>{{content.additionalAddress.address}}</div>
+                        <div>{{content.additionalAddress.region}}</div>
+                        <div>{{content.additionalAddress.postalCode}}</div>
+                        <div>{{content.additionalAddress.country}}</div>
+                        <div class="address-book-edit-delete">
+                          <div><button><img src="{{meta.assetsPath}}/img/edit-1-2b7e8483b4bb1bfc5a2daf069c3f56d1.png" alt="">{{content.additionalAddress.edit}}</button></div>
+                          <div><button><img src="{{meta.assetsPath}}/img/delete-60px-ca8af169baa3c3762ed83c64371a50ac.png" alt="">{{content.additionalAddress.delete}}</button></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="add-new-address-btn">
+                        <button>{{content.addNewAddressBtn}}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{!-- {{> common/wishlist}} --}}
+  {{> common/footer}}
+  {{> common/htmlscripts}}
+</body>
+
+</html>
+<!-- end my-account-address-book.hbs -->

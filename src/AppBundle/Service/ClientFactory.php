@@ -37,7 +37,6 @@ class ClientFactory
         $this->logger = $logger;
     }
 
-
     /**
      * @param $locale
      * @param $clientCredentials
