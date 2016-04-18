@@ -20,9 +20,13 @@
     "SPHERE_PROJECT": {
       "description": "The client secret of your commercetools platform project.",
       "required": true
+    },
+    "SYMFONY_ENV": {
+      "description": "The symfony environment to be used",
+      "value": "prod"
     }
   },
   "scripts": {
-    "postdeploy": "php app/console.php cache:warmup --env prod"
+    "postdeploy": "bin/console.php cache:warmup --env=prod --no-debug"
   }
 }
