@@ -4,14 +4,20 @@ imports:
   - { resource: 'services.yml' }
   - { resource: 'app.yml' }
 
+parameters:
+  locale: en
+
 framework:
   secret: "%secret%"
+  router:
+    resource: "%kernel.root_dir%/config/routing.yml"
+    strict_requirements: ~
   templating:
     engines: ['twig', 'handlebars']
   form: ~
   assets:
     base_path: /assets/
-  default_locale: en
+  default_locale: "%locale%"
   esi: { enabled: true }
   fragments: ~
   session:
@@ -19,17 +25,27 @@ framework:
     save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
   translator:
     paths:
-    - %kernel.root_dir%/../vendor/commercetools/sunrise-theme/translations
+    - "%kernel.root_dir%/../vendor/commercetools/sunrise-theme/translations"
 twig:
-  debug:            "%kernel.debug%"
+  debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
 handlebars:
-  cache: %kernel.cache_dir%/handlebars
+  cache: "%kernel.cache_dir%/handlebars"
   paths:
-    - %kernel.root_dir%/Resources/views
-    - %kernel.root_dir%/../vendor/commercetools/sunrise-theme/templates
+    - "%kernel.root_dir%/Resources/views"
+    - "%kernel.root_dir%/../vendor/commercetools/sunrise-theme/templates"
   helpers:
     esi: JaySDe\HandlebarsBundle\HandlebarsHelper::esi
     cms: JaySDe\HandlebarsBundle\HandlebarsHelper::cms
     i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
     json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
+commercetools:
+  credentials:
+    client_id: "%commercetools.client_id%"
+    client_secret: "%commercetools.client_secret%"
+    project: "%commercetools.project%"
+assetic:
+  debug: "%kernel.debug%"
+  use_controller: "%kernel.debug%"
+  filters:
+    cssrewrite: ~

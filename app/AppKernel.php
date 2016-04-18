@@ -5,24 +5,22 @@ use Commercetools\Symfony\CtpBundle\CtpBundle;
 use JaySDe\HandlebarsBundle\HandlebarsBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Sensio\Bundle\DistributionBundle\SensioDistributionBundle;
+use Symfony\Bundle\AsseticBundle\AsseticBundle;
+use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
  * @author @jayS-de <jens.schulze@commercetools.de>
  */
 class AppKernel extends Kernel
 {
-    use MicroKernelTrait;
-
     public function registerBundles()
     {
         $bundles = [
@@ -30,46 +28,24 @@ class AppKernel extends Kernel
             new SecurityBundle(),
             new TwigBundle(),
             new HandlebarsBundle(),
-            new SensioFrameworkExtraBundle(),
             new MonologBundle(),
+            new SensioFrameworkExtraBundle(),
             new AppBundle(),
-            new CtpBundle()
+            new CtpBundle(),
+            new AsseticBundle(),
         ];
-        if ($this->getEnvironment() == 'dev') {
+        if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
+            $bundles[] = new DebugBundle();
             $bundles[] = new WebProfilerBundle();
             $bundles[] = new SensioDistributionBundle();
+            $bundles[] = new SensioGeneratorBundle();
         }
         return $bundles;
     }
 
-    public function configureRoutes(RouteCollectionBuilder $routes)
+    public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $file = 'routing.yml';
-        if ($this->getEnvironment() === 'dev') {
-            $file = 'routing_dev.yml';
-        }
-        $routes->import(__DIR__ . '/config/' . $file);
-        // import the WebProfilerRoutes, only if the bundle is enabled
-        if (isset($this->bundles['WebProfilerBundle'])) {
-            $routes->mount('/_wdt', $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml'));
-            $routes->mount('/_profiler', $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml'));
-        }
-    }
-
-    public function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
-    {
-
-        $loader->load(__DIR__.'/config/config_' . $this->getEnvironment() . '.yml');
-        if (!empty(getenv('SECRET_TOKEN'))) {
-            $c->setParameter('kernel.secret', getenv('SECRET_TOKEN'));
-        }
-        // configure WebProfilerBundle only if the bundle is enabled
-        if (isset($this->bundles['WebProfilerBundle'])) {
-            $c->loadFromExtension('web_profiler', array(
-                'toolbar' => true,
-                'intercept_redirects' => false,
-            ));
-        }
+        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
     }
 
     public function getRootDir()

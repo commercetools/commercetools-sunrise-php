@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f92e226a977038f2b9e8644a62b0a309",
-    "content-hash": "92f8fbdbc6b05ce73c41cb23626b50de",
+    "hash": "4d75c3c47194492fe64d9fed95e57214",
+    "content-hash": "0530b46a996e5407436633f7314050b9",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -165,19 +165,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-symfony.git",
-                "reference": "55168f6f4bdd23406a2f0f4cf1472ee6dbb1ce5b"
+                "reference": "01f9c678963f81d71898637d5cbb21530d3555dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/55168f6f4bdd23406a2f0f4cf1472ee6dbb1ce5b",
-                "reference": "55168f6f4bdd23406a2f0f4cf1472ee6dbb1ce5b",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/01f9c678963f81d71898637d5cbb21530d3555dc",
+                "reference": "01f9c678963f81d71898637d5cbb21530d3555dc",
                 "shasum": ""
             },
             "require": {
                 "commercetools/commons": "*",
                 "commercetools/php-sdk": "^1.0@beta",
                 "php": ">=5.5.9",
-                "symfony/symfony": "3.0.*"
+                "symfony/assetic-bundle": "^2.8",
+                "symfony/symfony": "^3.0"
             },
             "require-dev": {
                 "symfony/phpunit-bridge": "^3.0"
@@ -193,7 +194,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2016-04-13 10:39:31"
+            "time": "2016-04-15 15:12:34"
         },
         {
             "name": "doctrine/annotations",
@@ -817,16 +818,16 @@
         },
         {
             "name": "jays-de/handlebars-bundle",
-            "version": "0.4.1",
+            "version": "0.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/HandlebarsBundle.git",
-                "reference": "800aa2d51e74b2e2fa4092ae0f30926ff4532f5e"
+                "reference": "4dc3bbf14634006bca39fdb5c3abbb01ad0ca1e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/800aa2d51e74b2e2fa4092ae0f30926ff4532f5e",
-                "reference": "800aa2d51e74b2e2fa4092ae0f30926ff4532f5e",
+                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/4dc3bbf14634006bca39fdb5c3abbb01ad0ca1e7",
+                "reference": "4dc3bbf14634006bca39fdb5c3abbb01ad0ca1e7",
                 "shasum": ""
             },
             "require": {
@@ -837,6 +838,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8 || ^5.0",
+                "symfony/assetic-bundle": "~2.0",
                 "symfony/yaml": "^3.0"
             },
             "type": "symfony-bundle",
@@ -866,7 +868,84 @@
                 "symfony",
                 "templating"
             ],
-            "time": "2016-04-14 08:43:02"
+            "time": "2016-04-18 09:22:23"
+        },
+        {
+            "name": "kriswallsmith/assetic",
+            "version": "v1.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kriswallsmith/assetic.git",
+                "reference": "9928f7c4ad98b234e3559d1049abd13387f86db5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/9928f7c4ad98b234e3559d1049abd13387f86db5",
+                "reference": "9928f7c4ad98b234e3559d1049abd13387f86db5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.1",
+                "symfony/process": "~2.1|~3.0"
+            },
+            "conflict": {
+                "twig/twig": "<1.23"
+            },
+            "require-dev": {
+                "cssmin/cssmin": "3.0.1",
+                "joliclic/javascript-packer": "1.1",
+                "kamicane/packager": "1.0",
+                "leafo/lessphp": "^0.3.7",
+                "leafo/scssphp": "~0.1",
+                "mrclay/minify": "~2.2",
+                "patchwork/jsqueeze": "~1.0|~2.0",
+                "phpunit/phpunit": "~4.8",
+                "psr/log": "~1.0",
+                "ptachoire/cssembed": "~1.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0",
+                "twig/twig": "~1.8|~2.0"
+            },
+            "suggest": {
+                "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
+                "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
+                "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
+                "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor",
+                "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
+                "twig/twig": "Assetic provides the integration with the Twig templating engine"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Assetic": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kris Wallsmith",
+                    "email": "kris.wallsmith@gmail.com",
+                    "homepage": "http://kriswallsmith.net/"
+                }
+            ],
+            "description": "Asset Management for PHP",
+            "homepage": "https://github.com/kriswallsmith/assetic",
+            "keywords": [
+                "assets",
+                "compression",
+                "minification"
+            ],
+            "time": "2015-11-12 13:51:40"
         },
         {
             "name": "monolog/monolog",
@@ -1284,6 +1363,76 @@
             ],
             "description": "A security checker for your composer.lock",
             "time": "2015-11-07 08:07:40"
+        },
+        {
+            "name": "symfony/assetic-bundle",
+            "version": "v2.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/assetic-bundle.git",
+                "reference": "aa5b4f8b712f38745928fa845ddb73300bb2af6d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/assetic-bundle/zipball/aa5b4f8b712f38745928fa845ddb73300bb2af6d",
+                "reference": "aa5b4f8b712f38745928fa845ddb73300bb2af6d",
+                "shasum": ""
+            },
+            "require": {
+                "kriswallsmith/assetic": "~1.3",
+                "php": ">=5.3.0",
+                "symfony/console": "~2.3|~3.0",
+                "symfony/dependency-injection": "~2.3|~3.0",
+                "symfony/framework-bundle": "~2.3|~3.0",
+                "symfony/yaml": "~2.3|~3.0"
+            },
+            "conflict": {
+                "kriswallsmith/spork": "<=0.2",
+                "twig/twig": "<1.20"
+            },
+            "require-dev": {
+                "kriswallsmith/spork": "~0.3",
+                "patchwork/jsqueeze": "~1.0",
+                "symfony/class-loader": "~2.3|~3.0",
+                "symfony/css-selector": "~2.3|~3.0",
+                "symfony/dom-crawler": "~2.3|~3.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0",
+                "symfony/twig-bundle": "~2.3|~3.0"
+            },
+            "suggest": {
+                "kriswallsmith/spork": "to be able to dump assets in parallel",
+                "symfony/twig-bundle": "to use the Twig integration"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Bundle\\AsseticBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kris Wallsmith",
+                    "email": "kris.wallsmith@gmail.com",
+                    "homepage": "http://kriswallsmith.net/"
+                }
+            ],
+            "description": "Integrates Assetic into Symfony2",
+            "homepage": "https://github.com/symfony/AsseticBundle",
+            "keywords": [
+                "assets",
+                "compression",
+                "minification"
+            ],
+            "time": "2015-12-28 13:12:39"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -3515,6 +3664,58 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2016-02-04 12:56:52"
+        },
+        {
+            "name": "sensio/generator-bundle",
+            "version": "v3.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
+                "reference": "ac91535054d025937d897d78ebb5fc2da5e955a4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/ac91535054d025937d897d78ebb5fc2da5e955a4",
+                "reference": "ac91535054d025937d897d78ebb5fc2da5e955a4",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/console": "~2.7|~3.0",
+                "symfony/framework-bundle": "~2.7|~3.0",
+                "symfony/process": "~2.7|~3.0",
+                "symfony/yaml": "~2.7|~3.0"
+            },
+            "require-dev": {
+                "doctrine/orm": "~2.4",
+                "symfony/doctrine-bridge": "~2.7|~3.0",
+                "twig/twig": "~1.18"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sensio\\Bundle\\GeneratorBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "This bundle generates code for you",
+            "time": "2016-02-26 04:36:01"
         }
     ],
     "aliases": [],

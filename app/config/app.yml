@@ -59,6 +59,6 @@ app:
     productTypes: true
     products: true
   commercetools:
-    client_id: %commercetools.client_id%
-    client_secret: %commercetools.client_secret%
-    project: %commercetools.project%
+    client_id: "%commercetools.client_id%"
+    client_secret: "%commercetools.client_secret%"
+    project: "%commercetools.project%"
