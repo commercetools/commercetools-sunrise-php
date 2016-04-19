@@ -46,10 +46,13 @@ class UserDetails
 
     /**
      * @param mixed $firstName
+     * @return $this
      */
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
+
+        return $this;
     }
 
     /**
@@ -62,10 +65,13 @@ class UserDetails
 
     /**
      * @param mixed $lastName
+     * @return $this
      */
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+
+        return $this;
     }
 
     /**
@@ -78,10 +84,13 @@ class UserDetails
 
     /**
      * @param mixed $email
+     * @return $this
      */
     public function setEmail($email)
     {
         $this->email = $email;
+
+        return $this;
     }
 
     /**
@@ -98,6 +107,8 @@ class UserDetails
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
     }
 
     public static function loadValidatorMetadata(ClassMetadata $metadata)
@@ -117,9 +128,9 @@ class UserDetails
     public static function ofCustomer(Customer $customer)
     {
         $userDetails = new static();
-        $firstName = $userDetails->getFirstName();
-        $lastName = $userDetails->getLastName();
-        $email = $userDetails->getEmail();
+        $userDetails->setFirstName($customer->getFirstName())
+            ->setLastName($customer->getLastName())
+            ->setEmail($customer->getEmail());
 
         return $userDetails;
     }

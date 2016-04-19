@@ -11,13 +11,14 @@ use Commercetools\Core\Model\Common\Money;
 use Commercetools\Core\Model\Customer\Customer;
 use Commercetools\Core\Model\Order\Order;
 use Commercetools\Core\Request\Customers\CustomerByIdGetRequest;
-use Commercetools\Sunrise\AppBundle\Entity\UserAddress;
-use Commercetools\Sunrise\AppBundle\Entity\UserDetails;
 use Commercetools\Sunrise\AppBundle\Model\View\Url;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Security\User\CTPUser;
+use Commercetools\Symfony\CtpBundle\Entity\UserAddress;
+use Commercetools\Symfony\CtpBundle\Entity\UserDetails;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -169,8 +170,8 @@ class UserController extends SunriseController
         $form = $this->createNamedFormBuilder('', $userDetails)
             ->add('firstName', TextType::class)
             ->add('lastName', TextType::class)
-            ->add('email', TextType::class)
-            ->add('currentPassword', TextType::class)
+            ->add('email', EmailType::class)
+            ->add('currentPassword', PasswordType::class)
             ->add(
                 'password',
                 RepeatedType::class,
@@ -185,14 +186,17 @@ class UserController extends SunriseController
              * @var UserDetails $userDetails
              */
             $userDetails = $form->getData();
-            $firstName = $userDetails->getFirstName();
-            $lastName = $userDetails->getLastName();
-            $email = $userDetails->getEmail();
             $currentPassword = $userDetails->getCurrentPassword();
             $newPassword = $userDetails->getPassword();
 
             $customer = $this->get('commercetools.repository.customer')
-                ->setCustomerDetails($request->getLocale(), $customer, $firstName, $lastName, $email);
+                ->setCustomerDetails(
+                    $request->getLocale(),
+                    $customer,
+                    $userDetails->getFirstName(),
+                    $userDetails->getLastName(),
+                    $userDetails->getEmail()
+                );
 
             if (is_null($customer)) {
                 $this->addFlash('error', 'Error updating user');
@@ -201,12 +205,14 @@ class UserController extends SunriseController
                 $this->addFlash('notice', 'User updated');
             }
 
-            try {
-                $this->get('commercetools.repository.customer')
-                    ->setNewPassword($request->getLocale(), $customer, $currentPassword, $newPassword);
-            } catch (\InvalidArgumentException $e) {
-                $this->addFlash('error', $this->trans($e->getMessage(), [], 'customers'));
-                return new Response($e->getMessage());
+            if (isset($newPassword)) {
+                try {
+                    $this->get('commercetools.repository.customer')
+                        ->setNewPassword($request->getLocale(), $customer, $currentPassword, $newPassword);
+                } catch (\InvalidArgumentException $e) {
+                    $this->addFlash('error', $this->trans($e->getMessage(), [], 'customers'));
+                    return new Response($e->getMessage());
+                }
             }
 
             return $this->redirect($this->generateUrl('myDetails'));
