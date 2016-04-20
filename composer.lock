@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4d75c3c47194492fe64d9fed95e57214",
-    "content-hash": "0530b46a996e5407436633f7314050b9",
+    "hash": "6e55707a5fddc46f98e847848afd96fa",
+    "content-hash": "6273bbff1445813328b8177da4ef63cb",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -63,16 +63,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "v1.0.0-RC11",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "1268a423b06a4877aa6b64d69321fb8f63c12d84"
+                "reference": "291bd05613c912387ebd6f802ba238acfb7dee2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/1268a423b06a4877aa6b64d69321fb8f63c12d84",
-                "reference": "1268a423b06a4877aa6b64d69321fb8f63c12d84",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/291bd05613c912387ebd6f802ba238acfb7dee2a",
+                "reference": "291bd05613c912387ebd6f802ba238acfb7dee2a",
                 "shasum": ""
             },
             "require": {
@@ -109,8 +109,14 @@
                         "env-map": {
                             "client_id": "COMMERCETOOLS_CLIENT_ID",
                             "client_secret": "COMMERCETOOLS_CLIENT_SECRET",
-                            "view_products-client_id": "COMMERCETOOLS_CLIENT_ID_VIEW",
-                            "view_products-client_secret": "COMMERCETOOLS_CLIENT_SECRET_VIEW",
+                            "project": "COMMERCETOOLS_PROJECT"
+                        }
+                    },
+                    {
+                        "file": "tests/myapp.yml",
+                        "env-map": {
+                            "client_id": "COMMERCETOOLS_CLIENT_ID",
+                            "client_secret": "COMMERCETOOLS_CLIENT_SECRET",
                             "project": "COMMERCETOOLS_PROJECT",
                             "oauth_url": "COMMERCETOOLS_OAUTH_URL",
                             "api_url": "COMMERCETOOLS_API_URL"
@@ -129,7 +135,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-04-06 15:59:34"
+            "time": "2016-04-20 08:59:43"
         },
         {
             "name": "commercetools/sunrise-theme",
@@ -165,17 +171,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-symfony.git",
-                "reference": "01f9c678963f81d71898637d5cbb21530d3555dc"
+                "reference": "ae4efe8a5bbf0852b18221bc2e7f3a67863f7f35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/01f9c678963f81d71898637d5cbb21530d3555dc",
-                "reference": "01f9c678963f81d71898637d5cbb21530d3555dc",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/ae4efe8a5bbf0852b18221bc2e7f3a67863f7f35",
+                "reference": "ae4efe8a5bbf0852b18221bc2e7f3a67863f7f35",
                 "shasum": ""
             },
             "require": {
                 "commercetools/commons": "*",
-                "commercetools/php-sdk": "^1.0@beta",
+                "commercetools/php-sdk": "*",
                 "php": ">=5.5.9",
                 "symfony/assetic-bundle": "^2.8",
                 "symfony/symfony": "^3.0"
@@ -194,7 +200,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2016-04-15 15:12:34"
+            "time": "2016-04-20 09:03:20"
         },
         {
             "name": "doctrine/annotations",
@@ -3721,7 +3727,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/php-sdk": 10,
+        "commercetools/php-sdk": 20,
         "commercetools/sunrise-theme": 10,
         "commercetools/symfony-bundle": 20,
         "commercetools/sunrise-scenarios": 20,

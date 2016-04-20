@@ -131,7 +131,7 @@ class SunriseController extends Controller
         $header->user->isLoggedIn = false;
         $header->user->signIn = new Url('Login', '');
         $header->miniCart = new ViewData();
-        $header->miniCart->totalItems = $session->get('cartNumItems', 0);
+        $header->miniCart->totalItems = $session->get(CartController::CART_ITEM_COUNT, 0);
         $header->navMenu = $this->getNavMenu();
 
         return $header;

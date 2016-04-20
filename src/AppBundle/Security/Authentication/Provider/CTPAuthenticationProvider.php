@@ -7,6 +7,7 @@ namespace Commercetools\Sunrise\AppBundle\Security\Authentication\Provider;
 
 
 use Commercetools\Core\Request\Customers\CustomerLoginRequest;
+use Commercetools\Sunrise\AppBundle\Controller\CartController;
 use Commercetools\Sunrise\AppBundle\Service\ClientFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
@@ -57,8 +58,9 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
                 throw new BadCredentialsException('The presented password cannot be empty.');
             }
 
+            $cartId = $this->session->get(CartController::CART_ID);
             $client = $this->clientFactory->build('en');
-            $request = CustomerLoginRequest::ofEmailAndPassword($token->getUser(), $presentedPassword);
+            $request = CustomerLoginRequest::ofEmailAndPassword($token->getUser(), $presentedPassword, $cartId);
             $response = $request->executeWithClient($client);
 
             if ($response->isError()) {
@@ -71,6 +73,8 @@ class CTPAuthenticationProvider extends UserAuthenticationProvider
             }
             $user->setId($customer->getId());
             $this->session->set('customer.id', $customer->getId());
+            $this->session->set(CartController::CART_ID, $result->getCart()->getId());
+            $this->session->set(CartController::CART_ITEM_COUNT, $result->getCart()->getLineItemCount());
 
         }
     }

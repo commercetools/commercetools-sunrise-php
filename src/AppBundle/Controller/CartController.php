@@ -16,13 +16,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends SunriseController
 {
+    const CART_ID = 'cart.id';
+    const CART_ITEM_COUNT = 'cart.itemCount';
+
     const CSRF_TOKEN_NAME = 'csrfToken';
 
     public function indexAction(Request $request)
     {
         $session = $this->get('session');
         $viewData = $this->getViewData('Sunrise - Cart', $request);
-        $cartId = $session->get('cartId');
+        $cartId = $session->get(self::CART_ID);
         $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId);
         $viewData->content = new ViewData();
         $viewData->content->cart = $this->getCart($cart);
@@ -43,13 +46,13 @@ class CartController extends SunriseController
         $quantity = (int)$request->get('quantity');
         $sku = $request->get('productSku');
         $slug = $request->get('productSlug');
-        $cartId = $session->get('cartId');
+        $cartId = $session->get(self::CART_ID);
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('currencies.'. $country);
         $cart = $this->get('commercetools.repository.cart')
             ->addLineItem($request->getLocale(), $cartId, $productId, $variantId, $quantity, $currency, $country);
-        $session->set('cartId', $cart->getId());
-        $session->set('cartNumItems', $this->getItemCount($cart));
+        $session->set(self::CART_ID, $cart->getId());
+        $session->set(self::CART_ITEM_COUNT, $cart->getLineItemCount());
         $session->save();
 
         if (empty($sku)) {
@@ -79,11 +82,11 @@ class CartController extends SunriseController
         $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
         $lineItemCount = (int)$request->get('quantity');
-        $cartId = $session->get('cartId');
+        $cartId = $session->get(self::CART_ID);
         $cart = $this->get('commercetools.repository.cart')
             ->changeLineItemQuantity($request->getLocale(), $cartId, $lineItemId, $lineItemCount);
 
-        $session->set('cartNumItems', $this->getItemCount($cart));
+        $session->set(self::CART_ITEM_COUNT, $cart->getLineItemCount());
         $session->save();
 
         return new RedirectResponse($this->generateUrl('cart'));
@@ -93,11 +96,11 @@ class CartController extends SunriseController
     {
         $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
-        $cartId = $session->get('cartId');
+        $cartId = $session->get(self::CART_ID);
         $cart = $this->get('commercetools.repository.cart')
             ->deleteLineItem($request->getLocale(), $cartId, $lineItemId);
 
-        $session->set('cartNumItems', $this->getItemCount($cart));
+        $session->set(self::CART_ITEM_COUNT, $cart->getLineItemCount());
         $session->save();
 
         return new RedirectResponse($this->generateUrl('cart'));
@@ -106,7 +109,7 @@ class CartController extends SunriseController
     public function checkoutAction(Request $request)
     {
         $session = $this->get('session');
-        $userId = $session->get('userId');
+        $userId = $session->get(self::CART_ID);
         if (is_null($userId)) {
             return $this->checkoutSigninAction($request);
         }
@@ -152,7 +155,7 @@ class CartController extends SunriseController
     protected function getCart(Cart $cart)
     {
         $cartModel = new ViewData();
-        $cartModel->totalItems = $this->getItemCount($cart);
+        $cartModel->totalItems = $cart->getLineItemCount();
         if ($cart->getTaxedPrice()) {
             $salexTax = Money::ofCurrencyAndAmount(
                 $cart->getTaxedPrice()->getTotalGross()->getCurrencyCode(),
