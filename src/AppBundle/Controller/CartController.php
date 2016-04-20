@@ -10,22 +10,20 @@ use Commercetools\Core\Model\Common\Money;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
+use Commercetools\Symfony\CtpBundle\Model\Repository\CartRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends SunriseController
 {
-    const CART_ID = 'cart.id';
-    const CART_ITEM_COUNT = 'cart.itemCount';
-
     const CSRF_TOKEN_NAME = 'csrfToken';
 
     public function indexAction(Request $request)
     {
         $session = $this->get('session');
         $viewData = $this->getViewData('Sunrise - Cart', $request);
-        $cartId = $session->get(self::CART_ID);
+        $cartId = $session->get(CartRepository::CART_ID);
         $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId);
         $viewData->content = new ViewData();
         $viewData->content->cart = $this->getCart($cart);
@@ -46,14 +44,11 @@ class CartController extends SunriseController
         $quantity = (int)$request->get('quantity');
         $sku = $request->get('productSku');
         $slug = $request->get('productSlug');
-        $cartId = $session->get(self::CART_ID);
+        $cartId = $session->get(CartRepository::CART_ID);
         $country = \Locale::getRegion($this->locale);
         $currency = $this->config->get('currencies.'. $country);
-        $cart = $this->get('commercetools.repository.cart')
+        $this->get('commercetools.repository.cart')
             ->addLineItem($request->getLocale(), $cartId, $productId, $variantId, $quantity, $currency, $country);
-        $session->set(self::CART_ID, $cart->getId());
-        $session->set(self::CART_ITEM_COUNT, $cart->getLineItemCount());
-        $session->save();
 
         if (empty($sku)) {
             $redirectUrl = $this->generateUrl('pdp-master', ['slug' => $slug]);
@@ -82,12 +77,9 @@ class CartController extends SunriseController
         $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
         $lineItemCount = (int)$request->get('quantity');
-        $cartId = $session->get(self::CART_ID);
-        $cart = $this->get('commercetools.repository.cart')
+        $cartId = $session->get(CartRepository::CART_ID);
+        $this->get('commercetools.repository.cart')
             ->changeLineItemQuantity($request->getLocale(), $cartId, $lineItemId, $lineItemCount);
-
-        $session->set(self::CART_ITEM_COUNT, $cart->getLineItemCount());
-        $session->save();
 
         return new RedirectResponse($this->generateUrl('cart'));
     }
@@ -96,12 +88,9 @@ class CartController extends SunriseController
     {
         $session = $this->get('session');
         $lineItemId = $request->get('lineItemId');
-        $cartId = $session->get(self::CART_ID);
-        $cart = $this->get('commercetools.repository.cart')
+        $cartId = $session->get(CartRepository::CART_ID);
+        $this->get('commercetools.repository.cart')
             ->deleteLineItem($request->getLocale(), $cartId, $lineItemId);
-
-        $session->set(self::CART_ITEM_COUNT, $cart->getLineItemCount());
-        $session->save();
 
         return new RedirectResponse($this->generateUrl('cart'));
     }
@@ -109,7 +98,7 @@ class CartController extends SunriseController
     public function checkoutAction(Request $request)
     {
         $session = $this->get('session');
-        $userId = $session->get(self::CART_ID);
+        $userId = $session->get(CartRepository::CART_ID);
         if (is_null($userId)) {
             return $this->checkoutSigninAction($request);
         }
@@ -139,17 +128,6 @@ class CartController extends SunriseController
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Confirmation', $request);
         return $this->render('checkout-confirmation.hbs', $viewData->toArray());
-    }
-
-    protected function getItemCount(Cart $cart)
-    {
-        $count = 0;
-        if ($cart->getLineItems()) {
-            foreach ($cart->getLineItems() as $lineItem) {
-                $count+= $lineItem->getQuantity();
-            }
-        }
-        return $count;
     }
 
     protected function getCart(Cart $cart)

@@ -13,6 +13,7 @@ use Commercetools\Sunrise\AppBundle\Model\View\Header;
 use Commercetools\Sunrise\AppBundle\Model\View\Tree;
 use Commercetools\Sunrise\AppBundle\Model\View\Url;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
+use Commercetools\Symfony\CtpBundle\Model\Repository\CartRepository;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -131,7 +132,7 @@ class SunriseController extends Controller
         $header->user->isLoggedIn = false;
         $header->user->signIn = new Url('Login', '');
         $header->miniCart = new ViewData();
-        $header->miniCart->totalItems = $session->get(CartController::CART_ITEM_COUNT, 0);
+        $header->miniCart->totalItems = $session->get(CartRepository::CART_ITEM_COUNT, 0);
         $header->navMenu = $this->getNavMenu();
 
         return $header;

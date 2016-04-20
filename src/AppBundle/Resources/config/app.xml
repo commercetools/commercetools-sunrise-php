@@ -111,25 +111,5 @@
             <tag name="data_collector" id="ctp"/>
             <argument type="service" id="app.commercetools.profile" />
         </service>
-
-        <!--<service id="app.ctpuser_user_provider" class="AppBundle\sUser\ctpuserprovider"/>-->
-
-        <service id="app.ctp_user_provider"
-                 class="Commercetools\Sunrise\AppBundle\Security\User\CTPUserProvider">
-            <argument type="service" id="session" />
-        </service>
-        <service id="security.authentication_provider.ctp"
-                 class="Commercetools\Sunrise\AppBundle\Security\Authentication\Provider\CTPAuthenticationProvider"
-                 abstract="true"
-                 public="false"
-        >
-            <argument type="service" id="session" />
-            <argument type="service" id="app.commercetools.client.factory" />
-            <argument /> <!-- User Provider -->
-            <argument type="service" id="security.user_checker" />
-            <argument /> <!-- Provider-shared Key -->
-            <argument>%security.authentication.hide_user_not_found%</argument>
-        </service>
-
     </services>
 </container>

@@ -7,7 +7,7 @@
 namespace Commercetools\Sunrise\AppBundle;
 
 
-use Commercetools\Sunrise\AppBundle\DependencyInjection\Factory\SecurityFactory;
+use Commercetools\Symfony\CtpBundle\DependencyInjection\Factory\SecurityFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
