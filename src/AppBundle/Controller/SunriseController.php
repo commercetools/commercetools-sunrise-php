@@ -7,6 +7,16 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Sunrise\AppBundle\Model\Config;
+use Commercetools\Sunrise\AppBundle\Model\View\Entry;
+use Commercetools\Sunrise\AppBundle\Model\View\Footer;
+use Commercetools\Sunrise\AppBundle\Model\View\LinkList;
+use Commercetools\Sunrise\AppBundle\Model\View\Location;
+use Commercetools\Sunrise\AppBundle\Model\View\Meta;
+use Commercetools\Sunrise\AppBundle\Model\View\MiniCart;
+use Commercetools\Sunrise\AppBundle\Model\View\Model;
+use Commercetools\Sunrise\AppBundle\Model\View\NavMenu;
+use Commercetools\Sunrise\AppBundle\Model\View\Newsletter;
+use Commercetools\Sunrise\AppBundle\Model\View\User;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Model\View\Header;
@@ -78,7 +88,7 @@ class SunriseController extends Controller
 
     protected function getViewData($title, Request $request = null)
     {
-        $viewData = new ViewData();
+        $viewData = new Model();
         $viewData->header = $this->getHeaderViewData($title, $request);
         $viewData->meta = $this->getMetaData();
         $viewData->footer = $this->getFooterData();
@@ -92,32 +102,26 @@ class SunriseController extends Controller
 
         $session = $this->get('session');
         $header = new Header($title);
-        $header->stores = new Url($this->trans('header.stores'), '');
-        $header->help = new Url($this->trans('header.help'), '');
-        $header->callUs = new Url(
-            $this->trans('header.callUs', ['phone' => $this->config['sunrise.header.callUs']]),
-            ''
-        );
-        $header->location = new ViewData();
         $languages = new ViewDataCollection();
 
         $routeParams = $request->get('_route_params');
         $queryParams = \GuzzleHttp\Psr7\parse_query($request->getQueryString());
         foreach ($this->config['languages'] as $language) {
-            $languageEntry = new ViewData();
-            if ($language == \Locale::getPrimaryLanguage($this->locale)) {
-                $languageEntry->selected = true;
-            }
-            $languageEntry->label = $this->trans('header.languages.' . $language);
             $routeParams['_locale'] = $language;
             $languageUri = $this->generateUrl($request->get('_route'), $routeParams);
 
             $uri = new Uri($languageUri);
-            $languageEntry->value = (string)$uri->withQuery(\GuzzleHttp\Psr7\build_query($queryParams));
+            $languageEntry = new Entry(
+                $this->trans('header.languages.' . $language),
+                (string)$uri->withQuery(\GuzzleHttp\Psr7\build_query($queryParams))
+            );
+            if ($language == \Locale::getPrimaryLanguage($this->locale)) {
+                $languageEntry->selected = true;
+            }
 
             $languages->add($languageEntry);
         }
-        $header->location->language = $languages;
+        $header->location = new Location($languages);
 
 //        $countries = new ViewDataCollection();
 //        foreach ($this->config['countries'] as $country) {
@@ -128,11 +132,8 @@ class SunriseController extends Controller
 //        }
 //
 //        $header->location->country = $countries;
-        $header->user = new ViewData();
-        $header->user->isLoggedIn = false;
-        $header->user->signIn = new Url('Login', '');
-        $header->miniCart = new ViewData();
-        $header->miniCart->totalItems = $session->get(CartRepository::CART_ITEM_COUNT, 0);
+        $header->user = new User(new Url('Login', ''), false);
+        $header->miniCart = new MiniCart($session->get(CartRepository::CART_ITEM_COUNT, 0));
         $header->navMenu = $this->getNavMenu();
 
         return $header;
@@ -140,7 +141,7 @@ class SunriseController extends Controller
 
     protected function getNavMenu()
     {
-        $navMenu = new ViewData();
+        $navMenu = new NavMenu();
 
         $cacheKey = 'category-menu-' . $this->locale;
         $cache = $this->get('app.cache');
@@ -197,16 +198,16 @@ class SunriseController extends Controller
 
     protected function getMetaData()
     {
-        $meta = new ViewData();
+        $meta = new Meta();
         $meta->assetsPath = $this->config['sunrise.assetsPath'];
-        $meta->_links = new ViewData();
-        $meta->_links->home = new ViewLink($this->generateUrl('home'));
-        $meta->_links->newProducts = new ViewLink($this->generateUrl('category', ['category' => 'new']));
-        $meta->_links->addToCart = new ViewLink($this->generateUrl('cartAdd'));
-        $meta->_links->miniCart = new ViewLink($this->generateUrl('miniCart'));
-        $meta->_links->cart = new ViewLink($this->generateUrl('cart'));
-        $meta->_links->signIn = new ViewLink($this->generateUrl('login_route'));
-        $meta->_links->logInSubmit = new ViewLink($this->generateUrl('login_check'));
+        $meta->_links = new ViewDataCollection();
+        $meta->_links->add(new ViewLink($this->generateUrl('home'), 'home'));
+        $meta->_links->add(new ViewLink($this->generateUrl('category', ['category' => 'new'])), 'newProducts');
+        $meta->_links->add(new ViewLink($this->generateUrl('cartAdd')), 'addToCart');
+        $meta->_links->add(new ViewLink($this->generateUrl('miniCart')), 'miniCart');
+        $meta->_links->add(new ViewLink($this->generateUrl('cart')), 'cart');
+        $meta->_links->add(new ViewLink($this->generateUrl('login_route')), 'signIn');
+        $meta->_links->add(new ViewLink($this->generateUrl('login_check')), 'logInSubmit');
         $meta->csrfToken = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
         $bagItems = new ViewDataCollection();
         for ($i = 1; $i < 10; $i++) {
@@ -241,16 +242,16 @@ class SunriseController extends Controller
 
     protected function getFooterData()
     {
-        $footer = new ViewData();
+        $footer = new Footer();
         $footer->paySecure = $this->trans('footer.paySecure');
         $footer->followUs = $this->trans('footer.followUs');
-        $footer->newsletter = new Url($this->trans('footer.newsletter.text'), '');
+        $footer->newsletter = new Newsletter($this->trans('footer.newsletter.text'), '');
         $footer->newsletter->textAlt = $this->trans('footer.newsletter.textAlt');
         $footer->newsletter->placeHolder = $this->trans('footer.newsletter.placeHolder');
         $footer->newsletter->inputId = 'pop-newsletter-input';
         $footer->newsletter->buttonId = 'pop-newsletter-button';
 
-        $footer->customerCare = new ViewData();
+        $footer->customerCare = new LinkList();
         $footer->customerCare->text = $this->trans('footer.customerCare.text');
         $ccList = new ViewDataCollection();
         $ccList->add(new Url($this->trans('footer.customerCare.contactUs'),''));
@@ -260,14 +261,14 @@ class SunriseController extends Controller
         $ccList->add(new Url($this->trans('footer.customerCare.sizeGuide'),''));
         $footer->customerCare->list = $ccList;
 
-        $footer->aboutUs = new ViewData();
+        $footer->aboutUs = new LinkList();
         $footer->aboutUs->text = $this->trans('footer.aboutUs.text');
         $aboutUsList = new ViewDataCollection();
         $aboutUsList->add(new Url($this->trans('footer.aboutUs.ourStory'),''));
         $aboutUsList->add(new Url($this->trans('footer.aboutUs.careers'),''));
         $footer->aboutUs->list = $aboutUsList;
 
-        $footer->shortcuts = new ViewData();
+        $footer->shortcuts = new LinkList();
         $footer->shortcuts->text = $this->trans('footer.shortcuts.text');
         $shortcutsList = new ViewDataCollection();
         $shortcutsList->add(new Url($this->trans('footer.shortcuts.myAccount'),''));
@@ -276,7 +277,7 @@ class SunriseController extends Controller
         $shortcutsList->add(new Url($this->trans('footer.shortcuts.payment'),''));
         $footer->shortcuts->list = $shortcutsList;
 
-        $footer->legalInfo = new ViewData();
+        $footer->legalInfo = new LinkList();
         $footer->legalInfo->text = $this->trans('footer.legalInfo.text');
         $legalInfoList = new ViewDataCollection();
         $legalInfoList->add(new Url($this->trans('footer.legalInfo.imprint'),''));
@@ -430,6 +431,6 @@ class SunriseController extends Controller
      */
     protected function createNamedFormBuilder($name, $data = null, array $options = array())
     {
-        return $this->container->get('form.factory')->createNamedBuilder($name, FormType::class, $data, $options);
+        return $this->get('form.factory')->createNamedBuilder($name, FormType::class, $data, $options);
     }
 }

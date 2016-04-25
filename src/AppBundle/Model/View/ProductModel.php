@@ -16,7 +16,7 @@ use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProductModel
 {
@@ -31,7 +31,7 @@ class ProductModel
     private $cache;
 
     /**
-     * @var UrlGenerator
+     * @var UrlGeneratorInterface
      */
     private $generator;
 
@@ -44,9 +44,9 @@ class ProductModel
      * ProductModel constructor.
      * @param CacheAdapterInterface $cache
      * @param Config $config
-     * @param UrlGenerator $generator
+     * @param UrlGeneratorInterface $generator
      */
-    public function __construct(CacheAdapterInterface $cache, Config $config, $productTypeRepository, UrlGenerator $generator)
+    public function __construct(CacheAdapterInterface $cache, Config $config, $productTypeRepository, UrlGeneratorInterface $generator)
     {
         $this->productTypeRepository = $productTypeRepository;
         $this->cache = $cache;

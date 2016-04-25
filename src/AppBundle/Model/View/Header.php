@@ -10,7 +10,11 @@ use Commercetools\Sunrise\AppBundle\Model\ViewData;
 
 class Header extends ViewData
 {
-    private $title;
+    protected $title;
+    public $location;
+    public $user;
+    public $miniCart;
+    public $navMenu;
 
     public function __construct($title)
     {

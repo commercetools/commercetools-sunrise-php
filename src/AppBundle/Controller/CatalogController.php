@@ -16,6 +16,11 @@ use Commercetools\Core\Model\ProductType\AttributeDefinition;
 use Commercetools\Core\Model\ProductType\LocalizedEnumType;
 use Commercetools\Core\Model\ProductType\ProductTypeCollection;
 use Commercetools\Core\Response\PagedSearchResponse;
+use Commercetools\Sunrise\AppBundle\Model\View\CategoryEntry;
+use Commercetools\Sunrise\AppBundle\Model\View\Entry;
+use Commercetools\Sunrise\AppBundle\Model\View\LinkList;
+use Commercetools\Sunrise\AppBundle\Model\View\Url;
+use Commercetools\Sunrise\AppBundle\Model\View\User;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\View\ProductModel;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
@@ -188,7 +193,7 @@ class CatalogController extends SunriseController
 
     protected function getFiltersData(UriInterface $searchUri, Category $category = null)
     {
-        $filter = new ViewData();
+        $filter = new LinkList();
         $filter->url = $searchUri->getPath();
         $filter->list = new ViewDataCollection();
         $filter->list->add($this->getCategoriesFacet($category, $searchUri));
@@ -261,9 +266,7 @@ class CatalogController extends SunriseController
                     if (isset($facetValues[$value->getKey()])) {
                         continue;
                     }
-                    $facetEntry = new ViewData();
-                    $facetEntry->value = $value->getKey();
-                    $facetEntry->label = (string)$value->getLabel();
+                    $facetEntry = new Entry((string)$value->getLabel() ,$value->getKey());
                     $facetValues[$value->getKey()] = $facetEntry;
                 }
             }
@@ -331,10 +334,11 @@ class CatalogController extends SunriseController
              * @var Category $category
              */
             foreach ($categoryData as $category) {
-                $categoryEntry = new ViewData();
-                $categoryEntry->value = $this->generateUrl('category', ['category' => (string)$category->getSlug()]);
+                $categoryEntry = new CategoryEntry(
+                    (string)$category->getName(),
+                    $this->generateUrl('category', ['category' => (string)$category->getSlug()])
+                );
                 $categoryEntry->id = (string)$category->getId();
-                $categoryEntry->label = (string)$category->getName();
                 $categoryEntry->count = 0;
                 $ancestors = $category->getAncestors();
                 $categoryEntry->ancestors = [];
