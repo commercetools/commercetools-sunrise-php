@@ -6,16 +6,21 @@
 namespace Commercetools\Sunrise\AppBundle\Repository;
 
 use Commercetools\Core\Request\Categories\CategoryQueryRequest;
-use Commercetools\Sunrise\AppBundle\Model\Repository;
+use Commercetools\Symfony\CtpBundle\Model\Repository;
 
 class CategoryRepository extends Repository
 {
     const NAME = 'categories';
 
-    public function getCategories()
+    /**
+     * @param $locale
+     * @return mixed
+     */
+    public function getCategories($locale)
     {
-        $cacheKey = 'categories';
+        $client = $this->getClient($locale);
+        $cacheKey = static::NAME;
         $categoriesRequest = CategoryQueryRequest::of();
-        return $this->retrieveAll(static::NAME, $cacheKey, $categoriesRequest);
+        return $this->retrieveAll($client, $cacheKey, $categoriesRequest);
     }
 }

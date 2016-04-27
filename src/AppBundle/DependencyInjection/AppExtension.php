@@ -22,8 +22,6 @@ class AppExtension extends Extension
         $configuration = new Configuration();
 
         $config = $this->processConfiguration($configuration, $configs);
-        $container->setParameter('app.fallback_languages', $config['fallback_languages']);
-        $container->setParameter('app.commercetools', isset($config['commercetools']) ? $config['commercetools']: []);
         $container->setParameter('app.config', $config);
     }
 }

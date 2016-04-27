@@ -72,7 +72,6 @@ class SunriseController extends Controller
     private $defaultNamespace;
 
     public function __construct(
-        $locale,
         $config
     )
     {
@@ -80,7 +79,6 @@ class SunriseController extends Controller
             $config = new Config($config);
         }
         $this->config = $config;
-        $this->locale = $locale;
         $this->defaultNamespace = $this->config['i18n.namespace.defaultNs'];
         $this->interpolationPrefix = $this->config['i18n.interpolationPrefix'];
         $this->interpolationSuffix = $this->config['i18n.interpolationSuffix'];
@@ -99,7 +97,7 @@ class SunriseController extends Controller
 
     protected function getHeaderViewData($title, Request $request = null)
     {
-
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
         $session = $this->get('session');
         $header = new Header($title);
         $languages = new ViewDataCollection();
@@ -115,7 +113,7 @@ class SunriseController extends Controller
                 $this->trans('header.languages.' . $language),
                 (string)$uri->withQuery(\GuzzleHttp\Psr7\build_query($queryParams))
             );
-            if ($language == \Locale::getPrimaryLanguage($this->locale)) {
+            if ($language == \Locale::getPrimaryLanguage($locale)) {
                 $languageEntry->selected = true;
             }
 
@@ -134,21 +132,21 @@ class SunriseController extends Controller
 //        $header->location->country = $countries;
         $header->user = new User(new Url('Login', ''), false);
         $header->miniCart = new MiniCart($session->get(CartRepository::CART_ITEM_COUNT, 0));
-        $header->navMenu = $this->getNavMenu();
+        $header->navMenu = $this->getNavMenu($locale);
 
         return $header;
     }
 
-    protected function getNavMenu()
+    protected function getNavMenu($locale)
     {
         $navMenu = new NavMenu();
 
-        $cacheKey = 'category-menu-' . $this->locale;
-        $cache = $this->get('app.cache');
+        $cacheKey = 'category-menu-' . $locale;
+        $cache = $this->get('commercetools.cache');
         if ($cache->has($cacheKey)) {
             $categoryMenu = unserialize($cache->fetch($cacheKey));
         } else {
-            $categories = $this->get('app.repository.category')->getCategories();
+            $categories = $this->get('app.repository.category')->getCategories($locale);
             $categoryMenu = new ViewDataCollection();
             $roots = $this->sortCategoriesByOrderHint($categories->getRoots());
 

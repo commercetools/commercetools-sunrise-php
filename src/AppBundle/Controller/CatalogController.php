@@ -70,6 +70,7 @@ class CatalogController extends SunriseController
 
     public function searchAction(Request $request)
     {
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
         $uri = new Uri($request->getRequestUri());
         $products = $this->getProducts($request);
 
@@ -86,13 +87,13 @@ class CatalogController extends SunriseController
         $query = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
         $viewData->content->displaySelector = $this->getDisplayContent($uri, $query, $this->getItemsPerPage($request));
         $viewData->content->sortSelector = $this->getSortData($uri, $query, $this->getSort($request, 'sunrise.products.sort'));
-        $viewData->content->facets = $this->getFiltersData($uri, $category);
+        $viewData->content->facets = $this->getFiltersData($locale, $uri, $category);
 
         $viewData->content->products = new ViewData();
         $viewData->content->products->list = new ViewDataCollection();
         foreach ($products as $key => $product) {
             $viewData->content->products->list->add(
-                $this->getProductModel()->getProductOverviewData($product, $product->getMasterVariant(), $this->locale)
+                $this->getProductModel()->getProductOverviewData($product, $product->getMasterVariant(), $locale)
             );
         }
         $viewData->content->pagination = $this->pagination;
@@ -106,13 +107,15 @@ class CatalogController extends SunriseController
 
     public function detailAction(Request $request)
     {
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
+
         $slug = $request->get('slug');
         $sku = $request->get('sku');
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page', $request);
 
-        $product = $this->get('commercetools.repository.product')->getProductBySlug($slug, $this->locale);
-        $productData = $this->getProductModel()->getProductDetailData($product, $sku, $this->locale);
+        $product = $this->get('commercetools.repository.product')->getProductBySlug($slug, $locale);
+        $productData = $this->getProductModel()->getProductDetailData($product, $sku, $locale);
         $viewData->content->product = $productData;
 
         return $this->render('pdp.hbs', $viewData->toArray(), $this->getCachableResponse());
@@ -191,29 +194,29 @@ class CatalogController extends SunriseController
         return $facetDefinitions;
     }
 
-    protected function getFiltersData(UriInterface $searchUri, Category $category = null)
+    protected function getFiltersData($locale, UriInterface $searchUri, Category $category = null)
     {
         $filter = new LinkList();
         $filter->url = $searchUri->getPath();
         $filter->list = new ViewDataCollection();
-        $filter->list->add($this->getCategoriesFacet($category, $searchUri));
+        $filter->list->add($this->getCategoriesFacet($locale, $category, $searchUri));
         $facetConfigs = $this->config->get('sunrise.products.facets');
 
         $queryParams = \GuzzleHttp\Psr7\parse_query($searchUri->getQuery());
         foreach ($facetConfigs as $facetName => $facetConfig) {
-            $filter->list->add($this->getFacet($facetName, $facetConfig, $searchUri, $queryParams));
+            $filter->list->add($this->getFacet($locale, $facetName, $facetConfig, $searchUri, $queryParams));
         }
 
         return $filter;
     }
 
-    protected function getFacet($facetName, $facetConfig, UriInterface $searchUri, $queryParams)
+    protected function getFacet($locale, $facetName, $facetConfig, UriInterface $searchUri, $queryParams)
     {
         $method = 'get' . ucfirst($facetConfig['type']) . 'Facet';
-        return $this->$method($facetName, $facetConfig, $searchUri, $queryParams);
+        return $this->$method($locale, $facetName, $facetConfig, $searchUri, $queryParams);
     }
 
-    protected function getTextFacet($facetName, $facetConfig, UriInterface $searchUri, $queryParams)
+    protected function getTextFacet($locale, $facetName, $facetConfig, UriInterface $searchUri, $queryParams)
     {
         $facetData = new ViewData();
         $facetData->selectFacet = true;
@@ -237,12 +240,12 @@ class CatalogController extends SunriseController
         return $facetData;
     }
 
-    protected function getEnumFacet($facetName, $facetConfig, UriInterface $searchUri, $queryParams)
+    protected function getEnumFacet($locale, $facetName, $facetConfig, UriInterface $searchUri, $queryParams)
     {
         $attributeName = $facetConfig['attribute'];
-        $cache = $this->get('app.cache');
-        $cacheKey = $facetName .'-facet-' . $this->locale;
-        $typeData = $this->get('app.repository.product_type')->getTypes();
+        $cache = $this->get('commercetools.cache');
+        $cacheKey = $facetName .'-facet-' . $locale;
+        $typeData = $this->get('app.repository.product_type')->getTypes($locale);
         if (!$cache->has($cacheKey)) {
             $facetValues = [];
             /**
@@ -317,17 +320,17 @@ class CatalogController extends SunriseController
         return $facetData;
     }
 
-    protected function getCategoriesFacet(Category $selectedCategory = null, UriInterface $uri)
+    protected function getCategoriesFacet($locale, Category $selectedCategory = null, UriInterface $uri)
     {
-        $cache = $this->get('app.cache');
+        $cache = $this->get('commercetools.cache');
         $categoryFacet = $this->facets->getByName('categories');
 
         /**
          * @var CategoryCollection $categoryData
          */
-        $categoryData = $this->get('app.repository.category')->getCategories();
+        $categoryData = $this->get('app.repository.category')->getCategories($locale);
 
-        $cacheKey = 'category-facet-tree-' . $this->locale;
+        $cacheKey = 'category-facet-tree-' . $locale;
         if (!$cache->has($cacheKey)) {
             $categoryTree = [];
             /**
@@ -482,8 +485,9 @@ class CatalogController extends SunriseController
 
     protected function getProducts(Request $request)
     {
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
         $uri = new Uri($request->getRequestUri());
-        $country = \Locale::getRegion($this->locale);
+        $country = \Locale::getRegion($locale);
         $currency = $this->config->get('currencies.'. $country);
         $category = $this->getCategory($request);
         $itemsPerPage = $this->getItemsPerPage($request);
@@ -521,11 +525,12 @@ class CatalogController extends SunriseController
         $category = $request->get('category');
 
         if (!is_null($category)) {
+            $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
             /**
              * @var CategoryCollection $categories
              */
-            $categories = $this->get('app.repository.category')->getCategories();
-            $category = $categories->getBySlug($category, $this->locale);
+            $categories = $this->get('app.repository.category')->getCategories($locale);
+            $category = $categories->getBySlug($category, $locale);
         }
         return $category;
     }
@@ -535,7 +540,7 @@ class CatalogController extends SunriseController
         /**
          * @var CacheAdapterInterface $cache
          */
-        $cache = $this->get('app.cache');
+        $cache = $this->get('commercetools.cache');
         $model = new ProductModel(
             $cache,
             $this->config,

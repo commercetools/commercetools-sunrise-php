@@ -40,10 +40,22 @@ handlebars:
     i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
     json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
 commercetools:
+  cache:
+    category: true
+    product_type: true
+    product: true
   credentials:
     client_id: "%commercetools.client_id%"
     client_secret: "%commercetools.client_secret%"
     project: "%commercetools.project%"
+  fallback_languages:
+    de:
+    - en
+    en:
+    - de
+  currency:
+    DE: EUR
+    UK: GBP
 assetic:
   debug: "%kernel.debug%"
   use_controller: "%kernel.debug%"

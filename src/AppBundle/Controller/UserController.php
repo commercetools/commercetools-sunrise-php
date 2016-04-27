@@ -14,9 +14,9 @@ use Commercetools\Core\Request\Customers\CustomerByIdGetRequest;
 use Commercetools\Sunrise\AppBundle\Model\View\Url;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
-use Commercetools\Sunrise\AppBundle\Security\User\CTPUser;
 use Commercetools\Symfony\CtpBundle\Entity\UserAddress;
 use Commercetools\Symfony\CtpBundle\Entity\UserDetails;
+use Commercetools\Symfony\CtpBundle\Security\User\User;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -49,10 +49,11 @@ class UserController extends SunriseController
 
     public function editAddressAction(Request $request)
     {
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
         $addressId = $request->get('id');
         $viewData = $this->getViewData('MyAccount - Edit Address', $request);
 
-        $customer = $this->getCustomer($this->getUser());
+        $customer = $this->getCustomer($locale, $this->getUser());
 
         $address = $customer->getAddresses()->getById($addressId);
 
@@ -223,9 +224,10 @@ class UserController extends SunriseController
 
     public function addressesAction(Request $request)
     {
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
         $viewData = $this->getViewData('MyAccount - Details', $request);
 
-        $customer = $this->getCustomer($this->getUser());
+        $customer = $this->getCustomer($locale, $this->getUser());
 
         $viewData->content->shippingAddress = $this->getViewAddress($customer->getDefaultShippingAddress());
         $viewData->content->billingAddress = $this->getViewAddress($customer->getDefaultBillingAddress());;
@@ -249,8 +251,9 @@ class UserController extends SunriseController
 
     public function ordersAction(Request $request)
     {
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
         $viewData = $this->getViewData('MyAccount - Orders', $request);
-        $orders = $this->get('app.repository.order')->getOrders($this->getUser()->getId());
+        $orders = $this->get('app.repository.order')->getOrders($locale, $this->getUser()->getId());
 
         $viewData->content->orderNumberTitle = $this->trans('my-account:orderNumber');
 
@@ -278,12 +281,13 @@ class UserController extends SunriseController
 
     public function orderDetailAction(Request $request, $orderId)
     {
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
         $viewData = $this->getViewData('MyAccount - Orders', $request);
 
         /**
          * @var Order $order
          */
-        $order = $this->get('app.repository.order')->getOrder($orderId);
+        $order = $this->get('app.repository.order')->getOrder($locale, $orderId);
 
 
         if ($order->getCustomerId() !== $this->getUser()->getId()) {
@@ -385,22 +389,13 @@ class UserController extends SunriseController
         $content->productDescriptionTitle = $this->trans('Product Description');
     }
 
-    protected function getCustomer(CTPUser $user)
+    protected function getCustomer($locale, User $user)
     {
-        if (!$user instanceof CTPUser) {
+        if (!$user instanceof User) {
             throw new \InvalidArgumentException();
         }
 
-        /**
-         * @var Client $client
-         */
-        $client = $this->get('app.commercetools.client');
-
-        $request = CustomerByIdGetRequest::ofId($user->getId());
-
-        $response = $request->executeWithClient($client);
-        $customer = $request->mapResponse($response);
-
+        $customer = $this->get('commercetools.repository.customer')->getCustomer($locale, $user->getId());
         return $customer;
     }
 }

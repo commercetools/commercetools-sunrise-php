@@ -123,7 +123,7 @@ class ProductModel
         if ($includeDetails) {
             $productModelVariant->description = (string)$product->getDescription();
 
-            $productType = $this->productTypeRepository->getById($product->getProductType()->getId());
+            $productType = $this->productTypeRepository->getById($locale, $product->getProductType()->getId());
             list($attributes, $variantKeys, $variantIdentifiers) = $this->getVariantSelectors($product, $productType, $selectSku);
             $productModelProduct->variants = $variantKeys;
             $productModelProduct->variantIdentifiers = $variantIdentifiers;

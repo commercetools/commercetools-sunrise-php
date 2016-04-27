@@ -5,29 +5,38 @@
 
 namespace Commercetools\Sunrise\AppBundle\Repository;
 
+use Commercetools\Core\Model\ProductType\ProductType;
 use Commercetools\Core\Model\ProductType\ProductTypeCollection;
 use Commercetools\Core\Request\ProductTypes\ProductTypeQueryRequest;
-use Commercetools\Sunrise\AppBundle\Model\Repository;
+use Commercetools\Symfony\CtpBundle\Model\Repository;
 
 class ProductTypeRepository extends Repository
 {
-    const NAME = 'productTypes';
+    const NAME = 'productType';
 
     /**
+     * @param string $locale
+     * @param bool $force
      * @return ProductTypeCollection
      */
-    public function getTypes($force = false)
+    public function getTypes($locale, $force = false)
     {
+        $client = $this->getClient($locale);
         $cacheKey = static::NAME;
         $productTypeRequest = ProductTypeQueryRequest::of();
-        return $this->retrieveAll(static::NAME, $cacheKey, $productTypeRequest, $force);
+        return $this->retrieveAll($client, $cacheKey, $productTypeRequest, $force);
     }
 
-    public function getById($id)
+    /**
+     * @param $locale
+     * @param $id
+     * @return ProductType
+     */
+    public function getById($locale, $id)
     {
-        $type = $this->getTypes()->getById($id);
+        $type = $this->getTypes($locale)->getById($id);
         if (is_null($type)) {
-            $type = $this->getTypes(true)->getById($id);
+            $type = $this->getTypes($locale, true)->getById($id);
         }
         return $type;
     }

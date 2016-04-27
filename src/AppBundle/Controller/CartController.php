@@ -37,6 +37,7 @@ class CartController extends SunriseController
 
     public function addAction(Request $request)
     {
+        $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
         $session = $this->get('session');
 
         $productId = $request->get('productId');
@@ -45,7 +46,7 @@ class CartController extends SunriseController
         $sku = $request->get('productSku');
         $slug = $request->get('productSlug');
         $cartId = $session->get(CartRepository::CART_ID);
-        $country = \Locale::getRegion($this->locale);
+        $country = \Locale::getRegion($locale);
         $currency = $this->config->get('currencies.'. $country);
         $this->get('commercetools.repository.cart')
             ->addLineItem($request->getLocale(), $cartId, $productId, $variantId, $quantity, $currency, $country);
@@ -93,41 +94,6 @@ class CartController extends SunriseController
             ->deleteLineItem($request->getLocale(), $cartId, $lineItemId);
 
         return new RedirectResponse($this->generateUrl('cart'));
-    }
-
-    public function checkoutAction(Request $request)
-    {
-        $session = $this->get('session');
-        $userId = $session->get(CartRepository::CART_ID);
-        if (is_null($userId)) {
-            return $this->checkoutSigninAction($request);
-        }
-
-        return $this->checkoutShippingAction($request);
-    }
-
-    public function checkoutSigninAction(Request $request)
-    {
-        $viewData = $this->getViewData('Sunrise - Checkout - Signin', $request);
-        return $this->render('checkout-signin.hbs', $viewData->toArray());
-    }
-
-    public function checkoutShippingAction(Request $request)
-    {
-        $viewData = $this->getViewData('Sunrise - Checkout - Shipping', $request);
-        return $this->render('checkout-shipping.hbs', $viewData->toArray());
-    }
-
-    public function checkoutPaymentAction(Request $request)
-    {
-        $viewData = $this->getViewData('Sunrise - Checkout - Payment', $request);
-        return $this->render('checkout-payment.hbs', $viewData->toArray());
-    }
-
-    public function checkoutConfirmationAction(Request $request)
-    {
-        $viewData = $this->getViewData('Sunrise - Checkout - Confirmation', $request);
-        return $this->render('checkout-confirmation.hbs', $viewData->toArray());
     }
 
     protected function getCart(Cart $cart)

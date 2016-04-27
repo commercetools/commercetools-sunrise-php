@@ -49,16 +49,3 @@ app:
   currencies:
     DE: EUR
     UK: GBP
-  fallback_languages:
-    de:
-    - en
-    en:
-    - de
-  cache:
-    categories: true
-    productTypes: true
-    products: true
-  commercetools:
-    client_id: "%commercetools.client_id%"
-    client_secret: "%commercetools.client_secret%"
-    project: "%commercetools.project%"
