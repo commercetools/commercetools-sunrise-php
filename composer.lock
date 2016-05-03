@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6e55707a5fddc46f98e847848afd96fa",
-    "content-hash": "6273bbff1445813328b8177da4ef63cb",
+    "hash": "d29cf674f816267c6ddb45df4415c012",
+    "content-hash": "93ab21723f6c3466a4906e3a26fc0824",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -63,16 +63,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "dev-develop",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "45190a64ca39da3f53b6f1799149d2d7a37255ec"
+                "reference": "fa9a11c8afade1356c53abde87abb71c4bd4f961"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/45190a64ca39da3f53b6f1799149d2d7a37255ec",
-                "reference": "45190a64ca39da3f53b6f1799149d2d7a37255ec",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/fa9a11c8afade1356c53abde87abb71c4bd4f961",
+                "reference": "fa9a11c8afade1356c53abde87abb71c4bd4f961",
                 "shasum": ""
             },
             "require": {
@@ -135,7 +135,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-04-27 13:03:38"
+            "time": "2016-05-02 15:52:56"
         },
         {
             "name": "commercetools/sunrise-theme",
@@ -171,17 +171,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-symfony.git",
-                "reference": "86dafc9d88501778770fb90ce16bd693e6407b14"
+                "reference": "7b70e8c38247c5416a07981670df891633f5dcaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/86dafc9d88501778770fb90ce16bd693e6407b14",
-                "reference": "86dafc9d88501778770fb90ce16bd693e6407b14",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/7b70e8c38247c5416a07981670df891633f5dcaf",
+                "reference": "7b70e8c38247c5416a07981670df891633f5dcaf",
                 "shasum": ""
             },
             "require": {
                 "commercetools/commons": "*",
-                "commercetools/php-sdk": "*",
+                "commercetools/php-sdk": "^1.0",
                 "php": ">=5.5.9",
                 "symfony/assetic-bundle": "^2.8",
                 "symfony/symfony": "^3.0"
@@ -200,7 +200,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2016-04-27 14:52:56"
+            "time": "2016-05-03 12:44:18"
         },
         {
             "name": "doctrine/annotations",
@@ -1840,16 +1840,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.0.4",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "4e17cb2ecb3fd637097ebeb871fc0e2cbdd5e7ff"
+                "reference": "10c83b58fbb42be516377de54962a758695ad964"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/4e17cb2ecb3fd637097ebeb871fc0e2cbdd5e7ff",
-                "reference": "4e17cb2ecb3fd637097ebeb871fc0e2cbdd5e7ff",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/10c83b58fbb42be516377de54962a758695ad964",
+                "reference": "10c83b58fbb42be516377de54962a758695ad964",
                 "shasum": ""
             },
             "require": {
@@ -1932,7 +1932,11 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Symfony\\Bridge\\": "src/Symfony/Bridge/",
+                    "Symfony\\Bridge\\Doctrine\\": "src/Symfony/Bridge/Doctrine/",
+                    "Symfony\\Bridge\\Monolog\\": "src/Symfony/Bridge/Monolog/",
+                    "Symfony\\Bridge\\ProxyManager\\": "src/Symfony/Bridge/ProxyManager/",
+                    "Symfony\\Bridge\\Swiftmailer\\": "src/Symfony/Bridge/Swiftmailer/",
+                    "Symfony\\Bridge\\Twig\\": "src/Symfony/Bridge/Twig/",
                     "Symfony\\Bundle\\": "src/Symfony/Bundle/",
                     "Symfony\\Component\\": "src/Symfony/Component/"
                 },
@@ -1962,7 +1966,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-03-30 10:41:14"
+            "time": "2016-05-03 05:58:56"
         },
         {
             "name": "twig/twig",
@@ -2534,16 +2538,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v101",
+            "version": "v102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "efca12bb59ccdebec79cabddd94e7c1ef51de908"
+                "reference": "2c8d01ff3aab321d6a9a674d84b434bbacca3300"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/efca12bb59ccdebec79cabddd94e7c1ef51de908",
-                "reference": "efca12bb59ccdebec79cabddd94e7c1ef51de908",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/2c8d01ff3aab321d6a9a674d84b434bbacca3300",
+                "reference": "2c8d01ff3aab321d6a9a674d84b434bbacca3300",
                 "shasum": ""
             },
             "bin": [
@@ -2564,7 +2568,7 @@
                 }
             ],
             "description": "Toolkit for starting a PHP application locally, with or without foreman, using the same config for PHP/HHVM and Apache2/Nginx as on Heroku",
-            "homepage": "http://github.com/heroku/heroku-buildpack-php",
+            "homepage": "https://github.com/heroku/heroku-buildpack-php",
             "keywords": [
                 "apache",
                 "apache2",
@@ -2574,7 +2578,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2016-04-12 02:41:29"
+            "time": "2016-04-29 17:10:34"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -2636,16 +2640,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "e3abefcd7f106677fd352cd7c187d6c969aa9ddc"
+                "reference": "a8773992b362b58498eed24bf85005f363c34771"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/e3abefcd7f106677fd352cd7c187d6c969aa9ddc",
-                "reference": "e3abefcd7f106677fd352cd7c187d6c969aa9ddc",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/a8773992b362b58498eed24bf85005f363c34771",
+                "reference": "a8773992b362b58498eed24bf85005f363c34771",
                 "shasum": ""
             },
             "require": {
@@ -2674,7 +2678,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2015-11-07 22:20:37"
+            "time": "2015-11-20 12:04:31"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -3727,7 +3731,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/php-sdk": 20,
         "commercetools/sunrise-theme": 10,
         "commercetools/symfony-bundle": 20,
         "commercetools/sunrise-scenarios": 20,
