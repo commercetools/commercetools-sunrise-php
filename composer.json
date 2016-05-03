@@ -16,7 +16,7 @@
     "commercetools/php-sdk": "^1.0",
     "commercetools/sunrise-theme": "^0.57@beta",
     "commercetools/symfony-bundle": "@dev",
-    "commercetools/commons": "^0.1",
+    "commercetools/commons": "^0.2",
     "jays-de/handlebars-bundle": "^0.4",
     "monolog/monolog": "^1.7",
     "symfony/symfony": "^3.0",
@@ -79,10 +79,6 @@
     {
       "type": "vcs",
       "url": "https://github.com/sphereio/sphere-sunrise-scenarios"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/sphereio/commercetools-php-commons"
     }
   ]
 }
