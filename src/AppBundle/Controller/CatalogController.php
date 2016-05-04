@@ -8,9 +8,9 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Core\Model\Category\CategoryCollection;
-use Commercetools\Core\Model\Product\Facet;
+use Commercetools\Core\Model\Product\Search\Facet;
 use Commercetools\Core\Model\Product\FacetResultCollection;
-use Commercetools\Core\Model\Product\Filter;
+use Commercetools\Core\Model\Product\Search\Filter;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
 use Commercetools\Core\Model\ProductType\AttributeDefinition;
 use Commercetools\Core\Model\ProductType\LocalizedEnumType;
@@ -176,14 +176,14 @@ class CatalogController extends SunriseController
 
     protected function getFacetDefinitions($facetDefinitions = [])
     {
-        $facetDefinitions[] = Facet::of()->setName('variants.categories.id')->setAlias('categories');
+        $facetDefinitions[] = Facet::ofName('variants.categories.id')->setAlias('categories');
         foreach ($this->config->get('sunrise.products.facets') as $facetName => $facetConfig) {
             switch ($facetConfig['type']) {
                 case 'text':
-                    $facet = Facet::of()->setName('variants.attributes.' . $facetConfig['attribute'])->setAlias($facetName);
+                    $facet = Facet::ofName('variants.attributes.' . $facetConfig['attribute'])->setAlias($facetName);
                     break;
                 case 'enum':
-                    $facet = Facet::of()->setName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setAlias($facetName);
+                    $facet = Facet::ofName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setAlias($facetName);
                     break;
                 default:
                     throw new \InvalidArgumentException('Facet type not implemented');
@@ -452,7 +452,7 @@ class CatalogController extends SunriseController
         $queryParams = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
 
         if ($category instanceof Category) {
-            $filters['filter'][] = Filter::of()->setName('categories.id')->setValue($category->getId());
+            $filters['filter'][] = Filter::ofName('categories.id')->setValue($category->getId());
         }
         foreach ($queryParams as $filterName => $params) {
             if (!isset($facetConfigs[$filterName])) {
@@ -463,17 +463,14 @@ class CatalogController extends SunriseController
                 if (!is_array($params)) {
                     $params = [$params];
                 }
-                $filter = Filter::ofType('array');
-            } else {
-                $filter = Filter::of();
             }
             switch ($facetConfig['type']) {
                 case 'text':
-                    $filter = $filter->setName('variants.attributes.' . $facetConfig['attribute'])->setValue($params);
+                    $filter = Filter::ofName('variants.attributes.' . $facetConfig['attribute'])->setValue($params);
                     $filters['filter'][] = $filters['filter.facets'][] = $filter;
                     break;
                 case 'enum':
-                    $filter = $filter->setName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setValue($params);
+                    $filter = Filter::ofName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setValue($params);
                     $filters['filter'][] = $filters['filter.facets'][] = $filter;
                     break;
                 default:

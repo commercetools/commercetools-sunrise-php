@@ -5,8 +5,6 @@
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
-use Commercetools\Symfony\CtpBundle\Model\Repository\CartRepository;
-use Commercetools\Symfony\CtpBundle\Model\Repository\CustomerRepository;
 use Commercetools\Symfony\CtpBundle\Security\User\User;
 use Symfony\Component\HttpFoundation\Request;
 

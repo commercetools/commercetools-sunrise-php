@@ -101,4 +101,3 @@ category:
   path: /{_locale}/{category}/
   defaults:  { _controller: app.catalog.controller:searchAction }
   methods:  [GET, HEAD]
-

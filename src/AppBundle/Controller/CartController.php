@@ -27,10 +27,10 @@ class CartController extends SunriseController
         $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId);
         $viewData->content = new ViewData();
         $viewData->content->cart = $this->getCart($cart);
-        $viewData->meta->_links->continueShopping = new ViewLink($this->generateUrl('home'));
-        $viewData->meta->_links->deleteLineItem = new ViewLink($this->generateUrl('lineItemDelete'));
-        $viewData->meta->_links->changeLineItem = new ViewLink($this->generateUrl('lineItemChange'));
-        $viewData->meta->_links->checkout = new ViewLink($this->generateUrl('checkout'));
+        $viewData->meta->_links->add(new ViewLink($this->generateUrl('home'), 'continueShopping'));
+        $viewData->meta->_links->add(new ViewLink($this->generateUrl('lineItemDelete')), 'deleteLineItem');
+        $viewData->meta->_links->add(new ViewLink($this->generateUrl('lineItemChange')), 'changeLineItem');
+        $viewData->meta->_links->add(new ViewLink($this->generateUrl('checkout')), 'checkout');
 
         return $this->render('cart.hbs', $viewData->toArray());
     }

@@ -170,16 +170,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-symfony.git",
-                "reference": "7b70e8c38247c5416a07981670df891633f5dcaf"
+                "reference": "6292c82488010094421d6be0d4ccc6a81c39d5d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/7b70e8c38247c5416a07981670df891633f5dcaf",
-                "reference": "7b70e8c38247c5416a07981670df891633f5dcaf",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/6292c82488010094421d6be0d4ccc6a81c39d5d7",
+                "reference": "6292c82488010094421d6be0d4ccc6a81c39d5d7",
                 "shasum": ""
             },
             "require": {
-                "commercetools/commons": "*",
+                "commercetools/commons": "^0.2",
                 "commercetools/php-sdk": "^1.0",
                 "php": ">=5.5.9",
                 "symfony/assetic-bundle": "^2.8",
@@ -199,7 +199,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2016-05-03 12:44:18"
+            "time": "2016-05-03 13:02:15"
         },
         {
             "name": "doctrine/annotations",
@@ -3325,16 +3325,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "1.3.5",
+            "version": "1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf"
+                "reference": "2292b116f43c272ff4328083096114f84ea46a56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf",
-                "reference": "dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/2292b116f43c272ff4328083096114f84ea46a56",
+                "reference": "2292b116f43c272ff4328083096114f84ea46a56",
                 "shasum": ""
             },
             "require": {
@@ -3371,7 +3371,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-02-26 18:40:46"
+            "time": "2016-05-04 07:59:13"
         },
         {
             "name": "sebastian/exporter",
