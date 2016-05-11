@@ -72,8 +72,26 @@ class CatalogController extends SunriseController
     public function searchAction(Request $request)
     {
         $locale = $this->get('commercetools.locale.converter')->convert($request->getLocale());
-        $uri = new Uri($request->getRequestUri());
+
         $products = $this->getProducts($request);
+        $viewData = $this->getSearchViewData($request, $locale);
+
+        $viewData->content->products = new ViewData();
+        $viewData->content->products->list = new ViewDataCollection();
+
+        foreach ($products as $key => $product) {
+            $viewData->content->products->list->add(
+                $this->getProductModel()->getProductOverviewData($product, $product->getMasterVariant(), $locale)
+            );
+        }
+
+        return $this->render('pop.hbs', $viewData->toArray(), $this->getCachableResponse());
+    }
+
+    protected function getSearchViewData(Request $request, $locale)
+    {
+        $uri = new Uri($request->getRequestUri());
+        $query = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Overview Page', $request);
 
@@ -85,25 +103,13 @@ class CatalogController extends SunriseController
             $viewData->content->banner = $this->getBannerContent();
         }
 
-        $query = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
         $viewData->content->displaySelector = $this->getDisplayContent($uri, $query, $this->getItemsPerPage($request));
         $viewData->content->sortSelector = $this->getSortData($uri, $query, $this->getSort($request, 'sunrise.products.sort'));
         $viewData->content->facets = $this->getFiltersData($locale, $uri, $category);
 
-        $viewData->content->products = new ViewData();
-        $viewData->content->products->list = new ViewDataCollection();
-        foreach ($products as $key => $product) {
-            $viewData->content->products->list->add(
-                $this->getProductModel()->getProductOverviewData($product, $product->getMasterVariant(), $locale)
-            );
-        }
         $viewData->content->pagination = $this->pagination;
 
-        /**
-         * @var callable $renderer
-         */
-        $response = $this->render('pop.hbs', $viewData->toArray(), $this->getCachableResponse());
-        return $response;
+        return $viewData;
     }
 
     public function detailAction(Request $request)
