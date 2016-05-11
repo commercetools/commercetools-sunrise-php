@@ -12,15 +12,16 @@ use Commercetools\Core\Model\Product\Search\Facet;
 use Commercetools\Core\Model\Product\FacetResultCollection;
 use Commercetools\Core\Model\Product\Search\Filter;
 use Commercetools\Core\Model\Product\ProductProjectionCollection;
+use Commercetools\Core\Model\Product\Search\FilterRange;
 use Commercetools\Core\Model\ProductType\AttributeDefinition;
 use Commercetools\Core\Model\ProductType\LocalizedEnumType;
 use Commercetools\Core\Model\ProductType\ProductTypeCollection;
 use Commercetools\Core\Response\PagedSearchResponse;
+use Commercetools\Sunrise\AppBundle\Model\Facet\FilterSubtree;
+use Commercetools\Sunrise\AppBundle\Model\Facet\FilterSubtreeCollection;
 use Commercetools\Sunrise\AppBundle\Model\View\CategoryEntry;
 use Commercetools\Sunrise\AppBundle\Model\View\Entry;
 use Commercetools\Sunrise\AppBundle\Model\View\LinkList;
-use Commercetools\Sunrise\AppBundle\Model\View\Url;
-use Commercetools\Sunrise\AppBundle\Model\View\User;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\View\ProductModel;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
@@ -176,7 +177,7 @@ class CatalogController extends SunriseController
 
     protected function getFacetDefinitions($facetDefinitions = [])
     {
-        $facetDefinitions[] = Facet::ofName('variants.categories.id')->setAlias('categories');
+        $facetDefinitions[] = Facet::ofName('categories.id')->setAlias('categories')->setValue(FilterSubtree::ofId('*'));
         foreach ($this->config->get('sunrise.products.facets') as $facetName => $facetConfig) {
             switch ($facetConfig['type']) {
                 case 'text':
@@ -394,7 +395,7 @@ class CatalogController extends SunriseController
         $categories->hierarchicalSelectFacet = true;
         $categories->facet = new ViewData();
         $categories->facet->clearUri = $this->generateUrl('pop', $queryParams);
-        $categories->facet->countHidden = true;
+        $categories->facet->countHidden = false;
         $categories->facet->available = true;
         $categories->facet->label = $this->trans('filters.productType', [], 'catalog');
         $categories->facet->key = 'product-type';
@@ -452,14 +453,18 @@ class CatalogController extends SunriseController
         $queryParams = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
 
         if ($category instanceof Category) {
-            $filters['filter'][] = Filter::ofName('categories.id')->setValue($category->getId());
+            $filters['filter.query'][] = Filter::ofName('categories.id')->setValue(
+                FilterSubtreeCollection::of()->add(FilterSubtree::ofId($category->getId()))
+            );
         }
         foreach ($queryParams as $filterName => $params) {
             if (!isset($facetConfigs[$filterName])) {
                 continue;
             }
             $facetConfig = $facetConfigs[$filterName];
+            $facetFilterType = 'filter.query';
             if ($facetConfig['multi']) {
+                $facetFilterType = 'filter.facets';
                 if (!is_array($params)) {
                     $params = [$params];
                 }
@@ -467,11 +472,11 @@ class CatalogController extends SunriseController
             switch ($facetConfig['type']) {
                 case 'text':
                     $filter = Filter::ofName('variants.attributes.' . $facetConfig['attribute'])->setValue($params);
-                    $filters['filter'][] = $filters['filter.facets'][] = $filter;
+                    $filters['filter'][] = $filters[$facetFilterType][] = $filter;
                     break;
                 case 'enum':
                     $filter = Filter::ofName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setValue($params);
-                    $filters['filter'][] = $filters['filter.facets'][] = $filter;
+                    $filters['filter'][] = $filters[$facetFilterType][] = $filter;
                     break;
                 default:
                     throw new \InvalidArgumentException('Facet type not implemented');
