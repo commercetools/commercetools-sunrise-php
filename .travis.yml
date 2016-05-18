@@ -20,6 +20,10 @@ script:
 after_script:
 - bin/console server:stop
 - cat selenium.log
+after_success:
+- curl http://saucelabs.com/rest/v1/${SAUCE_USERNAME}/jobs/${TRAVIS_JOB_NUMBER} -H "Content-Type:text/json" -s -X PUT -d '{"passed": true}' -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY
+after_failure:
+- curl http://saucelabs.com/rest/v1/${SAUCE_USERNAME}/jobs/${TRAVIS_JOB_NUMBER} -H "Content-Type:text/json" -s -X PUT -d '{"passed": false}' -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY
 matrix:
   allow_failures:
     - env: BEHAT_PROFILE="php-sauce"
