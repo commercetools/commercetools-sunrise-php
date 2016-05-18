@@ -11,7 +11,7 @@ default:
             homepage: /
   extensions:
     Behat\MinkExtension:
-      base_url: http://127.0.0.1:8001
+      base_url: http://127.0.0.1:8000
       default_session: default
       javascript_session: default
       sessions:
@@ -32,7 +32,7 @@ default:
 php:
   extensions:
     Behat\MinkExtension:
-      base_url: http://127.0.0.1:8001
+      base_url: http://127.0.0.1:8000
 
 jvm:
   extensions:
@@ -67,7 +67,7 @@ live:
 php-sauce:
   extensions:
     Behat\MinkExtension:
-      base_url: http://127.0.0.1:8001
+      base_url: http://127.0.0.1:8000
       default_session: sauce
       javascript_session: sauce
       sessions:
