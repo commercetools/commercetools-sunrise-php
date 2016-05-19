@@ -24,7 +24,8 @@
     "symfony/psr-http-message-bridge": "^0.2.0",
     "sensio/framework-extra-bundle": "^3.0",
     "sensio/distribution-bundle": "^5.0",
-    "incenteev/composer-parameter-handler": "^2.0"
+    "incenteev/composer-parameter-handler": "^2.0",
+    "nelmio/security-bundle": "^2.0"
   },
   "require-dev": {
     "commercetools/sunrise-scenarios": "dev-behat",

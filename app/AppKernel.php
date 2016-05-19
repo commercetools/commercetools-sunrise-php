@@ -3,6 +3,7 @@
 use Commercetools\Sunrise\AppBundle\AppBundle;
 use Commercetools\Symfony\CtpBundle\CtpBundle;
 use JaySDe\HandlebarsBundle\HandlebarsBundle;
+use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Sensio\Bundle\DistributionBundle\SensioDistributionBundle;
 use Symfony\Bundle\AsseticBundle\AsseticBundle;
@@ -33,6 +34,7 @@ class AppKernel extends Kernel
             new AppBundle(),
             new CtpBundle(),
             new AsseticBundle(),
+            new NelmioSecurityBundle(),
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new DebugBundle();

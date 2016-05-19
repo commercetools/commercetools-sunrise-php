@@ -21,6 +21,7 @@ framework:
   esi: { enabled: true }
   fragments: ~
   session:
+    handler_id: nelmio_security.session.handler
     name: sunrise_session
     save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
   translator:
@@ -61,3 +62,80 @@ assetic:
   use_controller: "%kernel.debug%"
   filters:
     cssrewrite: ~
+nelmio_security:
+    cookie_session:
+        enabled: true
+    # signs/verifies all cookies
+    signed_cookie:
+        names: ['*']
+    # prevents framing of the entire site
+    clickjacking:
+        paths:
+            '^/.*': DENY
+    # prevents redirections outside the website's domain
+    external_redirects:
+        abort: true
+        log: true
+
+    # prevents inline scripts, unsafe eval, external scripts/images/styles/frames, etc
+    csp:
+        report_logger_service: monolog.logger.security
+        hosts: []
+        content_types: []
+        enforce:
+            level1_fallback: true
+            browser_adaptive: false
+            report-uri: /nelmio/csp/report
+            default-src:
+                - 'self'
+            font-src:
+                - 'self'
+                - fonts.googleapis.com
+                - maxcdn.bootstrapcdn.com
+                - fonts.gstatic.com
+                - cdn.jsdelivr.net
+            style-src:
+                - 'self'
+                - 'unsafe-inline'
+                - fonts.googleapis.com
+                - maxcdn.bootstrapcdn.com
+                - ajax.googleapis.com
+                - cdn.jsdelivr.net
+                - cdnjs.cloudflare.com
+            script-src:
+                - 'self'
+                - 'unsafe-inline'
+                - cdnjs.cloudflare.com
+                - maxcdn.bootstrapcdn.com
+                - ajax.googleapis.com
+                - cdn.jsdelivr.net
+            img-src:
+                - 'self'
+                - 'unsafe-inline'
+                - 'data:'
+                - s3-eu-west-1.amazonaws.com
+                - cdn.jsdelivr.net
+            block-all-mixed-content: true # Default to false, blocks http content over https transport
+            # upgrade-insecure-requests: true # Default to false, upgrades http requests to https transport
+
+    # disables content type sniffing for script resources
+    content_type:
+        nosniff: true
+
+    # Forces Microsoft's XSS-Protection with
+    # its block mode
+    xss_protection:
+        enabled: true
+        mode_block: true
+
+    # forced HTTPS handling, don't combine with flexible mode
+    # and make sure you have SSL working on your site before enabling this
+#    forced_ssl:
+#        hsts_max_age: 2592000 # 30 days
+#        hsts_subdomains: true
+
+    # flexible HTTPS handling, read the detailed config info
+    # and make sure you have SSL working on your site before enabling this
+#    flexible_ssl:
+#        cookie_name: auth
+#        unsecured_logout: false
