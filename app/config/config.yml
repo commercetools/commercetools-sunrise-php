@@ -21,7 +21,7 @@ framework:
   esi: { enabled: true }
   fragments: ~
   session:
-    handler_id: nelmio_security.session.handler
+#    handler_id: nelmio_security.session.handler
     name: sunrise_session
     save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
   translator:
