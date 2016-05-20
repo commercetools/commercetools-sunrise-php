@@ -63,8 +63,8 @@ assetic:
   filters:
     cssrewrite: ~
 nelmio_security:
-    cookie_session:
-        enabled: true
+#    cookie_session:
+#        enabled: true
     # signs/verifies all cookies
     signed_cookie:
         names: ['*']
