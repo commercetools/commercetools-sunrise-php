@@ -25,7 +25,7 @@ app:
       variantsSelector:
         main:
         - color
-        - size
+        - commonSize
       details:
         attributes:
           main:

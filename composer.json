@@ -15,9 +15,9 @@
     "ext-mbstring": "*",
     "commercetools/php-sdk": "^1.0",
     "commercetools/sunrise-theme": "^0.57@beta",
-    "commercetools/symfony-bundle": "@dev",
+    "commercetools/symfony-bundle": "dev-checkout",
     "commercetools/commons": "^0.2",
-    "jays-de/handlebars-bundle": "^0.4",
+    "jays-de/handlebars-bundle": "^0.6",
     "monolog/monolog": "^1.7",
     "symfony/symfony": "^3.0",
     "symfony/monolog-bundle": "^2.8",
@@ -35,7 +35,10 @@
     "behat/mink-selenium2-driver": "^1.2@dev",
     "heroku/heroku-buildpack-php": "*",
     "phpunit/phpunit": "^5.0",
-    "sensio/generator-bundle": "^3.0"
+    "sensio/generator-bundle": "^3.0",
+    "php-pm/php-pm": "dev-master",
+    "php-pm/httpkernel-adapter": "dev-master",
+    "react/http": "dev-master"
   },
   "autoload": {
     "psr-4": {

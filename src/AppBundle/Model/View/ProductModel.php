@@ -239,7 +239,6 @@ class ProductModel
                 }
             }
         }
-
         $variantKeys = [];
         $identifiers = array_values(array_intersect($variantSelectors, array_keys($attributes)));
         foreach ($variants as $variantId => $variantAttributes) {

@@ -40,9 +40,8 @@
             </li>
 
             <li class="list-item-bag">
-              {{esi @root.meta._links.miniCart.href }}
+              {{{esi @root.meta._links.miniCart.href }}}
             </li>
-
             {{#if @root.meta.user.loggedIn}}
                 <li class="list-item-user">
                     <a href="{{@root.meta._links.logOut.href}}" class="link-user">

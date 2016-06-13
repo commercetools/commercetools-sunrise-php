@@ -21,7 +21,6 @@ framework:
   esi: { enabled: true }
   fragments: ~
   session:
-#    handler_id: nelmio_security.session.handler
     name: sunrise_session
     save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
   translator:
@@ -31,15 +30,9 @@ twig:
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
 handlebars:
-  cache: "%kernel.cache_dir%/handlebars"
   paths:
     - "%kernel.root_dir%/Resources/views"
     - "%kernel.root_dir%/../vendor/commercetools/sunrise-theme/templates"
-  helpers:
-    esi: JaySDe\HandlebarsBundle\HandlebarsHelper::esi
-    cms: JaySDe\HandlebarsBundle\HandlebarsHelper::cms
-    i18n: JaySDe\HandlebarsBundle\HandlebarsHelper::trans
-    json: JaySDe\HandlebarsBundle\HandlebarsHelper::json
 commercetools:
   cache:
     category: true
@@ -66,8 +59,10 @@ nelmio_security:
 #    cookie_session:
 #        enabled: true
     # signs/verifies all cookies
-    signed_cookie:
-        names: ['*']
+#    encrypted_cookie:
+#        adapter: openssl
+#        secret: def000002f118b5a5f130bdcda872ee1fa2e0a6dc797d760eb65f7baec5b06dc72f8647a54901754f44ebfdb1dfc0329546ed75614a1516f99eb66a9aa0880d8e6ca8cf7
+#        names: ['*']
     # prevents framing of the entire site
     clickjacking:
         paths:
