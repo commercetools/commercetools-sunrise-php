@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d2db8b151ef6605bb5dc864af8cc4341",
-    "content-hash": "976718ccfcd5d8977ffbfcd4563ef840",
+    "hash": "1991386011b83694573b89ac0407ba65",
+    "content-hash": "43509e4219c8b742b2fb2353d8e5d906",
     "packages": [
         {
             "name": "byrokrat/checkdigit",
@@ -204,17 +204,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-symfony.git",
-                "reference": "58240a8ca9612f0363ad579b648734f3c9618e57"
+                "reference": "1987eb3934e89fe402c8c594a9b95181ec3dbd6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/58240a8ca9612f0363ad579b648734f3c9618e57",
-                "reference": "58240a8ca9612f0363ad579b648734f3c9618e57",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/1987eb3934e89fe402c8c594a9b95181ec3dbd6c",
+                "reference": "1987eb3934e89fe402c8c594a9b95181ec3dbd6c",
                 "shasum": ""
             },
             "require": {
                 "commercetools/commons": "^0.2",
-                "commercetools/php-sdk": "^1.1",
+                "commercetools/php-sdk": "^1.2.1",
                 "php": ">=5.6",
                 "symfony/assetic-bundle": "^2.8",
                 "symfony/cache": "^3.1",
@@ -239,7 +239,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2016-07-05 12:53:08"
+            "time": "2016-07-05 13:50:36"
         },
         {
             "name": "doctrine/annotations",
@@ -927,23 +927,23 @@
         },
         {
             "name": "jays-de/handlebars-bundle",
-            "version": "dev-develop",
+            "version": "0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/HandlebarsBundle.git",
-                "reference": "38ec25609845d526e6cb5d9719781c4044e350be"
+                "reference": "fcb06b30244e221060ca3df7e26d79deacd4271d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/38ec25609845d526e6cb5d9719781c4044e350be",
-                "reference": "38ec25609845d526e6cb5d9719781c4044e350be",
+                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/fcb06b30244e221060ca3df7e26d79deacd4271d",
+                "reference": "fcb06b30244e221060ca3df7e26d79deacd4271d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5",
                 "symfony/framework-bundle": "^3.0",
                 "twig/twig": "*",
-                "zordius/lightncandy": "^0.92"
+                "zordius/lightncandy": "^0.94"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8 || ^5.0",
@@ -977,7 +977,7 @@
                 "symfony",
                 "templating"
             ],
-            "time": "2016-06-14 08:57:32"
+            "time": "2016-07-05 16:13:26"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -2301,16 +2301,16 @@
         },
         {
             "name": "zordius/lightncandy",
-            "version": "v0.92",
+            "version": "v0.94",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "7268dbf29f69eea6399e14d92f2e74bb39dee2e1"
+                "reference": "fe90545c755e8e6f907755b186b457a8f38916c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/7268dbf29f69eea6399e14d92f2e74bb39dee2e1",
-                "reference": "7268dbf29f69eea6399e14d92f2e74bb39dee2e1",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/fe90545c755e8e6f907755b186b457a8f38916c6",
+                "reference": "fe90545c755e8e6f907755b186b457a8f38916c6",
                 "shasum": ""
             },
             "require": {
@@ -2344,7 +2344,7 @@
                 "php",
                 "template"
             ],
-            "time": "2016-03-15 06:35:20"
+            "time": "2016-07-05 08:39:36"
         }
     ],
     "packages-dev": [
@@ -4660,7 +4660,6 @@
     "stability-flags": {
         "commercetools/sunrise-theme": 10,
         "commercetools/symfony-bundle": 20,
-        "jays-de/handlebars-bundle": 20,
         "commercetools/sunrise-scenarios": 20,
         "behat/mink": 20,
         "behat/behat": 10,

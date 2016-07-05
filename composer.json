@@ -17,7 +17,7 @@
     "commercetools/sunrise-theme": "^0.57@beta",
     "commercetools/symfony-bundle": "dev-checkout",
     "commercetools/commons": "^0.2",
-    "jays-de/handlebars-bundle": "dev-develop",
+    "jays-de/handlebars-bundle": "^0.7",
     "monolog/monolog": "^1.7",
     "symfony/symfony": "^3.1",
     "symfony/monolog-bundle": "^2.8",
