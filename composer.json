@@ -13,7 +13,7 @@
     "php": ">=5.6",
     "ext-apcu": "*",
     "ext-mbstring": "*",
-    "commercetools/php-sdk": "^1.0",
+    "commercetools/php-sdk": "^1.2.1",
     "commercetools/sunrise-theme": "^0.57@beta",
     "commercetools/symfony-bundle": "dev-checkout",
     "commercetools/commons": "^0.2",

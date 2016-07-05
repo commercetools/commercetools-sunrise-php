@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0cc9dc928382b2b8e280ba7f61145315",
-    "content-hash": "8cf316e53b1899bec7ee89479bb08a92",
+    "hash": "d2db8b151ef6605bb5dc864af8cc4341",
+    "content-hash": "976718ccfcd5d8977ffbfcd4563ef840",
     "packages": [
         {
             "name": "byrokrat/checkdigit",
@@ -93,16 +93,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "5d5b152a93e5428343bd9dc281defc914f56888d"
+                "reference": "c8e891f2814f37b9bf9b967e182a75914e58e2a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/5d5b152a93e5428343bd9dc281defc914f56888d",
-                "reference": "5d5b152a93e5428343bd9dc281defc914f56888d",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/c8e891f2814f37b9bf9b967e182a75914e58e2a9",
+                "reference": "c8e891f2814f37b9bf9b967e182a75914e58e2a9",
                 "shasum": ""
             },
             "require": {
@@ -168,7 +168,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-06-30 08:52:28"
+            "time": "2016-07-05 13:17:42"
         },
         {
             "name": "commercetools/sunrise-theme",
