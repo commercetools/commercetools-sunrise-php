@@ -5,6 +5,7 @@
 
 namespace Commercetools\Sunrise\AppBundle\Controller;
 
+use Cache\Adapter\Common\CacheItem;
 use Commercetools\Core\Model\Category\Category;
 use Commercetools\Sunrise\AppBundle\Model\Config;
 use Commercetools\Sunrise\AppBundle\Model\View\Entry;
@@ -25,6 +26,7 @@ use Commercetools\Sunrise\AppBundle\Model\View\Url;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Symfony\CtpBundle\Model\Repository\CartRepository;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Cache\CacheItemInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -143,8 +145,12 @@ class SunriseController extends Controller
 
         $cacheKey = 'category-menu-' . $locale;
         $cache = $this->get('commercetools.cache');
-        if ($cache->has($cacheKey)) {
-            $categoryMenu = unserialize($cache->fetch($cacheKey));
+        if ($cache->hasItem($cacheKey)) {
+            /**
+             * @var CacheItemInterface $item
+             */
+            $item = $cache->getItem($cacheKey);
+            $categoryMenu = $item->get();
         } else {
             $categories = $this->get('app.repository.category')->getCategories($locale);
             $categoryMenu = new ViewDataCollection();
@@ -187,7 +193,8 @@ class SunriseController extends Controller
                 $categoryMenu->add($menuEntry);
             }
             $categoryMenu = $categoryMenu->toArray();
-            $cache->store($cacheKey, serialize($categoryMenu), static::CACHE_TTL);
+            $item = $cache->getItem($cacheKey)->set($categoryMenu)->expiresAfter(static::CACHE_TTL);
+            $cache->save($item);
         }
         $navMenu->categories = $categoryMenu;
 
@@ -199,7 +206,7 @@ class SunriseController extends Controller
         $meta = new Meta();
         $meta->assetsPath = $this->config['sunrise.assetsPath'];
         $meta->_links = new ViewDataCollection();
-        $meta->_links->add(new ViewLink($this->generateUrl('home'), 'home'));
+        $meta->_links->add(new ViewLink($this->generateUrl('home')), 'home');
         $meta->_links->add(new ViewLink($this->generateUrl('category', ['category' => 'new'])), 'newProducts');
         $meta->_links->add(new ViewLink($this->generateUrl('cartAdd')), 'addToCart');
         $meta->_links->add(new ViewLink($this->generateUrl('miniCart')), 'miniCart');

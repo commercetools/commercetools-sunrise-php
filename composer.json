@@ -17,15 +17,16 @@
     "commercetools/sunrise-theme": "^0.57@beta",
     "commercetools/symfony-bundle": "dev-checkout",
     "commercetools/commons": "^0.2",
-    "jays-de/handlebars-bundle": "^0.6",
+    "jays-de/handlebars-bundle": "dev-develop",
     "monolog/monolog": "^1.7",
-    "symfony/symfony": "^3.0",
+    "symfony/symfony": "^3.1",
     "symfony/monolog-bundle": "^2.8",
     "symfony/psr-http-message-bridge": "^0.2.0",
     "sensio/framework-extra-bundle": "^3.0",
     "sensio/distribution-bundle": "^5.0",
     "incenteev/composer-parameter-handler": "^2.0",
-    "nelmio/security-bundle": "^2.0"
+    "nelmio/security-bundle": "^2.0",
+    "particle/validator": "^2.1"
   },
   "require-dev": {
     "commercetools/sunrise-scenarios": "dev-behat",

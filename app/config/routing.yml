@@ -63,6 +63,10 @@ checkout:
   path: /{_locale}/checkout
   defaults:  { _controller: app.checkout.controller:checkoutAction }
   methods:  [GET, HEAD, POST]
+checkoutAddress:
+  path: /{_locale}/checkout/address
+  defaults:  { _controller: app.checkout.controller:checkoutAddressAction }
+  methods:  [GET, POST, HEAD]
 checkoutSignin:
   path: /{_locale}/checkout/signin
   defaults:  { _controller: app.checkout.controller:checkoutSigninAction }

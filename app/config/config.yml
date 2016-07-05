@@ -30,6 +30,8 @@ twig:
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
 handlebars:
+  translation:
+    default_namespace: main
   paths:
     - "%kernel.root_dir%/Resources/views"
     - "%kernel.root_dir%/../vendor/commercetools/sunrise-theme/templates"

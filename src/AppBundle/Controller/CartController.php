@@ -7,6 +7,7 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 
 use Commercetools\Core\Model\Cart\Cart;
 use Commercetools\Core\Model\Common\Money;
+use Commercetools\Sunrise\AppBundle\Model\View\CartModel;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
@@ -26,7 +27,10 @@ class CartController extends SunriseController
         $cartId = $session->get(CartRepository::CART_ID);
         $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId);
         $viewData->content = new ViewData();
-        $viewData->content->cart = $this->getCart($cart);
+
+        $cartModel = new CartModel($this->get('app.route_generator'), $this->config['sunrise.cart.attributes']);
+        $viewData->content->cart = $cartModel->getViewCart($cart);
+
         $viewData->meta->_links->add(new ViewLink($this->generateUrl('home'), 'continueShopping'));
         $viewData->meta->_links->add(new ViewLink($this->generateUrl('lineItemDelete')), 'deleteLineItem');
         $viewData->meta->_links->add(new ViewLink($this->generateUrl('lineItemChange')), 'changeLineItem');
@@ -96,80 +100,5 @@ class CartController extends SunriseController
         return new RedirectResponse($this->generateUrl('cart'));
     }
 
-    protected function getCart(Cart $cart)
-    {
-        $cartModel = new ViewData();
-        $cartModel->totalItems = $cart->getLineItemCount();
-        if ($cart->getTaxedPrice()) {
-            $salexTax = Money::ofCurrencyAndAmount(
-                $cart->getTaxedPrice()->getTotalGross()->getCurrencyCode(),
-                $cart->getTaxedPrice()->getTotalGross()->getCentAmount() -
-                    $cart->getTaxedPrice()->getTotalNet()->getCentAmount(),
-                $cart->getContext()
-            );
-            $cartModel->salesTax = (string)$salexTax;
-            $cartModel->subtotalPrice = (string)$cart->getTaxedPrice()->getTotalNet();
-            $cartModel->totalPrice = (string)$cart->getTotalPrice();
-        }
-        if ($cart->getShippingInfo()) {
-            $shippingInfo = $cart->getShippingInfo();
-            $cartModel->shippingMethod = new ViewData();
-            $cartModel->shippingMethod->price = (string)$shippingInfo->getPrice();
-        }
 
-        $cartModel->lineItems = $this->getCartLineItems($cart);
-        return $cartModel;
-    }
-
-    protected function getCartLineItems(Cart $cart)
-    {
-        $cartItems = new ViewData();
-        $cartItems->list = new ViewDataCollection();
-
-        $lineItems = $cart->getLineItems();
-
-        if (!is_null($lineItems)) {
-            foreach ($lineItems as $lineItem) {
-                $variant = $lineItem->getVariant();
-                $cartLineItem = new ViewData();
-                $cartLineItem->productId = $lineItem->getProductId();
-                $cartLineItem->variantId = $variant->getId();
-                $cartLineItem->lineItemId = $lineItem->getId();
-                $cartLineItem->quantity = $lineItem->getQuantity();
-                $lineItemVariant = new ViewData();
-                $lineItemVariant->url = (string)$this->generateUrl(
-                    'pdp-master',
-                    ['slug' => (string)$lineItem->getProductSlug()]
-                );
-                $lineItemVariant->name = (string)$lineItem->getName();
-                $lineItemVariant->image = (string)$variant->getImages()->current()->getUrl();
-                $price = $lineItem->getPrice();
-                if (!is_null($price->getDiscounted())) {
-                    $lineItemVariant->price = (string)$price->getDiscounted()->getValue();
-                    $lineItemVariant->priceOld = (string)$price->getValue();
-                } else {
-                    $lineItemVariant->price = (string)$price->getValue();
-                }
-                $cartLineItem->variant = $lineItemVariant;
-                $cartLineItem->sku = $variant->getSku();
-                $cartLineItem->totalPrice = $lineItem->getTotalPrice();
-                $cartLineItem->attributes = new ViewDataCollection();
-
-                $cartAttributes = $this->config['sunrise.cart.attributes'];
-                foreach ($cartAttributes as $attributeName) {
-                    $attribute = $variant->getAttributes()->getByName($attributeName);
-                    if ($attribute) {
-                        $lineItemAttribute = new ViewData();
-                        $lineItemAttribute->label = $attributeName;
-                        $lineItemAttribute->key = $attributeName;
-                        $lineItemAttribute->value = (string)$attribute->getValue();
-                        $cartLineItem->attributes->add($lineItemAttribute);
-                    }
-                }
-                $cartItems->list->add($cartLineItem);
-            }
-        }
-
-        return $cartItems;
-    }
 }
