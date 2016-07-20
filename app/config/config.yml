@@ -6,6 +6,8 @@ imports:
 
 parameters:
   locale: en
+  handlebars.helper_interface.class: JaySDe\HandlebarsBundle\Helper\HelperInterface
+  handlebars.helper_interface.method: handle
 
 framework:
   secret: "%secret%"
@@ -15,6 +17,7 @@ framework:
   templating:
     engines: ['twig', 'handlebars']
   form: ~
+  csrf_protection: { enabled: true }
   assets:
     base_path: /assets/
   default_locale: "%locale%"

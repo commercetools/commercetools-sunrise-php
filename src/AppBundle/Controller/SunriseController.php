@@ -94,6 +94,7 @@ class SunriseController extends Controller
         $viewData->footer = $this->getFooterData();
         $viewData->seo = $this->getSeoData();
         $viewData->content = new ViewData();
+        $viewData->content->components = new ViewDataCollection();
         return $viewData;
     }
 
@@ -213,7 +214,7 @@ class SunriseController extends Controller
         $meta->_links->add(new ViewLink($this->generateUrl('cart')), 'cart');
         $meta->_links->add(new ViewLink($this->generateUrl('login_route')), 'signIn');
         $meta->_links->add(new ViewLink($this->generateUrl('login_check')), 'logInSubmit');
-        $meta->csrfToken = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
+        $meta->csrfToken = $this->refreshCsrfToken(static::CSRF_TOKEN_FORM);
         $bagItems = new ViewDataCollection();
         for ($i = 1; $i < 10; $i++) {
             $bagItems->add($i);
@@ -236,11 +237,17 @@ class SunriseController extends Controller
         return false;
     }
 
+    protected function refreshCsrfToken($formName)
+    {
+        $manager = $this->get('security.csrf.token_manager');
+        $token = $manager->refreshToken($formName);
+
+        return $token;
+    }
     protected function getCsrfToken($formName)
     {
-        $session = $this->get('session');
-        $token=hash("sha512",mt_rand(0,mt_getrandmax()));
-        $session->set($formName, $token);
+        $manager = $this->get('security.csrf.token_manager');
+        $token = $manager->getToken($formName);
 
         return $token;
     }

@@ -1,4 +1,5 @@
 services:
-#  handlebars.helper:
-#      class: JaySDe\HandlebarsBundle\HandlebarsHelper
-#      arguments: ['@fragment.handler', '@translator']
+#  commercetools.cache:
+#    parent: cache.adapter.apcu
+#    tags:
+#      - {name: cache.pool}

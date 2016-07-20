@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1991386011b83694573b89ac0407ba65",
-    "content-hash": "43509e4219c8b742b2fb2353d8e5d906",
+    "hash": "be67ccd87416b303f81e3642ddc1b840",
+    "content-hash": "e0558c930fb52002b1aa6ca1c1c432cf",
     "packages": [
         {
             "name": "byrokrat/checkdigit",
@@ -93,16 +93,16 @@
         },
         {
             "name": "commercetools/php-sdk",
-            "version": "v1.2.1",
+            "version": "v1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "c8e891f2814f37b9bf9b967e182a75914e58e2a9"
+                "reference": "122bdbd953f733604235df9084d071a87b3ec9a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/c8e891f2814f37b9bf9b967e182a75914e58e2a9",
-                "reference": "c8e891f2814f37b9bf9b967e182a75914e58e2a9",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/122bdbd953f733604235df9084d071a87b3ec9a6",
+                "reference": "122bdbd953f733604235df9084d071a87b3ec9a6",
                 "shasum": ""
             },
             "require": {
@@ -168,20 +168,20 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-07-05 13:17:42"
+            "time": "2016-07-14 08:57:51"
         },
         {
             "name": "commercetools/sunrise-theme",
-            "version": "v0.57.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/sunrise-theme.git",
-                "reference": "fb716484cff65ab0afd72607ede8dfab74eb43c8"
+                "reference": "0bd85cd8259d6fdf241ab5ddd6ce84f5c3858ad3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/sunrise-theme/zipball/fb716484cff65ab0afd72607ede8dfab74eb43c8",
-                "reference": "fb716484cff65ab0afd72607ede8dfab74eb43c8",
+                "url": "https://api.github.com/repos/jayS-de/sunrise-theme/zipball/0bd85cd8259d6fdf241ab5ddd6ce84f5c3858ad3",
+                "reference": "0bd85cd8259d6fdf241ab5ddd6ce84f5c3858ad3",
                 "shasum": ""
             },
             "type": "library",
@@ -196,20 +196,20 @@
                 }
             ],
             "description": "Commercetools Sunrise theme",
-            "time": "2016-06-16 17:47:25"
+            "time": "2016-07-19 12:25:51"
         },
         {
             "name": "commercetools/symfony-bundle",
-            "version": "dev-checkout",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-symfony.git",
-                "reference": "1987eb3934e89fe402c8c594a9b95181ec3dbd6c"
+                "reference": "8efb740f42761c092e42b5623af9070345220f96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/1987eb3934e89fe402c8c594a9b95181ec3dbd6c",
-                "reference": "1987eb3934e89fe402c8c594a9b95181ec3dbd6c",
+                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/8efb740f42761c092e42b5623af9070345220f96",
+                "reference": "8efb740f42761c092e42b5623af9070345220f96",
                 "shasum": ""
             },
             "require": {
@@ -239,7 +239,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2016-07-05 13:50:36"
+            "time": "2016-07-08 15:30:15"
         },
         {
             "name": "doctrine/annotations",
@@ -641,16 +641,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "7.4.4",
+            "version": "7.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "75cc4cb41d1f590391f15484df5bdc13963c2b1a"
+                "reference": "a138adeb07233059c2a8d3caea7b6a6bcbee6765"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/75cc4cb41d1f590391f15484df5bdc13963c2b1a",
-                "reference": "75cc4cb41d1f590391f15484df5bdc13963c2b1a",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/a138adeb07233059c2a8d3caea7b6a6bcbee6765",
+                "reference": "a138adeb07233059c2a8d3caea7b6a6bcbee6765",
                 "shasum": ""
             },
             "require": {
@@ -701,31 +701,31 @@
                 "phonenumber",
                 "validation"
             ],
-            "time": "2016-06-29 14:09:08"
+            "time": "2016-07-14 10:56:47"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.2.0",
+            "version": "6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "d094e337976dff9d8e2424e8485872194e768662"
+                "reference": "3f808fba627f2c5b69e2501217bf31af349c1427"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d094e337976dff9d8e2424e8485872194e768662",
-                "reference": "d094e337976dff9d8e2424e8485872194e768662",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/3f808fba627f2c5b69e2501217bf31af349c1427",
+                "reference": "3f808fba627f2c5b69e2501217bf31af349c1427",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/promises": "~1.0",
-                "guzzlehttp/psr7": "~1.1",
-                "php": ">=5.5.0"
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.3.1",
+                "php": ">=5.5"
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "~4.0",
-                "psr/log": "~1.0"
+                "phpunit/phpunit": "^4.0",
+                "psr/log": "^1.0"
             },
             "type": "library",
             "extra": {
@@ -763,7 +763,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-03-21 20:02:09"
+            "time": "2016-07-15 17:22:37"
         },
         {
             "name": "guzzlehttp/promises",
@@ -927,28 +927,28 @@
         },
         {
             "name": "jays-de/handlebars-bundle",
-            "version": "0.7.0",
+            "version": "dev-feature-js-symfony2_8_support",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/HandlebarsBundle.git",
-                "reference": "fcb06b30244e221060ca3df7e26d79deacd4271d"
+                "reference": "836302e3bfd3af4940358ad90fc115bb46ea1ad6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/fcb06b30244e221060ca3df7e26d79deacd4271d",
-                "reference": "fcb06b30244e221060ca3df7e26d79deacd4271d",
+                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/836302e3bfd3af4940358ad90fc115bb46ea1ad6",
+                "reference": "836302e3bfd3af4940358ad90fc115bb46ea1ad6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5",
-                "symfony/framework-bundle": "^3.0",
+                "symfony/framework-bundle": "^2.8 || ^3.0",
                 "twig/twig": "*",
                 "zordius/lightncandy": "^0.94"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8 || ^5.0",
                 "symfony/assetic-bundle": "~2.0",
-                "symfony/yaml": "^3.0"
+                "symfony/yaml": "^2.8 || ^3.0"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -977,7 +977,7 @@
                 "symfony",
                 "templating"
             ],
-            "time": "2016-07-05 16:13:26"
+            "time": "2016-07-19 16:51:53"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -1136,16 +1136,16 @@
         },
         {
             "name": "nelmio/security-bundle",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioSecurityBundle.git",
-                "reference": "7d355276856ee8336d6605c155353b33b2d8e95d"
+                "reference": "51deb40a429bfd821c264d1b2d6682040ce0f39e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioSecurityBundle/zipball/7d355276856ee8336d6605c155353b33b2d8e95d",
-                "reference": "7d355276856ee8336d6605c155353b33b2d8e95d",
+                "url": "https://api.github.com/repos/nelmio/NelmioSecurityBundle/zipball/51deb40a429bfd821c264d1b2d6682040ce0f39e",
+                "reference": "51deb40a429bfd821c264d1b2d6682040ce0f39e",
                 "shasum": ""
             },
             "require": {
@@ -1190,7 +1190,7 @@
             "keywords": [
                 "security"
             ],
-            "time": "2016-05-17 15:56:58"
+            "time": "2016-06-03 22:16:21"
         },
         {
             "name": "paragonie/random_compat",
@@ -2854,16 +2854,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v107",
+            "version": "v108",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "118cfbb3e6940bd6c1a953b0c482f458582162a6"
+                "reference": "afca47645064b9d28a6a7d9e470eb76c076d75b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/118cfbb3e6940bd6c1a953b0c482f458582162a6",
-                "reference": "118cfbb3e6940bd6c1a953b0c482f458582162a6",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/afca47645064b9d28a6a7d9e470eb76c076d75b6",
+                "reference": "afca47645064b9d28a6a7d9e470eb76c076d75b6",
                 "shasum": ""
             },
             "bin": [
@@ -2894,7 +2894,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2016-06-17 22:36:40"
+            "time": "2016-07-08 21:43:10"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -3831,12 +3831,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/http.git",
-                "reference": "545723837ceed39cbd81e479ab98198bb2c5893b"
+                "reference": "cd15204bd15d106d7832c680e4fb0ca0ce2f5e30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/http/zipball/545723837ceed39cbd81e479ab98198bb2c5893b",
-                "reference": "545723837ceed39cbd81e479ab98198bb2c5893b",
+                "url": "https://api.github.com/repos/reactphp/http/zipball/cd15204bd15d106d7832c680e4fb0ca0ce2f5e30",
+                "reference": "cd15204bd15d106d7832c680e4fb0ca0ce2f5e30",
                 "shasum": ""
             },
             "require": {
@@ -3847,11 +3847,6 @@
                 "react/stream": "^0.4"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.5-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "React\\Http\\": "src"
@@ -3865,7 +3860,7 @@
             "keywords": [
                 "http"
             ],
-            "time": "2015-12-28 14:55:30"
+            "time": "2016-07-06 23:51:32"
         },
         {
             "name": "react/promise",
@@ -4658,8 +4653,9 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/sunrise-theme": 10,
+        "commercetools/sunrise-theme": 20,
         "commercetools/symfony-bundle": 20,
+        "jays-de/handlebars-bundle": 20,
         "commercetools/sunrise-scenarios": 20,
         "behat/mink": 20,
         "behat/behat": 10,

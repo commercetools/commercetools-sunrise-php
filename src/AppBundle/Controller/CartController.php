@@ -22,10 +22,11 @@ class CartController extends SunriseController
 
     public function indexAction(Request $request)
     {
-        $session = $this->get('session');
         $viewData = $this->getViewData('Sunrise - Cart', $request);
+        $session = $this->get('session');
         $cartId = $session->get(CartRepository::CART_ID);
-        $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId);
+        $customerId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId, $customerId);
         $viewData->content = new ViewData();
 
         $cartModel = new CartModel($this->get('app.route_generator'), $this->config['sunrise.cart.attributes']);
@@ -53,7 +54,16 @@ class CartController extends SunriseController
         $country = \Locale::getRegion($locale);
         $currency = $this->config->get('currencies.'. $country);
         $this->get('commercetools.repository.cart')
-            ->addLineItem($request->getLocale(), $cartId, $productId, $variantId, $quantity, $currency, $country);
+            ->addLineItem(
+                $request->getLocale(),
+                $cartId,
+                $productId,
+                $variantId,
+                $quantity,
+                $currency,
+                $country,
+                $this->getCustomerId()
+            );
 
         if (empty($sku)) {
             $redirectUrl = $this->generateUrl('pdp-master', ['slug' => $slug]);
@@ -84,7 +94,13 @@ class CartController extends SunriseController
         $lineItemCount = (int)$request->get('quantity');
         $cartId = $session->get(CartRepository::CART_ID);
         $this->get('commercetools.repository.cart')
-            ->changeLineItemQuantity($request->getLocale(), $cartId, $lineItemId, $lineItemCount);
+            ->changeLineItemQuantity(
+                $request->getLocale(),
+                $cartId,
+                $lineItemId,
+                $lineItemCount,
+                $this->getCustomerId()
+            );
 
         return new RedirectResponse($this->generateUrl('cart'));
     }
@@ -95,10 +111,24 @@ class CartController extends SunriseController
         $lineItemId = $request->get('lineItemId');
         $cartId = $session->get(CartRepository::CART_ID);
         $this->get('commercetools.repository.cart')
-            ->deleteLineItem($request->getLocale(), $cartId, $lineItemId);
+            ->deleteLineItem(
+                $request->getLocale(),
+                $cartId,
+                $lineItemId,
+                $this->getCustomerId()
+            );
 
         return new RedirectResponse($this->generateUrl('cart'));
     }
 
+    protected function getCustomerId()
+    {
+        $user = $this->getUser();
+        if (is_null($user)) {
+            return null;
+        }
+        $customerId = $user->getId();
 
+        return $customerId;
+    }
 }

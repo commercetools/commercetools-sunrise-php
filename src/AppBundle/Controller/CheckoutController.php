@@ -7,12 +7,14 @@ namespace Commercetools\Sunrise\AppBundle\Controller;
 
 use Commercetools\Sunrise\AppBundle\Model\View\Address;
 use Commercetools\Sunrise\AppBundle\Model\View\AddressForm;
+use Commercetools\Sunrise\AppBundle\Model\View\AddressFormSettings;
 use Commercetools\Sunrise\AppBundle\Model\View\CartModel;
 use Commercetools\Sunrise\AppBundle\Model\View\Error;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Symfony\CtpBundle\Model\Repository\CartRepository;
 use Commercetools\Symfony\CtpBundle\Security\User\User;
+use Particle\Validator\Rule\Equal;
 use Particle\Validator\Validator;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -48,51 +50,70 @@ class CheckoutController extends SunriseController
 
     public function checkoutAddressAction(Request $request)
     {
-        $session = $this->get('session');
-        $cartId = $session->get(CartRepository::CART_ID);
-        $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId);
+        $customerId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $token = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
+//        var_dump($token->getValue());var_dump($request->get(static::CSRF_TOKEN_FORM));
+        $cart = $this->getCart($request->getLocale());
 
         $viewData = $this->getViewData('Sunrise - Checkout - Address', $request);
         $viewData->meta->_links->add(new ViewLink($this->generateUrl('checkoutAddress')), 'checkoutAddressesSubmit');
-        $addressForm = new AddressForm();
-        $addressForm->billingAddressDifferentToBillingAddress = false;
-        
+        $addressForm = AddressForm::fromCart($cart);
+        $addressFormSettings = new AddressFormSettings();
+
         if ($request->isMethod('post')) {
             $validator = new Validator();
-            $validator->required('firstNameShipping', $this->trans('form.firstName', [], 'main'))->lengthBetween(2, 50)->alpha();
-            $validator->required('lastNameShipping', $this->trans('form.lastName', [], 'main'))->lengthBetween(2, 50)->alpha();
-            $validator->required('streetNameShipping', $this->trans('form.addressOne', [], 'main'))->lengthBetween(2, 50)->alpha();
-            $validator->optional('additionalStreetInfoShipping', $this->trans('form.addressTwo', [], 'main'))->lengthBetween(2, 50)->alpha();
-            $validator->required('cityShipping', $this->trans('form.city', [], 'main'))->lengthBetween(2, 50)->alpha();
-            $validator->required('postalCodeShipping', $this->trans('form.postCode', [], 'main'))->lengthBetween(2, 10)->alpha();
-            $validator->required('countryShipping', $this->trans('form.country', [], 'main'))->length(2)->alpha();
-            $validator->optional('regionShipping', $this->trans('form.region', [], 'main'))->lengthBetween(2, 50)->alpha();
+            $validator->required(static::CSRF_TOKEN_FORM, 'CSRF Token')->equals($token->getValue());
+            $validator->overwriteMessages([static::CSRF_TOKEN_FORM => [Equal::NOT_EQUAL => 'CSRF Token mismatch']]);
+            $validator->required('firstNameShipping', $this->trans('form.firstName', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+            $validator->required('lastNameShipping', $this->trans('form.lastName', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+            $validator->required('streetNameShipping', $this->trans('form.addressOne', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+            $validator->optional('additionalStreetInfoShipping', $this->trans('form.addressTwo', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+            $validator->required('cityShipping', $this->trans('form.city', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+            $validator->required('postalCodeShipping', $this->trans('form.postCode', [], 'main'))->lengthBetween(2, 10)->alnum(true);
+            $validator->optional('countryShipping', $this->trans('form.country', [], 'main'))->length(2)->alnum(true);
+            $validator->optional('regionShipping', $this->trans('form.region', [], 'main'))->lengthBetween(2, 50)->alnum(true);
             $validator->optional('phoneShipping', $this->trans('form.phone', [], 'main'))->phone('de');
             $validator->optional('emailShipping', $this->trans('form.email', [], 'main'))->email();
 
             if ($request->get('billingAddressDifferentToBillingAddress', false)) {
-                $validator->required('firstNameBilling', $this->trans('form.firstName', [], 'main'))->lengthBetween(2, 50)->alpha();
-                $validator->required('lastNameBilling', $this->trans('form.lastName', [], 'main'))->lengthBetween(2, 50)->alpha();
-                $validator->required('streetNameBilling', $this->trans('form.addressOne', [], 'main'))->lengthBetween(2, 50)->alpha();
-                $validator->optional('additionalStreetInfoBilling', $this->trans('form.addressTwo', [], 'main'))->lengthBetween(2, 50)->alpha();
-                $validator->required('cityBilling', $this->trans('form.city', [], 'main'))->lengthBetween(2, 50)->alpha();
-                $validator->required('postalCodeBilling', $this->trans('form.postCode', [], 'main'))->lengthBetween(2, 10)->alpha();
-                $validator->required('countryBilling', $this->trans('form.country', [], 'main'))->length(2)->alpha();
-                $validator->optional('regionBilling', $this->trans('form.region', [], 'main'))->lengthBetween(2, 50)->alpha();
+                $validator->required('firstNameBilling', $this->trans('form.firstName', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+                $validator->required('lastNameBilling', $this->trans('form.lastName', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+                $validator->required('streetNameBilling', $this->trans('form.addressOne', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+                $validator->optional('additionalStreetInfoBilling', $this->trans('form.addressTwo', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+                $validator->required('cityBilling', $this->trans('form.city', [], 'main'))->lengthBetween(2, 50)->alnum(true);
+                $validator->required('postalCodeBilling', $this->trans('form.postCode', [], 'main'))->lengthBetween(2, 10)->alnum(true);
+                $validator->required('countryBilling', $this->trans('form.country', [], 'main'))->length(2)->alnum(true);
+                $validator->optional('regionBilling', $this->trans('form.region', [], 'main'))->lengthBetween(2, 50)->alnum(true);
                 $validator->optional('phoneBilling', $this->trans('form.phone', [], 'main'))->phone('de');
                 $validator->optional('emailBilling', $this->trans('form.email', [], 'main'))->email();
             }
 
             $result = $validator->validate($request->request->all());
             if ($result->isNotValid()) {
-                var_dump($request->get('firstNameShipping'));
-                var_dump($result->getFailures());
                 foreach ($result->getMessages() as $message) {
                     $addressForm->errors->globalErrors->add(new Error(current($message)));
                 }
             }
+            if ($result->isValid()) {
+                $shippingAddress = AddressForm::getAddress($result->getValues(), 'shipping');
+                $billingAddress = null;
+                if ($request->get('billingAddressDifferentToBillingAddress', false)) {
+                    $billingAddress = AddressForm::getAddress($result->getValues(), 'billing');
+                }
+                $repository = $this->get('commercetools.repository.cart');
+                $cart = $repository->setAddresses(
+                    $request->getLocale(),
+                    $cart->getId(),
+                    $shippingAddress,
+                    $billingAddress,
+                    $customerId
+                );
+
+                return $this->redirect($this->generateUrl('checkoutShipping'));
+            }
         }
         $viewData->content->addressForm = $addressForm;
+        $viewData->content->addressFormSettings = $addressFormSettings;
         $cartModel = new CartModel($this->get('app.route_generator'), $this->config['sunrise.cart.attributes']);
         $viewData->content->cart = $cartModel->getViewCart($cart);
 
@@ -116,5 +137,19 @@ class CheckoutController extends SunriseController
     {
         $viewData = $this->getViewData('Sunrise - Checkout - Confirmation', $request);
         return $this->render('checkout-confirmation.hbs', $viewData->toArray());
+    }
+
+    /**
+     * @param string $locale
+     * @return \Commercetools\Core\Model\Cart\Cart|null
+     */
+    protected function getCart($locale)
+    {
+        $session = $this->get('session');
+        $cartId = $session->get(CartRepository::CART_ID);
+        $customerId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $cart = $this->get('commercetools.repository.cart')->getCart($locale, $cartId, $customerId);
+
+        return $cart;
     }
 }
