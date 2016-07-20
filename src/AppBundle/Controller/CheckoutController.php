@@ -74,6 +74,7 @@ class CheckoutController extends SunriseController
             $validator->optional('regionShipping', $this->trans('form.region', [], 'main'))->lengthBetween(2, 50)->alnum(true);
             $validator->optional('phoneShipping', $this->trans('form.phone', [], 'main'))->phone('de');
             $validator->optional('emailShipping', $this->trans('form.email', [], 'main'))->email();
+            $validator->required('titleShipping', $this->trans('form.title', [], 'main'))->inArray($addressFormSettings->getTitleValues('shipping'));
 
             if ($request->get('billingAddressDifferentToBillingAddress', false)) {
                 $validator->required('firstNameBilling', $this->trans('form.firstName', [], 'main'))->lengthBetween(2, 50)->alnum(true);
@@ -86,7 +87,18 @@ class CheckoutController extends SunriseController
                 $validator->optional('regionBilling', $this->trans('form.region', [], 'main'))->lengthBetween(2, 50)->alnum(true);
                 $validator->optional('phoneBilling', $this->trans('form.phone', [], 'main'))->phone('de');
                 $validator->optional('emailBilling', $this->trans('form.email', [], 'main'))->email();
+                $validator->required('titleBilling', $this->trans('form.title', [], 'main'))->inArray($addressFormSettings->getTitleValues('billing'));
             }
+
+            foreach ($request->request as $key => $parameter) {
+                if (property_exists($addressForm, $key)) {
+                    $addressForm->$key = $parameter;
+                }
+            }
+            $addressFormSettings->selectProperty('titleShipping', $request->get('titleShipping'));
+            $addressFormSettings->selectProperty('titleBilling', $request->get('titleBilling'));
+            $addressFormSettings->selectProperty('countryShipping', $request->get('countryShipping'));
+            $addressFormSettings->selectProperty('countryBilling', $request->get('countryBilling'));
 
             $result = $validator->validate($request->request->all());
             if ($result->isNotValid()) {
@@ -109,7 +121,9 @@ class CheckoutController extends SunriseController
                     $customerId
                 );
 
-                return $this->redirect($this->generateUrl('checkoutShipping'));
+                if ($cart) {
+                    return $this->redirect($this->generateUrl('checkoutShipping'));
+                }
             }
         }
         $viewData->content->addressForm = $addressForm;

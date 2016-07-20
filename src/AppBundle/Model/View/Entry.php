@@ -18,4 +18,14 @@ class Entry extends ViewData
         $this->label = $label;
         $this->value = $value;
     }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function getLabel()
+    {
+        return $this->label;
+    }
 }

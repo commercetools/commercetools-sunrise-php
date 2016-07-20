@@ -16,22 +16,22 @@ class AddressForm extends ViewData
     public $firstNameShipping;
     public $lastNameShipping;
     public $streetNameShipping;
-    public $streetNumberShipping;
+    public $additionalStreetInfoShipping;
     public $cityShipping;
     public $regionShipping;
     public $postalCodeShipping;
-    public $countriesShipping;
+    public $countryShipping;
     public $phoneShipping;
     public $emailShipping;
     public $titleBilling;
     public $firstNameBilling;
     public $lastNameBilling;
     public $streetNameBilling;
-    public $streetNumberBilling;
+    public $additionalStreetInfoBilling;
     public $cityBilling;
     public $regionBilling;
     public $postalCodeBilling;
-    public $countriesBilling;
+    public $countryBilling;
     public $phoneBilling;
     public $emailBilling;
 
@@ -54,11 +54,11 @@ class AddressForm extends ViewData
             $addressForm->firstNameShipping = $cart->getShippingAddress()->getFirstName();
             $addressForm->lastNameShipping = $cart->getShippingAddress()->getLastName();
             $addressForm->streetNameShipping = $cart->getShippingAddress()->getStreetName();
-            $addressForm->streetNumberShipping = $cart->getShippingAddress()->getStreetNumber();
+            $addressForm->additionalStreetInfoShipping = $cart->getShippingAddress()->getAdditionalStreetInfo();
             $addressForm->cityShipping = $cart->getShippingAddress()->getCity();
             $addressForm->regionShipping = $cart->getShippingAddress()->getRegion();
             $addressForm->postalCodeShipping = $cart->getShippingAddress()->getPostalCode();
-            $addressForm->countriesShipping = $cart->getShippingAddress()->getCountry();
+            $addressForm->countryShipping = $cart->getShippingAddress()->getCountry();
             $addressForm->phoneShipping = $cart->getShippingAddress()->getPhone();
             $addressForm->emailShipping = $cart->getShippingAddress()->getEmail();
         }
@@ -68,11 +68,11 @@ class AddressForm extends ViewData
             $addressForm->firstNameBilling = $cart->getBillingAddress()->getFirstName();
             $addressForm->lastNameBilling = $cart->getBillingAddress()->getLastName();
             $addressForm->streetNameBilling = $cart->getBillingAddress()->getStreetName();
-            $addressForm->streetNumberBilling = $cart->getBillingAddress()->getStreetNumber();
+            $addressForm->additionalStreetInfoBilling = $cart->getBillingAddress()->getAdditionalStreetInfo();
             $addressForm->cityBilling = $cart->getBillingAddress()->getCity();
             $addressForm->regionBilling = $cart->getBillingAddress()->getRegion();
             $addressForm->postalCodeBilling = $cart->getBillingAddress()->getPostalCode();
-            $addressForm->countriesBilling = $cart->getBillingAddress()->getCountry();
+            $addressForm->countryBilling = $cart->getBillingAddress()->getCountry();
             $addressForm->phoneBilling = $cart->getBillingAddress()->getPhone();
             $addressForm->emailBilling = $cart->getBillingAddress()->getEmail();
         }
@@ -90,7 +90,7 @@ class AddressForm extends ViewData
         isset($data['city' . ucfirst($type)]) ? $address->setCity($data['city' . ucfirst($type)]):'';
         isset($data['region' . ucfirst($type)]) ? $address->setRegion($data['region' . ucfirst($type)]):'';
         isset($data['postalCode' . ucfirst($type)]) ? $address->setPostalCode($data['postalCode' . ucfirst($type)]):'';
-        isset($data['countries' . ucfirst($type)]) ? $address->setCountry($data['countries' . ucfirst($type)]):'';
+        isset($data['country' . ucfirst($type)]) ? $address->setCountry($data['countries' . ucfirst($type)]):'';
         isset($data['phone' . ucfirst($type)]) ? $address->setPhone($data['phone' . ucfirst($type)]):'';
         isset($data['email' . ucfirst($type)]) ? $address->setEmail($data['email' . ucfirst($type)]):'';
 
