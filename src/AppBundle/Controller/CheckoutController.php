@@ -13,9 +13,11 @@ use Commercetools\Sunrise\AppBundle\Model\View\AddressForm;
 use Commercetools\Sunrise\AppBundle\Model\View\AddressFormSettings;
 use Commercetools\Sunrise\AppBundle\Model\View\CartModel;
 use Commercetools\Sunrise\AppBundle\Model\View\Error;
+use Commercetools\Sunrise\AppBundle\Model\View\OrderModel;
 use Commercetools\Sunrise\AppBundle\Model\View\ShippingForm;
 use Commercetools\Sunrise\AppBundle\Model\View\ShippingMethod;
 use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
+use Commercetools\Sunrise\AppBundle\Repository\OrderRepository;
 use Commercetools\Symfony\CtpBundle\Model\Repository\CartRepository;
 use Commercetools\Symfony\CtpBundle\Security\User\User;
 use Particle\Validator\Rule\Equal;
@@ -225,8 +227,57 @@ class CheckoutController extends SunriseController
 
     public function checkoutConfirmationAction(Request $request)
     {
+        $token = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
+        $cart = $this->getCart($request->getLocale());
         $viewData = $this->getViewData('Sunrise - Checkout - Confirmation', $request);
+
+        if ($request->isMethod('post')) {
+
+            $validator = new Validator();
+            $validator->required(static::CSRF_TOKEN_FORM, 'CSRF Token')->equals($token->getValue());
+            $validator->overwriteMessages([static::CSRF_TOKEN_FORM => [Equal::NOT_EQUAL => 'CSRF Token mismatch']]);
+            $result = $validator->validate($request->request->all());
+            if ($result->isValid()) {
+                $order = $this->get('commercetools.repository.order')
+                    ->createOrderFromCart($request->getLocale(), $cart);
+
+                if ($order) {
+                    $session = $this->get('session');
+                    $session->remove(CartRepository::CART_ID);
+                    $session->remove(CartRepository::CART_ITEM_COUNT);
+                    $session->set('lastOrderId', $order->getId());
+
+                    return $this->redirect($this->generateUrl('checkoutThankYou'));
+                }
+            }
+        }
+
+        $cartModel = new CartModel($this->get('app.route_generator'), $this->config['sunrise.cart.attributes']);
+        $viewData->content->cart = $cartModel->getViewCart($cart);
+
         return $this->render('checkout-confirmation.hbs', $viewData->toArray());
+    }
+
+    public function checkoutThankYouAction(Request $request)
+    {
+        $session = $this->get('session');
+        $orderId = $session->get('lastOrderId');
+        $session->remove('lastOrderId');
+        if (is_null($orderId)) {
+            return $this->redirect($this->generateUrl('_home'));
+        }
+
+        $order = $this->get('commercetools.repository.order')->getOrder($request->getLocale(), $orderId);
+        if (is_null($order)) {
+            return $this->redirect($this->generateUrl('_home'));
+        }
+
+        $viewData = $this->getViewData('Sunrise - Checkout - Thank you', $request);
+
+        $orderModel = new OrderModel($this->get('app.route_generator'), $this->config['sunrise.cart.attributes']);
+        $viewData->content->order = $orderModel->getViewOrder($order);
+
+        return $this->render('checkout-thankyou.hbs', $viewData->toArray());
     }
 
     /**

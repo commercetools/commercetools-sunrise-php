@@ -82,6 +82,10 @@ checkoutPayment:
 checkoutConfirmation:
   path: /{_locale}/checkout/confirmation
   defaults:  { _controller: app.checkout.controller:checkoutConfirmationAction }
+  methods:  [GET, POST, HEAD]
+checkoutThankYou:
+  path: /{_locale}/checkout/thankyou
+  defaults:  { _controller: app.checkout.controller:checkoutThankYouAction }
   methods:  [GET, HEAD]
 
 cartAdd:

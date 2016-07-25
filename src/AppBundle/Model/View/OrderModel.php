@@ -7,11 +7,11 @@ namespace Commercetools\Sunrise\AppBundle\Model\View;
 
 use Commercetools\Core\Model\Common\Money;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
-use Commercetools\Core\Model\Cart\Cart;
+use Commercetools\Core\Model\Order\Order;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class CartModel extends ViewData
+class OrderModel extends ViewData
 {
 
     protected $generator;
@@ -23,55 +23,55 @@ class CartModel extends ViewData
         $this->cartAttributes = $cartAttributes;
     }
 
-    public function getViewCart(Cart $cart)
+    public function getViewOrder(Order $order)
     {
-        $cartModel = new ViewCart();
-        $cartModel->totalItems = $cart->getLineItemCount();
-        if ($cart->getTaxedPrice()) {
+        $orderModel = new ViewCart();
+//        $cartModel->totalItems = $order->getLineItemCount();
+        if ($order->getTaxedPrice()) {
             $salexTax = Money::ofCurrencyAndAmount(
-                $cart->getTaxedPrice()->getTotalGross()->getCurrencyCode(),
-                $cart->getTaxedPrice()->getTotalGross()->getCentAmount() -
-                $cart->getTaxedPrice()->getTotalNet()->getCentAmount(),
-                $cart->getContext()
+                $order->getTaxedPrice()->getTotalGross()->getCurrencyCode(),
+                $order->getTaxedPrice()->getTotalGross()->getCentAmount() -
+                $order->getTaxedPrice()->getTotalNet()->getCentAmount(),
+                $order->getContext()
             );
-            $cartModel->salesTax = (string)$salexTax;
-            $cartModel->subtotalPrice = (string)$cart->getTaxedPrice()->getTotalNet();
-            $cartModel->totalPrice = (string)$cart->getTotalPrice();
+            $orderModel->salesTax = (string)$salexTax;
+            $orderModel->subtotalPrice = (string)$order->getTaxedPrice()->getTotalNet();
+            $orderModel->totalPrice = (string)$order->getTotalPrice();
         }
-        if ($cart->getShippingInfo()) {
-            $shippingInfo = $cart->getShippingInfo();
-            $cartModel->shippingMethod = new Entry(
+        if ($order->getShippingInfo()) {
+            $shippingInfo = $order->getShippingInfo();
+            $orderModel->shippingMethod = new Entry(
                 $shippingInfo->getShippingMethodName(),
                 $shippingInfo->getShippingMethod()->getId()
             );
-            $cartModel->shippingMethod->price = (string)$shippingInfo->getPrice();
+            $orderModel->shippingMethod->price = (string)$shippingInfo->getPrice();
         }
-        if ($cart->getShippingAddress()) {
-            $cartModel->shippingAddress = Address::fromCartAddress($cart->getShippingAddress());
+        if ($order->getShippingAddress()) {
+            $orderModel->shippingAddress = Address::fromCartAddress($order->getShippingAddress());
         }
-        if ($cart->getBillingAddress()) {
-            $cartModel->billingAddress = Address::fromCartAddress($cart->getBillingAddress());
+        if ($order->getBillingAddress()) {
+            $orderModel->billingAddress = Address::fromCartAddress($order->getBillingAddress());
         } else {
-            $cartModel->billingAddress = Address::fromCartAddress($cart->getShippingAddress());
+            $orderModel->billingAddress = Address::fromCartAddress($order->getShippingAddress());
         }
 
-        $cartModel->lineItems = $this->getViewCartLineItems($cart);
-        return $cartModel;
+        $orderModel->lineItems = $this->getViewCartLineItems($order);
+        return $orderModel;
     }
 
-    protected function getViewCartLineItems(Cart $cart)
+    protected function getViewCartLineItems(Order $order)
     {
-        $cartItems = new ListObject();
-        $lineItems = $cart->getLineItems();
+        $orderItems = new ListObject();
+        $lineItems = $order->getLineItems();
 
         if (!is_null($lineItems)) {
             foreach ($lineItems as $lineItem) {
                 $variant = $lineItem->getVariant();
-                $cartLineItem = new ViewData();
-                $cartLineItem->productId = $lineItem->getProductId();
-                $cartLineItem->variantId = $variant->getId();
-                $cartLineItem->lineItemId = $lineItem->getId();
-                $cartLineItem->quantity = $lineItem->getQuantity();
+                $orderLineitem = new ViewData();
+                $orderLineitem->productId = $lineItem->getProductId();
+                $orderLineitem->variantId = $variant->getId();
+                $orderLineitem->lineItemId = $lineItem->getId();
+                $orderLineitem->quantity = $lineItem->getQuantity();
                 $lineItemVariant = new ViewData();
                 $lineItemVariant->url = (string)$this->generator->generate(
                     'pdp-master',
@@ -86,10 +86,10 @@ class CartModel extends ViewData
                 } else {
                     $lineItemVariant->price = (string)$price->getValue();
                 }
-                $cartLineItem->variant = $lineItemVariant;
-                $cartLineItem->sku = $variant->getSku();
-                $cartLineItem->totalPrice = $lineItem->getTotalPrice();
-                $cartLineItem->attributes = new ViewDataCollection();
+                $orderLineitem->variant = $lineItemVariant;
+                $orderLineitem->sku = $variant->getSku();
+                $orderLineitem->totalPrice = $lineItem->getTotalPrice();
+                $orderLineitem->attributes = new ViewDataCollection();
 
                 foreach ($this->cartAttributes as $attributeName) {
                     $attribute = $variant->getAttributes()->getByName($attributeName);
@@ -98,13 +98,13 @@ class CartModel extends ViewData
                         $lineItemAttribute->label = $attributeName;
                         $lineItemAttribute->key = $attributeName;
                         $lineItemAttribute->value = (string)$attribute->getValue();
-                        $cartLineItem->attributes->add($lineItemAttribute);
+                        $orderLineitem->attributes->add($lineItemAttribute);
                     }
                 }
-                $cartItems->list->add($cartLineItem);
+                $orderItems->list->add($orderLineitem);
             }
         }
 
-        return $cartItems;
+        return $orderItems;
     }
 }
