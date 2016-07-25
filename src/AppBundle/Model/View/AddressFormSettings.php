@@ -12,8 +12,8 @@ class AddressFormSettings extends ViewData
 {
     public $titleShipping;
     public $titleBilling;
-    public $countryShipping;
-    public $countryBilling;
+    public $countriesShipping;
+    public $countriesBilling;
 
     public function __construct()
     {
@@ -31,8 +31,14 @@ class AddressFormSettings extends ViewData
             ->add(new Entry('Ms.', 'Ms.'))
             ->add(new Entry('Dr.', 'Dr.'))
         ;
-        $this->countryShipping = new ListObject();
-        $this->countryBilling = new ListObject();
+        $this->countriesShipping = new ListObject();
+        $this->countriesShipping->list
+            ->add(new Entry('Germany', 'DE'))
+        ;
+        $this->countriesBilling = new ListObject();
+        $this->countriesBilling->list
+            ->add(new Entry('Germany', 'DE'))
+        ;
     }
 
     public function selectProperty($property, $value)

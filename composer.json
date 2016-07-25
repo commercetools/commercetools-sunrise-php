@@ -17,7 +17,7 @@
     "commercetools/sunrise-theme": "dev-master",
     "commercetools/symfony-bundle": "dev-develop",
     "commercetools/commons": "^0.2",
-    "jays-de/handlebars-bundle": "dev-feature-js-symfony2_8_support",
+    "jays-de/handlebars-bundle": "dev-master",
     "monolog/monolog": "^1.7",
     "symfony/symfony": "^3.1",
     "symfony/monolog-bundle": "^2.8",

@@ -90,7 +90,7 @@ class AddressForm extends ViewData
         isset($data['city' . ucfirst($type)]) ? $address->setCity($data['city' . ucfirst($type)]):'';
         isset($data['region' . ucfirst($type)]) ? $address->setRegion($data['region' . ucfirst($type)]):'';
         isset($data['postalCode' . ucfirst($type)]) ? $address->setPostalCode($data['postalCode' . ucfirst($type)]):'';
-        isset($data['country' . ucfirst($type)]) ? $address->setCountry($data['countries' . ucfirst($type)]):'';
+        isset($data['country' . ucfirst($type)]) ? $address->setCountry($data['country' . ucfirst($type)]):'';
         isset($data['phone' . ucfirst($type)]) ? $address->setPhone($data['phone' . ucfirst($type)]):'';
         isset($data['email' . ucfirst($type)]) ? $address->setEmail($data['email' . ucfirst($type)]):'';
 

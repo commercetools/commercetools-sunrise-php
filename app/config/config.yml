@@ -35,6 +35,8 @@ twig:
 handlebars:
   translation:
     default_namespace: main
+    interpolation_prefix: __
+    interpolation_suffix: __
   paths:
     - "%kernel.root_dir%/Resources/views"
     - "%kernel.root_dir%/../vendor/commercetools/sunrise-theme/templates"

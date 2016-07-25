@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "be67ccd87416b303f81e3642ddc1b840",
-    "content-hash": "e0558c930fb52002b1aa6ca1c1c432cf",
+    "hash": "8ffb6bc7e413cd5086a38455c91bc343",
+    "content-hash": "231cd7428438788a3d147011404576a3",
     "packages": [
         {
             "name": "byrokrat/checkdigit",
@@ -927,16 +927,16 @@
         },
         {
             "name": "jays-de/handlebars-bundle",
-            "version": "dev-feature-js-symfony2_8_support",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/HandlebarsBundle.git",
-                "reference": "836302e3bfd3af4940358ad90fc115bb46ea1ad6"
+                "reference": "70e9c74f7efc6be98777dfd09d81660c32c54836"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/836302e3bfd3af4940358ad90fc115bb46ea1ad6",
-                "reference": "836302e3bfd3af4940358ad90fc115bb46ea1ad6",
+                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/70e9c74f7efc6be98777dfd09d81660c32c54836",
+                "reference": "70e9c74f7efc6be98777dfd09d81660c32c54836",
                 "shasum": ""
             },
             "require": {
@@ -977,7 +977,7 @@
                 "symfony",
                 "templating"
             ],
-            "time": "2016-07-19 16:51:53"
+            "time": "2016-07-20 09:46:24"
         },
         {
             "name": "kriswallsmith/assetic",

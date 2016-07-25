@@ -74,11 +74,11 @@ checkoutSignin:
 checkoutShipping:
   path: /{_locale}/checkout/shipping
   defaults:  { _controller: app.checkout.controller:checkoutShippingAction }
-  methods:  [GET, HEAD]
+  methods:  [GET, POST, HEAD]
 checkoutPayment:
   path: /{_locale}/checkout/payment
   defaults:  { _controller: app.checkout.controller:checkoutPaymentAction }
-  methods:  [GET, HEAD]
+  methods:  [GET, POST, HEAD]
 checkoutConfirmation:
   path: /{_locale}/checkout/confirmation
   defaults:  { _controller: app.checkout.controller:checkoutConfirmationAction }

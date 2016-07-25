@@ -121,7 +121,9 @@ class CatalogController extends SunriseController
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page', $request);
 
-        $product = $this->get('commercetools.repository.product')->getProductBySlug($slug, $locale);
+        $country = \Locale::getRegion($locale);
+        $currency = $this->config->get('currencies.'. $country);
+        $product = $this->get('commercetools.repository.product')->getProductBySlug($slug, $locale, $currency, $country);
         $productData = $this->getProductModel()->getProductDetailData($product, $sku, $locale);
         $viewData->content->product = $productData;
 
