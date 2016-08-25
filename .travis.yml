@@ -21,9 +21,12 @@ before_script:
 - npm i
 - bin/console server:start
 script:
-- npm test
+- npm run test:remote
 after_script:
 - bin/console server:stop
+env:
+  matrix:
+  - TEST_NAME="Sunrise PHP Travis"
 notifications:
   hipchat:
     rooms:
