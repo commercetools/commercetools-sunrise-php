@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "778a06003c4be6daee1b7ee756621cd6",
-    "content-hash": "99bfea5bb234257d3522a4300d311965",
+    "hash": "573ba0944b26ca14fc0312026f0eef1b",
+    "content-hash": "f08015d6dcb93f351591f65d022760e4",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -155,7 +155,7 @@
         },
         {
             "name": "commercetools/symfony-bundle",
-            "version": "dev-develop",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sphereio/commercetools-php-symfony.git",
@@ -3602,8 +3602,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "commercetools/sunrise-theme": 20,
-        "commercetools/symfony-bundle": 20
+        "commercetools/sunrise-theme": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
