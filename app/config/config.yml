@@ -33,6 +33,8 @@ twig:
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
 handlebars:
+  cms:
+    default_namespace: cms
   translation:
     default_namespace: main
     interpolation_prefix: __

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "573ba0944b26ca14fc0312026f0eef1b",
-    "content-hash": "f08015d6dcb93f351591f65d022760e4",
+    "hash": "547e98cdfdc891e2659f7486df7db4e1",
+    "content-hash": "c1515ce56ecada7c9e0d5eb80b0d1506",
     "packages": [
         {
             "name": "commercetools/commons",
@@ -818,16 +818,16 @@
         },
         {
             "name": "jays-de/handlebars-bundle",
-            "version": "0.9.1",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/HandlebarsBundle.git",
-                "reference": "e85978a5dbdc8a326cb9d539a1d993bb59c9f37e"
+                "reference": "ab0bf60f85ce11388d9a0e78ccf48fb77a05db47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/e85978a5dbdc8a326cb9d539a1d993bb59c9f37e",
-                "reference": "e85978a5dbdc8a326cb9d539a1d993bb59c9f37e",
+                "url": "https://api.github.com/repos/jayS-de/HandlebarsBundle/zipball/ab0bf60f85ce11388d9a0e78ccf48fb77a05db47",
+                "reference": "ab0bf60f85ce11388d9a0e78ccf48fb77a05db47",
                 "shasum": ""
             },
             "require": {
@@ -870,7 +870,7 @@
                 "symfony",
                 "templating"
             ],
-            "time": "2016-08-23 09:33:15"
+            "time": "2016-08-29 13:36:18"
         },
         {
             "name": "kriswallsmith/assetic",
