@@ -7,7 +7,6 @@ namespace Commercetools\Sunrise\AppBundle\Model\View;
 
 
 use Commercetools\Commons\Helper\PriceFinder;
-use Commercetools\Core\Cache\CacheAdapterInterface;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Model\Product\ProductVariant;
 use Commercetools\Core\Model\ProductType\ProductType;
@@ -15,6 +14,7 @@ use Commercetools\Sunrise\AppBundle\Model\Config;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -26,7 +26,7 @@ class ProductModel
     private $config;
 
     /**
-     * @var CacheAdapterInterface
+     * @var CacheItemPoolInterface
      */
     private $cache;
 
@@ -42,11 +42,11 @@ class ProductModel
 
     /**
      * ProductModel constructor.
-     * @param CacheAdapterInterface $cache
+     * @param CacheItemPoolInterface $cache
      * @param Config $config
      * @param UrlGeneratorInterface $generator
      */
-    public function __construct(CacheAdapterInterface $cache, Config $config, $productTypeRepository, UrlGeneratorInterface $generator)
+    public function __construct(CacheItemPoolInterface $cache, Config $config, $productTypeRepository, UrlGeneratorInterface $generator)
     {
         $this->productTypeRepository = $productTypeRepository;
         $this->cache = $cache;
@@ -64,8 +64,8 @@ class ProductModel
         $selectSku = null
     ) {
         $cacheKey = $cachePrefix . '-' . $productVariant->getSku() . $selectSku . '-' . $locale;
-        if ($this->config['cache.products'] && $this->cache->has($cacheKey)) {
-            return unserialize($this->cache->fetch($cacheKey));
+        if ($this->config['cache.products'] && $this->cache->hasItem($cacheKey)) {
+            return unserialize($this->cache->getItem($cacheKey)->get());
         }
 
         $country = \Locale::getRegion($locale);
@@ -162,7 +162,8 @@ class ProductModel
         $productModel->product->variant = $productModelVariant;
 
         $productModel = $productModel->toArray();
-        $this->cache->store($cacheKey, serialize($productModel));
+        $item = $this->cache->getItem($cacheKey)->set(serialize($productModel));
+        $this->cache->save($item);
 
         return $productModel;
     }

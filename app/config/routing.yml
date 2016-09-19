@@ -63,6 +63,10 @@ checkout:
   path: /{_locale}/checkout
   defaults:  { _controller: app.checkout.controller:checkoutAction }
   methods:  [GET, HEAD, POST]
+checkoutAddress:
+  path: /{_locale}/checkout/address
+  defaults:  { _controller: app.checkout.controller:checkoutAddressAction }
+  methods:  [GET, POST, HEAD]
 checkoutSignin:
   path: /{_locale}/checkout/signin
   defaults:  { _controller: app.checkout.controller:checkoutSigninAction }
@@ -70,14 +74,18 @@ checkoutSignin:
 checkoutShipping:
   path: /{_locale}/checkout/shipping
   defaults:  { _controller: app.checkout.controller:checkoutShippingAction }
-  methods:  [GET, HEAD]
+  methods:  [GET, POST, HEAD]
 checkoutPayment:
   path: /{_locale}/checkout/payment
   defaults:  { _controller: app.checkout.controller:checkoutPaymentAction }
-  methods:  [GET, HEAD]
+  methods:  [GET, POST, HEAD]
 checkoutConfirmation:
   path: /{_locale}/checkout/confirmation
   defaults:  { _controller: app.checkout.controller:checkoutConfirmationAction }
+  methods:  [GET, POST, HEAD]
+checkoutThankYou:
+  path: /{_locale}/checkout/thankyou
+  defaults:  { _controller: app.checkout.controller:checkoutThankYouAction }
   methods:  [GET, HEAD]
 
 cartAdd:

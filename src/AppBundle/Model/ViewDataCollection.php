@@ -10,7 +10,7 @@ use Commercetools\Sunrise\AppBundle\Model\View\ArraySerializable;
 
 class ViewDataCollection implements ArraySerializable, \IteratorAggregate
 {
-    protected $data;
+    protected $data = [];
 
     public function toArray()
     {
@@ -38,6 +38,7 @@ class ViewDataCollection implements ArraySerializable, \IteratorAggregate
         } else {
             $this->data[$key] = $value;
         }
+        return $this;
     }
 
     public function getIterator()

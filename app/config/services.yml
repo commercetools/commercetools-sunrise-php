@@ -1,4 +1,18 @@
 services:
-#  handlebars.helper:
-#      class: JaySDe\HandlebarsBundle\HandlebarsHelper
-#      arguments: ['@fragment.handler', '@translator']
+#  commercetools.cache:
+#    parent: cache.adapter.apcu
+#    tags:
+#      - {name: cache.pool}
+
+  app.handlebars.cms:
+    parent: handlebars.helper.cms
+    tags:
+      - { name: handlebars.helper, id: cms }
+  app.handlebars.trans:
+    parent: handlebars.helper.trans
+    tags:
+      - { name: handlebars.helper, id: i18n }
+  app.handlebars.json:
+    parent: handlebars.helper.json
+    tags:
+      - { name: handlebars.helper, id: json }

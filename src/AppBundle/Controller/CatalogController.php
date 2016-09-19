@@ -121,7 +121,9 @@ class CatalogController extends SunriseController
 
         $viewData = $this->getViewData('Sunrise - ProductRepository Detail Page', $request);
 
-        $product = $this->get('commercetools.repository.product')->getProductBySlug($slug, $locale);
+        $country = \Locale::getRegion($locale);
+        $currency = $this->config->get('currencies.'. $country);
+        $product = $this->get('commercetools.repository.product')->getProductBySlug($slug, $locale, $currency, $country);
         $productData = $this->getProductModel()->getProductDetailData($product, $sku, $locale);
         $viewData->content->product = $productData;
 
@@ -253,7 +255,7 @@ class CatalogController extends SunriseController
         $cache = $this->get('commercetools.cache');
         $cacheKey = $facetName .'-facet-' . $locale;
         $typeData = $this->get('app.repository.product_type')->getTypes($locale);
-        if (!$cache->has($cacheKey)) {
+        if (!$cache->hasItem($cacheKey)) {
             $facetValues = [];
             /**
              * @var ProductTypeCollection $typeData
@@ -280,9 +282,10 @@ class CatalogController extends SunriseController
                     $facetValues[$value->getKey()] = $facetEntry;
                 }
             }
-            $cache->store($cacheKey, serialize($facetValues));
+            $item = $cache->getItem($cacheKey)->set(serialize($facetValues));
+            $cache->save($item);
         } else {
-            $facetValues = unserialize($cache->fetch($cacheKey));
+            $facetValues = unserialize($cache->getItem($cacheKey)->get());
         }
 
         $facetData = new ViewData();
@@ -338,7 +341,7 @@ class CatalogController extends SunriseController
         $categoryData = $this->get('app.repository.category')->getCategories($locale);
 
         $cacheKey = 'category-facet-tree-' . $locale;
-        if (!$cache->has($cacheKey)) {
+        if (!$cache->hasItem($cacheKey)) {
             $categoryTree = [];
             /**
              * @var Category $category
@@ -368,9 +371,10 @@ class CatalogController extends SunriseController
                     $entry->children->add($categoryTree[$id], $id);
                 }
             }
-            $cache->store($cacheKey, serialize($categoryTree));
+            $item = $cache->getItem($cacheKey)->set(serialize($categoryTree));
+            $cache->save($item);
         } else {
-            $categoryTree = unserialize($cache->fetch($cacheKey));
+            $categoryTree = unserialize($cache->getItem($cacheKey)->get());
         }
 
         foreach ($categoryFacet->getTerms() as $term) {
