@@ -16,3 +16,7 @@ services:
     parent: handlebars.helper.json
     tags:
       - { name: handlebars.helper, id: json }
+  app.handlebars.esi:
+    parent: handlebars.helper.esi
+    tags:
+      - { name: handlebars.helper, id: esi }

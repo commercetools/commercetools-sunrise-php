@@ -33,7 +33,6 @@ class AppKernel extends Kernel
             new SensioFrameworkExtraBundle(),
             new AppBundle(),
             new CtpBundle(),
-            new AsseticBundle(),
             new NelmioSecurityBundle(),
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

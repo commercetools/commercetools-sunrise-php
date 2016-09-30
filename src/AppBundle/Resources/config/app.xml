@@ -13,17 +13,17 @@
         <service id="app.repository.category" class="Commercetools\Sunrise\AppBundle\Repository\CategoryRepository">
             <argument>%commercetools.cache.category%</argument>
             <argument type="service" id="commercetools.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="commercetools.client.factory"/>
         </service>
         <service id="app.repository.order" class="Commercetools\Sunrise\AppBundle\Repository\OrderRepository">
             <argument>%commercetools.cache.order%</argument>
             <argument type="service" id="commercetools.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="commercetools.client.factory"/>
         </service>
         <service id="app.repository.product_type" class="Commercetools\Sunrise\AppBundle\Repository\ProductTypeRepository">
             <argument>%commercetools.cache.product_type%</argument>
             <argument type="service" id="commercetools.cache" />
-            <argument type="service" id="commercetools.client"/>
+            <argument type="service" id="commercetools.client.factory"/>
         </service>
         <service id="app.catalog.controller" class="Commercetools\Sunrise\AppBundle\Controller\CatalogController">
             <argument>%app.config%</argument>
@@ -51,16 +51,6 @@
         </service>
         <service id="app.route_generator" class="Symfony\Component\Routing\Generator\UrlGeneratorInterface">
             <factory service="router" method="getGenerator" />
-        </service>
-
-        <service id="app.extension.profiler" class="Commercetools\Sunrise\AppBundle\Profiler\CTPProfilerExtension" public="false">
-            <argument type="service" id="app.commercetools.profile" />
-            <argument type="service" id="debug.stopwatch" on-invalid="null" />
-        </service>
-        <service id="app.commercetools.profile" class="Commercetools\Sunrise\AppBundle\Profiler\Profile" />
-        <service id="data_collector.ctp" class="Commercetools\Sunrise\AppBundle\DataCollector\CTPDataCollector" public="false">
-            <tag name="data_collector" id="ctp"/>
-            <argument type="service" id="app.commercetools.profile" />
         </service>
     </services>
 </container>

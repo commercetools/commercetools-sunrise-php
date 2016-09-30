@@ -51,6 +51,8 @@ commercetools:
     client_id: "%commercetools.client_id%"
     client_secret: "%commercetools.client_secret%"
     project: "%commercetools.project%"
+  defaults:
+    country: DE
   fallback_languages:
     de:
     - en
@@ -59,11 +61,6 @@ commercetools:
   currency:
     DE: EUR
     UK: GBP
-assetic:
-  debug: "%kernel.debug%"
-  use_controller: "%kernel.debug%"
-  filters:
-    cssrewrite: ~
 nelmio_security:
 #    cookie_session:
 #        enabled: true
@@ -88,7 +85,8 @@ nelmio_security:
         content_types: []
         enforce:
             level1_fallback: true
-            browser_adaptive: false
+            browser_adaptive:
+              enabled: false
             report-uri: /nelmio/csp/report
             default-src:
                 - 'self'
