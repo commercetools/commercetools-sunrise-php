@@ -26,6 +26,7 @@ use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\View\ProductModel;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
+use Commercetools\Symfony\CtpBundle\Model\FacetConfig;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -186,19 +187,6 @@ class CatalogController extends SunriseController
     protected function getFacetDefinitions($facetDefinitions = [])
     {
         $facetDefinitions[] = Facet::ofName('categories.id')->setAlias('categories')->setValue(FilterSubtree::ofId('*'));
-        foreach ($this->config->get('sunrise.products.facets') as $facetName => $facetConfig) {
-            switch ($facetConfig['type']) {
-                case 'text':
-                    $facet = Facet::ofName('variants.attributes.' . $facetConfig['attribute'])->setAlias($facetName);
-                    break;
-                case 'enum':
-                    $facet = Facet::ofName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setAlias($facetName);
-                    break;
-                default:
-                    throw new \InvalidArgumentException('Facet type not implemented');
-            }
-            $facetDefinitions[] = $facet;
-        }
 
         return $facetDefinitions;
     }
@@ -208,24 +196,31 @@ class CatalogController extends SunriseController
         $filter = new LinkList();
         $filter->url = $searchUri->getPath();
         $filter->list = new ViewDataCollection();
-        $filter->list->add($this->getCategoriesFacet($locale, $category, $searchUri));
-        $facetConfigs = $this->config->get('sunrise.products.facets');
+        $facetConfigs = $this->get('commercetools.search')->getFacetConfigs();
 
         $queryParams = \GuzzleHttp\Psr7\parse_query($searchUri->getQuery());
         foreach ($facetConfigs as $facetName => $facetConfig) {
-            $filter->list->add($this->getFacet($locale, $facetName, $facetConfig, $searchUri, $queryParams));
+            $filter->list->add(
+                $this->getFacet(
+                    $locale,
+                    $facetName,
+                    $facetConfig,
+                    $searchUri,
+                    $facetName !== 'categories' ? $queryParams : $category
+                )
+            );
         }
 
         return $filter;
     }
 
-    protected function getFacet($locale, $facetName, $facetConfig, UriInterface $searchUri, $queryParams)
+    protected function getFacet($locale, $facetName, FacetConfig $facetConfig, UriInterface $searchUri, $queryParams)
     {
-        $method = 'get' . ucfirst($facetConfig['type']) . 'Facet';
+        $method = 'get' . ucfirst($facetConfig->getType()) . 'Facet';
         return $this->$method($locale, $facetName, $facetConfig, $searchUri, $queryParams);
     }
 
-    protected function getTextFacet($locale, $facetName, $facetConfig, UriInterface $searchUri, $queryParams)
+    protected function getTextFacet($locale, $facetName, FacetConfig $facetConfig, UriInterface $searchUri, $queryParams)
     {
         $facetData = new ViewData();
         $facetData->selectFacet = true;
@@ -249,9 +244,9 @@ class CatalogController extends SunriseController
         return $facetData;
     }
 
-    protected function getEnumFacet($locale, $facetName, $facetConfig, UriInterface $searchUri, $queryParams)
+    protected function getEnumFacet($locale, $facetName, FacetConfig $facetConfig, UriInterface $searchUri, $queryParams)
     {
-        $attributeName = $facetConfig['attribute'];
+        $attributeName = $facetConfig->getField();
         $cache = $this->get('commercetools.cache');
         $cacheKey = $facetName .'-facet-' . $locale;
         $typeData = $this->get('app.repository.product_type')->getTypes($locale);
@@ -289,11 +284,11 @@ class CatalogController extends SunriseController
         }
 
         $facetData = new ViewData();
-        $facetData->displayList = ($facetConfig['display'] == 'list');
+        $facetData->displayList = ($facetConfig->getDisplay() == 'list');
         $facetData->selectFacet = true;
         $facetData->facet = new ViewData();
-        if ($facetConfig['multi'] === true) {
-            $facetData->facet->multiSelect = $facetConfig['multi'];
+        if ($facetConfig->isMultiSelect() === true) {
+            $facetData->facet->multiSelect = $facetConfig->isMultiSelect();
         }
         $facetData->facet->available = true;
         $facetData->facet->label = $this->trans('filters.' . $facetName, [], 'catalog');
@@ -330,7 +325,7 @@ class CatalogController extends SunriseController
         return $facetData;
     }
 
-    protected function getCategoriesFacet($locale, Category $selectedCategory = null, UriInterface $uri)
+    protected function getCategoriesFacet($locale, $facetName, FacetConfig $facetConfig, UriInterface $uri, Category $selectedCategory = null)
     {
         $cache = $this->get('commercetools.cache');
         $categoryFacet = $this->facets->getByName('categories');
@@ -455,43 +450,16 @@ class CatalogController extends SunriseController
     }
 
 
-    protected function getFilters(UriInterface $uri, Category $category = null)
+    protected function getCategoryFilter(Category $category = null)
     {
         $filters = [];
-
-        $facetConfigs = $this->config->get('sunrise.products.facets');
-        $queryParams = \GuzzleHttp\Psr7\parse_query($uri->getQuery());
 
         if ($category instanceof Category) {
             $filters['filter.query'][] = Filter::ofName('categories.id')->setValue(
                 FilterSubtreeCollection::of()->add(FilterSubtree::ofId($category->getId()))
             );
         }
-        foreach ($queryParams as $filterName => $params) {
-            if (!isset($facetConfigs[$filterName])) {
-                continue;
-            }
-            $facetConfig = $facetConfigs[$filterName];
-            $facetFilterType = 'filter.query';
-            if ($facetConfig['multi']) {
-                $facetFilterType = 'filter.facets';
-                if (!is_array($params)) {
-                    $params = [$params];
-                }
-            }
-            switch ($facetConfig['type']) {
-                case 'text':
-                    $filter = Filter::ofName('variants.attributes.' . $facetConfig['attribute'])->setValue($params);
-                    $filters['filter'][] = $filters[$facetFilterType][] = $filter;
-                    break;
-                case 'enum':
-                    $filter = Filter::ofName('variants.attributes.' . $facetConfig['attribute'] . '.key')->setValue($params);
-                    $filters['filter'][] = $filters[$facetFilterType][] = $filter;
-                    break;
-                default:
-                    throw new \InvalidArgumentException('Facet type not implemented');
-            }
-        }
+
         return $filters;
     }
 
@@ -518,8 +486,8 @@ class CatalogController extends SunriseController
             $currency,
             $country,
             null,
-            $this->getFilters($uri, $category),
-            $this->getFacetDefinitions()
+            $uri,
+            $this->getCategoryFilter($category)
         );
 
         $this->applyPagination($uri, $offset, $total, $itemsPerPage);

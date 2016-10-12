@@ -58,6 +58,16 @@ commercetools:
     - en
     en:
     - de
+  facets:
+    categories:
+      hierarchical: true
+      type: categories
+    color: ~
+    size:
+      field: commonSize
+    brand:
+      field: designer
+      display: list
   currency:
     DE: EUR
     UK: GBP
