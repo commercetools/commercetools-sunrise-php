@@ -21,8 +21,6 @@ framework:
   assets:
     base_path: /assets/
   default_locale: "%locale%"
-  esi: { enabled: true }
-  fragments: ~
   session:
     name: sunrise_session
     save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
