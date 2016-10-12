@@ -119,6 +119,7 @@ nelmio_security:
                 - maxcdn.bootstrapcdn.com
                 - ajax.googleapis.com
                 - cdn.jsdelivr.net
+                - js-agent.newrelic.com
             img-src:
                 - 'self'
                 - 'unsafe-inline'
