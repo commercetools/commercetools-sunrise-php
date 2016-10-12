@@ -120,6 +120,7 @@ nelmio_security:
                 - ajax.googleapis.com
                 - cdn.jsdelivr.net
                 - js-agent.newrelic.com
+                - bam.nr-data.net
             img-src:
                 - 'self'
                 - 'unsafe-inline'
