@@ -21,10 +21,10 @@ class ProductTypeRepository extends Repository
      */
     public function getTypes($locale, $force = false)
     {
-        $client = $this->getClient($locale);
+        $client = $this->getClient();
         $cacheKey = static::NAME;
         $productTypeRequest = ProductTypeQueryRequest::of();
-        return $this->retrieveAll($client, $cacheKey, $productTypeRequest, $force);
+        return $this->retrieveAll($client, $cacheKey, $productTypeRequest, $locale, $force);
     }
 
     /**

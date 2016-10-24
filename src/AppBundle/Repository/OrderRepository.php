@@ -20,10 +20,13 @@ class OrderRepository extends Repository
      */
     public function getOrders($locale, $customerId)
     {
-        $client = $this->getClient($locale);
+        $client = $this->getClient();
         $request = OrderQueryRequest::of()->where('customerId = "' . $customerId . '"');
         $response = $request->executeWithClient($client);
-        $orders = $request->mapResponse($response);
+        $orders = $request->mapFromResponse(
+            $response,
+            $this->mapperFactory->build($locale, $request->getResultClass())
+        );
 
         return $orders;
     }
@@ -35,10 +38,13 @@ class OrderRepository extends Repository
      */
     public function getOrder($locale, $orderId)
     {
-        $client = $this->getClient($locale);
+        $client = $this->getClient();
         $request = OrderByIdGetRequest::ofId($orderId);
         $response = $request->executeWithClient($client);
-        $order = $request->mapResponse($response);
+        $order = $request->mapFromResponse(
+            $response,
+            $this->mapperFactory->build($locale, $request->getResultClass())
+        );
         return $order;
     }
 }

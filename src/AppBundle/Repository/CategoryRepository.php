@@ -18,9 +18,9 @@ class CategoryRepository extends Repository
      */
     public function getCategories($locale)
     {
-        $client = $this->getClient($locale);
+        $client = $this->getClient();
         $cacheKey = static::NAME;
         $categoriesRequest = CategoryQueryRequest::of();
-        return $this->retrieveAll($client, $cacheKey, $categoriesRequest);
+        return $this->retrieveAll($client, $cacheKey, $categoriesRequest, $locale);
     }
 }
