@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c92e09a8fb57d74510390676e8443eaa",
-    "content-hash": "eb0d20e7073e4ae2a3aa72ac041d0f9d",
+    "hash": "a330c63391052c51d86cbdc20f74f13e",
+    "content-hash": "93d0f4c36fc049bd03376f6a9af8e57c",
     "packages": [
         {
             "name": "commercetools/commons",
             "version": "v0.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sphereio/commercetools-php-commons.git",
+                "url": "https://github.com/commercetools/commercetools-php-commons.git",
                 "reference": "c96f801c4f6659118b86ad9d12826ede8050402a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-commons/zipball/c96f801c4f6659118b86ad9d12826ede8050402a",
+                "url": "https://api.github.com/repos/commercetools/commercetools-php-commons/zipball/c96f801c4f6659118b86ad9d12826ede8050402a",
                 "reference": "c96f801c4f6659118b86ad9d12826ede8050402a",
                 "shasum": ""
             },
@@ -51,13 +51,13 @@
             "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sphereio/commercetools-php-sdk.git",
-                "reference": "67848af0554cf0508a01fcbe62dfb560efe6fcd5"
+                "url": "https://github.com/commercetools/commercetools-php-sdk.git",
+                "reference": "843210d3913881bdf867e7eb663771d872a7fce7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-sdk/zipball/67848af0554cf0508a01fcbe62dfb560efe6fcd5",
-                "reference": "67848af0554cf0508a01fcbe62dfb560efe6fcd5",
+                "url": "https://api.github.com/repos/commercetools/commercetools-php-sdk/zipball/843210d3913881bdf867e7eb663771d872a7fce7",
+                "reference": "843210d3913881bdf867e7eb663771d872a7fce7",
                 "shasum": ""
             },
             "require": {
@@ -125,8 +125,8 @@
                 "MIT"
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
-            "homepage": "https://github.com/sphereio/commercetools-php-sdk",
-            "time": "2016-10-10 09:49:26"
+            "homepage": "https://github.com/commercetools/commercetools-php-sdk",
+            "time": "2016-10-24 09:08:33"
         },
         {
             "name": "commercetools/sunrise-theme",
@@ -134,12 +134,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jayS-de/sunrise-theme.git",
-                "reference": "eea0b58152928f3687944daf62255aa1ebc40c2a"
+                "reference": "a91c81d2b3d175bbe2294824cdb0618b65ac3f86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jayS-de/sunrise-theme/zipball/eea0b58152928f3687944daf62255aa1ebc40c2a",
-                "reference": "eea0b58152928f3687944daf62255aa1ebc40c2a",
+                "url": "https://api.github.com/repos/jayS-de/sunrise-theme/zipball/a91c81d2b3d175bbe2294824cdb0618b65ac3f86",
+                "reference": "a91c81d2b3d175bbe2294824cdb0618b65ac3f86",
                 "shasum": ""
             },
             "type": "library",
@@ -154,20 +154,20 @@
                 }
             ],
             "description": "Commercetools Sunrise theme",
-            "time": "2016-09-09 12:11:28"
+            "time": "2016-10-19 09:54:55"
         },
         {
             "name": "commercetools/symfony-bundle",
             "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sphereio/commercetools-php-symfony.git",
-                "reference": "5915226a5bfb39a6f572d94cf72a30a6a5bf2203"
+                "url": "https://github.com/commercetools/commercetools-php-symfony.git",
+                "reference": "c2a879b301f8e2bd410e25695bc2cefd5a751485"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sphereio/commercetools-php-symfony/zipball/5915226a5bfb39a6f572d94cf72a30a6a5bf2203",
-                "reference": "5915226a5bfb39a6f572d94cf72a30a6a5bf2203",
+                "url": "https://api.github.com/repos/commercetools/commercetools-php-symfony/zipball/c2a879b301f8e2bd410e25695bc2cefd5a751485",
+                "reference": "c2a879b301f8e2bd410e25695bc2cefd5a751485",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2016-10-12 08:29:22"
+            "time": "2016-10-24 09:14:35"
         },
         {
             "name": "doctrine/annotations",
@@ -960,16 +960,16 @@
         },
         {
             "name": "nelmio/security-bundle",
-            "version": "2.0.2",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioSecurityBundle.git",
-                "reference": "6915cdd169ecfc3f1ad9a4361aa8014a3527728f"
+                "reference": "4b6d7f2a5519c53ffb59772b17aa923f47740ef7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioSecurityBundle/zipball/6915cdd169ecfc3f1ad9a4361aa8014a3527728f",
-                "reference": "6915cdd169ecfc3f1ad9a4361aa8014a3527728f",
+                "url": "https://api.github.com/repos/nelmio/NelmioSecurityBundle/zipball/4b6d7f2a5519c53ffb59772b17aa923f47740ef7",
+                "reference": "4b6d7f2a5519c53ffb59772b17aa923f47740ef7",
                 "shasum": ""
             },
             "require": {
@@ -1016,20 +1016,20 @@
             "keywords": [
                 "security"
             ],
-            "time": "2016-08-24 11:04:45"
+            "time": "2016-10-19 10:32:05"
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "088c04e2f261c33bed6ca5245491cfca69195ccf"
+                "reference": "c0125896dbb151380ab47e96c621741e79623beb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/088c04e2f261c33bed6ca5245491cfca69195ccf",
-                "reference": "088c04e2f261c33bed6ca5245491cfca69195ccf",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c0125896dbb151380ab47e96c621741e79623beb",
+                "reference": "c0125896dbb151380ab47e96c621741e79623beb",
                 "shasum": ""
             },
             "require": {
@@ -1064,7 +1064,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-04-03 06:00:07"
+            "time": "2016-10-17 15:23:22"
         },
         {
             "name": "particle/validator",
@@ -2185,16 +2185,16 @@
         },
         {
             "name": "heroku/heroku-buildpack-php",
-            "version": "v112",
+            "version": "v113",
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "5de1d2796304f74568901c88fed16885af179e93"
+                "reference": "af7089595b889690df2594044c8626068178f739"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/5de1d2796304f74568901c88fed16885af179e93",
-                "reference": "5de1d2796304f74568901c88fed16885af179e93",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/af7089595b889690df2594044c8626068178f739",
+                "reference": "af7089595b889690df2594044c8626068178f739",
                 "shasum": ""
             },
             "bin": [
@@ -2225,7 +2225,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2016-09-20 20:47:04"
+            "time": "2016-10-19 23:42:40"
         },
         {
             "name": "myclabs/deep-copy",

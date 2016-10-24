@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://jayS-de@github.com/sphereio/commercetools-sunrise-php.git"
+    "url": "git+https://jayS-de@github.com/commercetools/commercetools-sunrise-php.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sphereio/commercetools-sunrise-php/issues"
+    "url": "https://github.com/commercetools/commercetools-sunrise-php/issues"
   },
-  "homepage": "https://github.com/sphereio/commercetools-sunrise-php#readme",
+  "homepage": "https://github.com/commercetools/commercetools-sunrise-php#readme",
   "devDependencies": {
     "sunrise-scenarios": "^0.1.2"
   }

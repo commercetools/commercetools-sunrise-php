@@ -2,8 +2,8 @@
 
 SUNRISE PHP is a template shopfront implementation that implements a complete online shop on the commercetools eCommerce platform using the following components:
 
- * the [commercetools PHP SDK](https://github.com/sphereio/commercetools-php-sdk) and its corresponding [commons library](https://github.com/sphereio/commercetools-php-commons)
- * the [commercetools SUNRISE](https://github.com/sphereio/sphere-sunrise-design) responsive HTML templates (handlebars syntax)
+ * the [commercetools PHP SDK](https://github.com/commercetools/commercetools-php-sdk) and its corresponding [commons library](https://github.com/commercetools/commercetools-php-commons)
+ * the [commercetools SUNRISE](https://github.com/commercetools/sphere-sunrise-design) responsive HTML templates (handlebars syntax)
  * the [symfony framework](http://symfony.com/) (using the MicrokernelTrait)
 
 It aims to focus on being slim, easy to understand and fast, delegating reusabilty into the commons and symfony-components libraries.
@@ -68,7 +68,7 @@ php bin/console cache:warmup
 
 For an easy and fast deployment of your application we recommend [heroku](https://www.heroku.com):
 
-<a href="https://heroku.com/deploy?template=https://github.com/sphereio/commercetools-sunrise-php"><img src="https://www.herokucdn.com/deploy/button.png" alt="Deploy"></a>
+<a href="https://heroku.com/deploy?template=https://github.com/commercetools/commercetools-sunrise-php"><img src="https://www.herokucdn.com/deploy/button.png" alt="Deploy"></a>
 
 ### Docker
 

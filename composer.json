@@ -3,11 +3,11 @@
   "description": "Commercetools Sunrise PHP template shop",
   "type": "project",
   "license": "MIT",
-  "homepage": "https://github.com/sphereio/commercetools-sunrise-php",
+  "homepage": "https://github.com/commercetools/commercetools-sunrise-php",
   "support": {
     "email": "support@sphere.io",
     "forum": "http://support.sphere.io",
-    "issues": "https://github.com/sphereio/commercetools-sunrise-php/issues"
+    "issues": "https://github.com/commercetools/commercetools-sunrise-php/issues"
   },
   "require": {
     "php": ">=5.6",
@@ -75,7 +75,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/sphereio/sphere-sunrise-scenarios"
+      "url": "https://github.com/commercetools/commercetools-sunrise-scenarios"
     }
   ]
 }

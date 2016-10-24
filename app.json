@@ -1,7 +1,7 @@
 {
   "name": "Commercetools Sunrise PHP",
   "description": "Create your own webshop in minutes with commercetoolsm platform and our template 'sunrise'",
-  "repository": "https://github.com/sphereio/commercetools-sunrise-php",
+  "repository": "https://github.com/commercetools/commercetools-sunrise-php",
   "logo": "http://www.commercetools.com/assets/img/ct_logo_farbe.gif",
   "keywords": ["commercetools", "sphere", "ecommerce", "shopping"],
   "env": {
