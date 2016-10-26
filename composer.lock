@@ -52,12 +52,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/commercetools/commercetools-php-sdk.git",
-                "reference": "2b5a4a7bb23fbc98b415dd0ff5ae795104260335"
+                "reference": "178596bd18fcaba336c5c828ae8aa34785424ebb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/commercetools/commercetools-php-sdk/zipball/2b5a4a7bb23fbc98b415dd0ff5ae795104260335",
-                "reference": "2b5a4a7bb23fbc98b415dd0ff5ae795104260335",
+                "url": "https://api.github.com/repos/commercetools/commercetools-php-sdk/zipball/178596bd18fcaba336c5c828ae8aa34785424ebb",
+                "reference": "178596bd18fcaba336c5c828ae8aa34785424ebb",
                 "shasum": ""
             },
             "require": {
@@ -126,7 +126,7 @@
             ],
             "description": "The commercetools PHP SDK  The official PHP Interface to the commercetools eCommerce API",
             "homepage": "https://github.com/commercetools/commercetools-php-sdk",
-            "time": "2016-10-24 13:54:22"
+            "time": "2016-10-26 08:06:58"
         },
         {
             "name": "commercetools/sunrise-theme",
@@ -162,12 +162,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/commercetools/commercetools-php-symfony.git",
-                "reference": "2bea5f5a3edaa46e0ca3b3e96038c6e2ef9f8a59"
+                "reference": "92e8ebeef4b60ceca8406ebda2565fdbeccfb6a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/commercetools/commercetools-php-symfony/zipball/2bea5f5a3edaa46e0ca3b3e96038c6e2ef9f8a59",
-                "reference": "2bea5f5a3edaa46e0ca3b3e96038c6e2ef9f8a59",
+                "url": "https://api.github.com/repos/commercetools/commercetools-php-symfony/zipball/92e8ebeef4b60ceca8406ebda2565fdbeccfb6a0",
+                "reference": "92e8ebeef4b60ceca8406ebda2565fdbeccfb6a0",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2016-10-24 15:36:51"
+            "time": "2016-10-26 08:32:29"
         },
         {
             "name": "doctrine/annotations",
@@ -2016,16 +2016,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.26.1",
+            "version": "v1.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "a09d8ee17ac1cfea29ed60c83960ad685c6a898d"
+                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a09d8ee17ac1cfea29ed60c83960ad685c6a898d",
-                "reference": "a09d8ee17ac1cfea29ed60c83960ad685c6a898d",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
+                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
                 "shasum": ""
             },
             "require": {
@@ -2038,7 +2038,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.26-dev"
+                    "dev-master": "1.27-dev"
                 }
             },
             "autoload": {
@@ -2073,7 +2073,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-10-05 18:57:41"
+            "time": "2016-10-25 19:17:17"
         },
         {
             "name": "zordius/lightncandy",
@@ -2723,16 +2723,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.6.1",
+            "version": "5.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "60c32c5b5e79c2248001efa2560f831da11cc2d7"
+                "reference": "cd13b23ac5a519a4708e00736c26ee0bb28b2e01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/60c32c5b5e79c2248001efa2560f831da11cc2d7",
-                "reference": "60c32c5b5e79c2248001efa2560f831da11cc2d7",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/cd13b23ac5a519a4708e00736c26ee0bb28b2e01",
+                "reference": "cd13b23ac5a519a4708e00736c26ee0bb28b2e01",
                 "shasum": ""
             },
             "require": {
@@ -2801,7 +2801,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-10-07 13:03:26"
+            "time": "2016-10-25 07:40:25"
         },
         {
             "name": "phpunit/phpunit-mock-objects",

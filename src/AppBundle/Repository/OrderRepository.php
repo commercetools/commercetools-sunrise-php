@@ -25,7 +25,7 @@ class OrderRepository extends Repository
         $response = $request->executeWithClient($client);
         $orders = $request->mapFromResponse(
             $response,
-            $this->mapperFactory->build($locale, $request->getResultClass())
+            $this->getMapper($locale)
         );
 
         return $orders;
@@ -43,7 +43,7 @@ class OrderRepository extends Repository
         $response = $request->executeWithClient($client);
         $order = $request->mapFromResponse(
             $response,
-            $this->mapperFactory->build($locale, $request->getResultClass())
+            $this->getMapper($locale)
         );
         return $order;
     }
