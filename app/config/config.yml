@@ -127,6 +127,7 @@ nelmio_security:
                 - 'data:'
                 - s3-eu-west-1.amazonaws.com
                 - cdn.jsdelivr.net
+                - www.commercetools.com
             block-all-mixed-content: true # Default to false, blocks http content over https transport
             # upgrade-insecure-requests: true # Default to false, upgrades http requests to https transport
 
