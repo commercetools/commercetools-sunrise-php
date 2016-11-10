@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "description": "SUNRISE PHP is a template shopfront implementation that implements a complete online shop on the commercetools eCommerce platform using the following components",
   "scripts": {
-    "test": "node_modules/.bin/features_run",
+    "pretest": "selenium-standalone install",
+    "test": "features_run",
     "test:remote": "NODE_ENV=remote cucumber.js node_modules/sunrise-scenarios/features"
   },
   "repository": {
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/commercetools/commercetools-sunrise-php#readme",
   "devDependencies": {
+    "selenium-standalone": "^5.5.0",
     "sunrise-scenarios": "^0.1.2"
   }
 }
