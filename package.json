@@ -5,7 +5,7 @@
   "scripts": {
     "pretest": "selenium-standalone install",
     "test": "features_run",
-    "test:remote": "NODE_ENV=remote cucumber.js node_modules/sunrise-scenarios/features"
+    "test:remote": "NODE_ENV=remote cucumber-js node_modules/sunrise-scenarios/features"
   },
   "repository": {
     "type": "git",
