@@ -55,5 +55,10 @@
         <service id="app.route_generator" class="Symfony\Component\Routing\Generator\UrlGeneratorInterface">
             <factory service="router" method="getGenerator" />
         </service>
+        <service id="app.assets.cache" class="Commercetools\Sunrise\AppBundle\Asset\AssetCache">
+            <argument>%app.config%</argument>
+            <argument>%kernel.cache_dir%</argument>
+            <argument>%kernel.debug%</argument>
+        </service>
     </services>
 </container>

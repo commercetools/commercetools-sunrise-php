@@ -27,6 +27,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->arrayNode('sunrise')
                 ->children()
+                    ->scalarNode('assetsCache')->end()
                     ->scalarNode('assetsPath')->end()
                     ->arrayNode('sale')
                         ->children()

@@ -133,10 +133,11 @@ class CatalogController extends SunriseController
 
     protected function getBannerContent()
     {
+        $assetsCache = $this->get('app.assets.cache');
         $banner = new ViewData();
         $banner->description = "Lorem dolor deserunt debitis voluptatibus odio id animi voluptates alias eum adipisci laudantium iusto totam quibusdam modi quo! Consectetur.";
-        $banner->imageMobile = "/assets/img/banner_mobile.jpg";
-        $banner->imageDesktop = "/assets/img/banner_desktop.jpg";
+        $banner->imageMobile = $this->config->get('sunrise.assetsPath') . '/' . $assetsCache->getFile('img/banner_banner.jpg');
+        $banner->imageDesktop = $this->config->get('sunrise.assetsPath') . '/' .  $assetsCache->getFile('img/banner_desktop.jpg');
 
         return $banner;
     }
