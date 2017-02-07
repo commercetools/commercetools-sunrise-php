@@ -3,6 +3,7 @@ framework:
   profiler: { only_exceptions: false }
   templating:
     engines: ['twig', 'handlebars']
+  form: ~
   assets:
     base_path: /assets/
   default_locale: en
