@@ -13,11 +13,11 @@
     "php": ">=5.6",
     "ext-apcu": "*",
     "ext-mbstring": "*",
-    "commercetools/php-sdk": "^1.5",
+    "commercetools/php-sdk": "^1.5 || ^2.0",
     "commercetools/sunrise-theme": "^0.63",
     "commercetools/symfony-bundle": "^0.2@dev",
     "commercetools/commons": "^0.2",
-    "jays-de/handlebars-bundle": "0.11.2",
+    "jays-de/handlebars-bundle": "^1.0.1",
     "monolog/monolog": "^1.7",
     "symfony/symfony": "^3.1",
     "symfony/monolog-bundle": "^2.8",
@@ -31,7 +31,7 @@
   "require-dev": {
     "heroku/heroku-buildpack-php": "*",
     "phpunit/phpunit": "^5.0",
-    "sensio/generator-bundle": "^3.0"
+    "sensio/generator-bundle": "^3.1"
   },
   "autoload": {
     "psr-4": {

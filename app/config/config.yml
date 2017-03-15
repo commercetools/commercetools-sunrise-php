@@ -46,9 +46,9 @@ commercetools:
     product_type: true
     product: true
   credentials:
-    client_id: "%commercetools.client_id%"
-    client_secret: "%commercetools.client_secret%"
-    project: "%commercetools.project%"
+    client_id: "%env(CTP_CLIENT_ID)%"
+    client_secret: "%env(CTP_CLIENT_SECRET)%"
+    project: "%env(CTP_PROJECT)%"
   defaults:
     country: DE
   fallback_languages:
@@ -128,6 +128,8 @@ nelmio_security:
                 - s3-eu-west-1.amazonaws.com
                 - cdn.jsdelivr.net
                 - www.commercetools.com
+                - '*.cf3.rackcdn.com'
+                - i1.adis.ws
             block-all-mixed-content: true # Default to false, blocks http content over https transport
             # upgrade-insecure-requests: true # Default to false, upgrades http requests to https transport
 
