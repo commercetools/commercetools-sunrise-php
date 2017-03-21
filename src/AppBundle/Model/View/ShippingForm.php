@@ -9,15 +9,21 @@ use Commercetools\Sunrise\AppBundle\Model\ViewData;
 
 class ShippingForm extends ViewData
 {
-    public $shippingMethods;
+    public $shippingMethod;
+    
+     /**
+     * @var ErrorCollection
+     */
+    public $errors;
 
     public function __construct()
     {
-        $this->shippingMethods = new ListObject();
+        $this->shippingMethod = new ListObject();
+        $this->errors = new ErrorCollection();
     }
 
     public function addShippingMethod(ShippingMethod $method)
     {
-        $this->shippingMethods->list->add($method);
+        $this->shippingMethod->list->add($method);
     }
 }
