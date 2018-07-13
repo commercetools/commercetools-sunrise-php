@@ -1,6 +1,6 @@
 language: php
 php:
-  - "5.6"
+  - "7.2"
 cache:
   directories:
   - vendor
@@ -21,7 +21,8 @@ before_script:
 - yarn
 - bin/console server:start
 script:
-- npm run test:remote
+- time
+#- npm run test:remote
 after_script:
 - bin/console server:stop
 env:

@@ -1,5 +1,5 @@
 parameters:
-  secret: Secr3tT0ken
+  env(SECRET_TOKEN): Secr3tT0ken
   env(CTP_CLIENT_ID): YourClientId
   env(CTP_CLIENT_SECRET): YourClientSecret
   env(CTP_PROJECT): YourProjectKey

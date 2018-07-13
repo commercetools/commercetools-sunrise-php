@@ -6,7 +6,6 @@ use JaySDe\HandlebarsBundle\HandlebarsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Sensio\Bundle\DistributionBundle\SensioDistributionBundle;
-use Symfony\Bundle\AsseticBundle\AsseticBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle;
@@ -16,6 +15,7 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Bundle\WebServerBundle\WebServerBundle;
 
 /**
  * @author @jayS-de <jens.schulze@commercetools.de>
@@ -40,6 +40,7 @@ class AppKernel extends Kernel
             $bundles[] = new WebProfilerBundle();
             $bundles[] = new SensioDistributionBundle();
             $bundles[] = new SensioGeneratorBundle();
+            $bundles[] = new WebServerBundle();
         }
         return $bundles;
     }

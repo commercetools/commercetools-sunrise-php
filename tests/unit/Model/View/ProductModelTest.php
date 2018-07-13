@@ -5,7 +5,7 @@
 
 namespace Commercetools\Sunrise\AppBundle\Model\View;
 
-use Commercetools\Core\Cache\NullCacheAdapter;
+use Cache\Adapter\PHPArray\ArrayCachePool;
 use Commercetools\Core\Model\Product\ProductProjection;
 use Commercetools\Core\Model\ProductType\ProductType;
 use Commercetools\Sunrise\AppBundle\Model\Config;
@@ -1178,7 +1178,7 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
         $model = new ProductModel(
-            new NullCacheAdapter(),
+            new ArrayCachePool(),
             $config,
             $productTypeRepository,
             $urlGenerator
@@ -1392,7 +1392,7 @@ class ProductModelTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
         $model = new ProductModel(
-            new NullCacheAdapter(),
+            new ArrayCachePool(),
             $config,
             $productTypeRepository,
             $urlGenerator

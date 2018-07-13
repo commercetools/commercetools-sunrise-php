@@ -10,7 +10,7 @@ parameters:
   handlebars.helper_interface.method: handle
 
 framework:
-  secret: "%secret%"
+  secret: "%env(SECRET_TOKEN)%"
   router:
     resource: "%kernel.root_dir%/config/routing.yml"
     strict_requirements: ~
