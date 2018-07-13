@@ -15,7 +15,6 @@
     "guzzlehttp/guzzle": "^6.3",
     "commercetools/sunrise-theme": "^0.63",
     "commercetools/symfony-bundle": "^0.2@dev",
-    "commercetools/commons": "^0.2",
     "jays-de/handlebars-bundle": "^1.0.1",
     "monolog/monolog": "^1.7",
     "symfony/symfony": "^3.1",
