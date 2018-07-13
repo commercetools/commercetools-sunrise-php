@@ -11,9 +11,8 @@
   },
   "require": {
     "php": ">=5.6",
-    "ext-apcu": "*",
-    "ext-mbstring": "*",
     "commercetools/php-sdk": "^1.5 || ^2.0",
+    "guzzlehttp/guzzle": "^6.3",
     "commercetools/sunrise-theme": "^0.63",
     "commercetools/symfony-bundle": "^0.2@dev",
     "commercetools/commons": "^0.2",
