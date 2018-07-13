@@ -21,6 +21,7 @@ before_script:
 - yarn
 - bin/console server:start
 script:
+- time
 #- npm run test:remote
 after_script:
 - bin/console server:stop
