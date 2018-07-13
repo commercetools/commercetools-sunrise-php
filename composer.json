@@ -29,7 +29,8 @@
   "require-dev": {
     "heroku/heroku-buildpack-php": "*",
     "phpunit/phpunit": "^5.0",
-    "sensio/generator-bundle": "^3.1"
+    "sensio/generator-bundle": "^3.1",
+    "symfony/web-server-bundle": "^3.1"
   },
   "autoload": {
     "psr-4": {
