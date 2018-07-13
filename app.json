@@ -9,16 +9,16 @@
       "description": "A secret key for verifying the integrity of signed cookies.",
       "generator": "secret"
     },
-    "SPHERE_CLIENT_ID": {
-      "description": "The project key for your commercetools platform project.",
-      "required": true
-    },
-    "SPHERE_CLIENT_SECRET": {
+    "CTP_CLIENT_ID": {
       "description": "The client ID of your commercetools platform project.",
       "required": true
     },
-    "SPHERE_PROJECT": {
-      "description": "The client secret of your commercetools platform project.",
+    "CTP_CLIENT_SECRET": {
+      "description": "The client ID of your commercetools platform project.",
+      "required": true
+    },
+    "CTP_PROJECT": {
+      "description": "The project key for your commercetools platform project.",
       "required": true
     },
     "SYMFONY_ENV": {
