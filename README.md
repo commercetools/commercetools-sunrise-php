@@ -68,7 +68,7 @@ php bin/console cache:warmup
 
 For an easy and fast deployment of your application we recommend [heroku](https://www.heroku.com):
 
-<a href="https://heroku.com/deploy?template=https://github.com/commercetools/commercetools-sunrise-php"><img src="https://www.herokucdn.com/deploy/button.png" alt="Deploy"></a>
+<a href="https://heroku.com/deploy?template=https://github.com/commercetools/commercetools-sunrise-php/tree/develop"><img src="https://www.herokucdn.com/deploy/button.png" alt="Deploy"></a>
 
 ### Docker
 
