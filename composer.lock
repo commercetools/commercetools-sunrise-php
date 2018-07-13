@@ -192,45 +192,6 @@
             "time": "2017-03-13T09:14:27+00:00"
         },
         {
-            "name": "commercetools/commons",
-            "version": "v0.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/commercetools/commercetools-php-commons.git",
-                "reference": "88d6e3e43d2692352bfbe1827b238eee8719c864"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/commercetools/commercetools-php-commons/zipball/88d6e3e43d2692352bfbe1827b238eee8719c864",
-                "reference": "88d6e3e43d2692352bfbe1827b238eee8719c864",
-                "shasum": ""
-            },
-            "require": {
-                "commercetools/php-sdk": "^1.0 || ^2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Commercetools\\Commons\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jens Schulze",
-                    "email": "jens.schulze@commercetools.de"
-                }
-            ],
-            "homepage": "https://github.com/commercetools/commercetools-php-commons",
-            "time": "2017-02-03T08:27:23+00:00"
-        },
-        {
             "name": "commercetools/php-sdk",
             "version": "v2.4.0",
             "source": {
@@ -351,16 +312,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/commercetools/commercetools-php-symfony.git",
-                "reference": "aee2ca486150982bd555abd42a78b0d410b0cd7c"
+                "reference": "4665606eb6e8b90603b145a615b32c3634974966"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/commercetools/commercetools-php-symfony/zipball/aee2ca486150982bd555abd42a78b0d410b0cd7c",
-                "reference": "aee2ca486150982bd555abd42a78b0d410b0cd7c",
+                "url": "https://api.github.com/repos/commercetools/commercetools-php-symfony/zipball/4665606eb6e8b90603b145a615b32c3634974966",
+                "reference": "4665606eb6e8b90603b145a615b32c3634974966",
                 "shasum": ""
             },
             "require": {
-                "commercetools/commons": "^0.2",
                 "commercetools/php-sdk": "^1.5 || ^2.0",
                 "php": ">=5.6",
                 "symfony/cache": "^3.1",
@@ -391,7 +351,7 @@
                 "MIT"
             ],
             "description": "Symfony bundle for Commercetools platform",
-            "time": "2017-10-02T07:43:44+00:00"
+            "time": "2018-07-13T12:11:10+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -2977,6 +2937,45 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "commercetools/commons",
+            "version": "v0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/commercetools/commercetools-php-commons.git",
+                "reference": "88d6e3e43d2692352bfbe1827b238eee8719c864"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/commercetools/commercetools-php-commons/zipball/88d6e3e43d2692352bfbe1827b238eee8719c864",
+                "reference": "88d6e3e43d2692352bfbe1827b238eee8719c864",
+                "shasum": ""
+            },
+            "require": {
+                "commercetools/php-sdk": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Commercetools\\Commons\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jens Schulze",
+                    "email": "jens.schulze@commercetools.de"
+                }
+            ],
+            "homepage": "https://github.com/commercetools/commercetools-php-commons",
+            "time": "2017-02-03T08:27:23+00:00"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.1.0",
