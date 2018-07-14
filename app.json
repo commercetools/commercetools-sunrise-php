@@ -27,6 +27,6 @@
     }
   },
   "scripts": {
-    "postdeploy": "bin/console.php cache:warmup --env=prod --no-debug"
+    "postdeploy": "bin/console cache:warmup --env=prod --no-debug"
   }
 }
