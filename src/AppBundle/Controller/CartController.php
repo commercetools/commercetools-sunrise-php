@@ -12,6 +12,7 @@ use Commercetools\Sunrise\AppBundle\Model\View\ViewLink;
 use Commercetools\Sunrise\AppBundle\Model\ViewData;
 use Commercetools\Sunrise\AppBundle\Model\ViewDataCollection;
 use Commercetools\Symfony\CtpBundle\Model\Repository\CartRepository;
+use Commercetools\Symfony\CtpBundle\Security\User\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +26,8 @@ class CartController extends SunriseController
         $viewData = $this->getViewData('Sunrise - Cart', $request);
         $session = $this->get('session');
         $cartId = $session->get(CartRepository::CART_ID);
-        $customerId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $customerId = ($user instanceof User ? $user->getId() : null);
         $cart = $this->get('commercetools.repository.cart')->getCart($request->getLocale(), $cartId, $customerId);
         $viewData->content = new ViewData();
 

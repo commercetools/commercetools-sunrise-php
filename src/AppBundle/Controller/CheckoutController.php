@@ -50,13 +50,14 @@ class CheckoutController extends SunriseController
         $viewData->content->guestCheckoutParagraph1 = $this->trans('signin.guestCheckoutParagraph1', [], 'checkout');
         $viewData->content->guestCheckoutParagraph2 = $this->trans('signin.guestCheckoutParagraph2', [], 'checkout');
         $viewData->content->continueGuestBtn = $this->trans('signin.continueGuestBtn', [], 'checkout');
-        
+
         return $this->render('checkout-signin.hbs', $viewData->toArray());
     }
 
     public function checkoutAddressAction(Request $request)
     {
-        $customerId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $customerId = ($user instanceof User ? $user->getId() : null);
         $token = $this->getCsrfToken(static::CSRF_TOKEN_FORM);
         $cart = $this->getCart($request->getLocale());
 
@@ -153,7 +154,6 @@ class CheckoutController extends SunriseController
 
         $shippingMethods = $shippingRepository->getShippingMethodByCart($request->getLocale(), $cart->getId());
 
-
         $shippingForm = new ShippingForm();
 
         if ($request->isMethod('post')) {
@@ -165,12 +165,14 @@ class CheckoutController extends SunriseController
 
             $result = $validator->validate($request->request->all());
             if ($result->isNotValid()) {
+                dump($result->getMessages());
                 foreach ($result->getMessages() as $message) {
                     $shippingForm->errors->globalErrors->add(new Error(current($message)));
                 }
             }
             if ($result->isValid()) {
-                $customerId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+                $user = $this->get('security.token_storage')->getToken()->getUser();
+                $customerId = ($user instanceof User ? $user->getId() : null);
                 $cart = $this->get('commercetools.repository.cart')->setShippingMethod(
                     $request->getLocale(),
                     $cart->getId(),
@@ -195,10 +197,10 @@ class CheckoutController extends SunriseController
             $method->description = $shippingMethod->getDescription();
             $shippingForm->addShippingMethod($method);
         }
-        $viewData->content->shippingForm = $shippingForm;
+        $viewData->content->shippingFormSettings = $shippingForm;
         $cartModel = new CartModel($this->get('app.route_generator'), $this->config['sunrise.cart.attributes']);
         $viewData->content->cart = $cartModel->getViewCart($cart);
-
+dump($viewData);
         return $this->render('checkout-shipping.hbs', $viewData->toArray());
     }
 
@@ -288,7 +290,8 @@ class CheckoutController extends SunriseController
     {
         $session = $this->get('session');
         $cartId = $session->get(CartRepository::CART_ID);
-        $customerId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $customerId = ($user instanceof User ? $user->getId() : null);
         $cart = $this->get('commercetools.repository.cart')->getCart($locale, $cartId, $customerId);
 
         return $cart;
