@@ -23,10 +23,11 @@ To run, you need a project on the commercetools platform that contains some mini
 
 ```yml
 parameters:
-    secret: <your application secret>
-    commercetools.client_id: <your client id>
-    commercetools.client_secret: <your client secret>
-    commercetools.project: <your project key>
+    env(SECRET_TOKEN): Secr3tT0ken
+    env(CTP_CLIENT_ID): client-id
+    env(CTP_CLIENT_SECRET): client-secret
+    env(CTP_PROJECT): project-key
+
 ```
 
 For local development purposes you can run the application in the php built-in web server. The `web` folder contains static assets and index.php as the _only_ PHP file.
