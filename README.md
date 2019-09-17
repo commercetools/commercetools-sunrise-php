@@ -1,5 +1,8 @@
 # commercetools-sunrise-php
 
+:warning: **The Sunrise php shopfront implementation is now deprecated and will be decommissioned in 2020.**
+If you would nevertheless like to use it for your own developments you should fork this repository under the given license and continue developing your version, but please be aware that there will be no more updates and no support provided to this framework. 
+
 SUNRISE PHP is a template shopfront implementation that implements a complete online shop on the commercetools eCommerce platform using the following components:
 
  * the [commercetools PHP SDK](https://github.com/commercetools/commercetools-php-sdk) and its corresponding [commons library](https://github.com/commercetools/commercetools-php-commons)
